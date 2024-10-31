@@ -74,4 +74,9 @@ outlier_trees <- locus.trees_filtered[names_filtered %in% results$Final$Outliers
 densityTree(outlier_trees, colors="#669ABFFF", alpha=0.9, method="plotTree", 
             fix.depth=T, use.edge.length=F, compute.consensus=F, 
             use.gradient=FALSE, show.axis=TRUE,type="cladogram",nodes="intermediate")
-densityTree(outlier_trees,type="cladogram",nodes="intermediate", compute.consensus=F)
+
+write.tree(outlier_trees, file = "outlier_trees.nwk")
+
+
+library(phangorn)
+densiTree(outlier_trees, alpha = 0.2, type = "cladogram", col="#669ABFFF", use.edge.length=F)
