@@ -1,0 +1,325 @@
+---
+title: "MolecularEvoPhy"
+author: "Yuejiao"
+date: "2024-10-30"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(AnnotationForge)
+library(clusterProfiler)
+library(tidyverse)
+library(ape)
+library(phangorn)
+library(factoextra)
+library(ggplot2)
+library(TreeDist)
+library(cowplot)
+library(ggpubr)
+library(ComplexHeatmap)
+```
+
+
+## pair-wised species-tree vs gene tree
+```{r}
+## import the species tree
+species_tree <- read.tree("Data/concord.cf.tree_concat.nwk")
+
+## import the gene tree
+locus.trees <- read.tree("Data/genetrees.nwk")
+
+## list of genes included in this study
+og_list <- read.table("Data/list.txt")
+names <- read.table("Data/list.txt")
+# plot(species_tree)
+# table(Ntip(locus.trees))
+
+### calculate the pariwise normalized RF distance 
+normal_rf <- c()
+for (i in seq(length(locus.trees))) {
+  rf <- TreeDist::RobinsonFoulds(species_tree,locus.trees[i],normalize = T)
+  normal_rf <- c(normal_rf,rf)
+}
+
+## Histogram of RF distance
+hist(normal_rf,xlab = "Normalized RF distance", main = NULL)
+
+```
+
+### outlier genes
+
+```{r}
+# Find the indices where RF equal to 1
+high_rf_indices <- which(normal_rf == 1)
+
+# Extract the RF distances that are greater than 0.9
+high_rf_distances <- normal_rf[high_rf_indices]
+
+og_candidate <- og_list[high_rf_indices,]
+og_candidate_1 <- og_candidate[which(Ntip(locus.trees[high_rf_indices])>10)]
+```
+
+
+### perfect gene trees
+```{r}
+confident_gene_tree <- names(which(normal_rf == 0))
+
+confident_genes <- confident_gene_tree[which(Ntip(locus.trees[which(normal_rf == 0)])>10)]
+```
+
+
+### Densitree
+
+```{r}
+### extract outlier gene trees 
+locus.trees[which(names %in% og_candidate_1)]
+# plot(locus.trees[which(names %in% og_candidate_1)])
+# Combine the species tree and gene trees into one list
+merged_trees <- c(species_tree, locus.trees[which(names %in% og_candidate_1)])
+p_densi_disagree <- densiTree(merged_trees, col = c("black", rep('steelblue', 7)), alpha = 0.7)
+p_hist <- hist(normal_rf,xlab = "Normalized RF distance", main = NULL)
+
+# plot(merge_species_confidence)
+merge_species_confidence <- c(locus.trees[which(names %in% confident_genes)], species_tree)
+p_densi_agree <- phangorn::densiTree(merge_species_confidence, col = c( rep('steelblue', 216),"black"), alpha = 0.7)
+
+
+ggarrange(p_densi_agree,p_densi_disagree, p_hist,
+          labels = c("A", "B","C"),
+          nrow = 3)
+
+pdf("densiTree_plot.pdf", width = 10, height = 7)
+png("densiTree_plot.png", width = 1400, height = 700, res = 150)
+par(mfrow = c(1, 2))
+#phangorn::densiTree(merge_species_confidence, col = c( rep('steelblue', 216),"black"), alpha = 0.7)
+hist(normal_rf,xlab = "Normalized RF distance", main = NULL)
+densiTree(merged_trees, col = c("black", rep('steelblue', 7)), alpha = 0.7, use.edge.length = F, width = 2,scaleX = 1)
+dev.off
+```
+
+
+### GO enrichment analysis
+
+```{r}
+### turtles annotation db
+go_all <- read.table("/Users/hsf378/Downloads/candidate_at32523.txt", header = F, col.names = c("GID","ontology","GO","Support_number"), sep = "\t")
+
+### subset DB associated with biological process
+go_bp <- go_all %>% 
+  filter(ontology == "biological_process",
+         str_detect(GO,"GO")) %>% 
+  select(GO,GID) %>% 
+  mutate(goterm = Term(GO))
+go_bp_name <- go_bp %>% select(GO,GID)
+go_bp_term <- go_bp %>% select(GO,goterm)
+
+### subset DB associated with cellular component
+go_cc <- go_all %>% 
+  filter(ontology == "cellular_component",
+         str_detect(GO,"GO")) %>% 
+  select(GO,GID) %>% 
+  mutate(goterm = Term(GO))
+go_cc_name <- go_cc %>% select(GO,GID)
+go_cc_term <- go_cc %>% select(GO,goterm)
+
+
+### subset DB associated with molecular function
+go_mf <- go_all %>% 
+  filter(ontology == "molecular_function",
+         str_detect(GO,"GO")) %>% 
+  select(GO,GID) %>% 
+  mutate(goterm = Term(GO))
+go_mf_name <- go_mf %>% select(GO,GID)
+go_mf_term <- go_mf %>% select(GO,goterm)
+
+
+### DB with all ontologies
+
+go_all_name <- go_all %>% filter(str_detect(GO,"GO")) %>% select(GO,GID)
+go_all_term <- go_all %>% filter(str_detect(GO,"GO")) %>% select(GO,GID) %>% mutate(goterm = Term(GO)) %>% select(GO,goterm)
+# all_enrich <- enricher(gene = og_candidate_1,
+#                         # pvalueCutoff = 100,
+#                         pAdjustMethod = "fdr",
+#                         # qvalueCutoff = 100,
+#                         TERM2GENE = go_all_name,
+#                         TERM2NAME = go_all_term)
+
+bp_enrich <- enricher(gene = og_candidate_1,
+                        # pvalueCutoff = 100,
+                        pAdjustMethod = "fdr",
+                        # qvalueCutoff = 100,
+                        TERM2GENE = go_bp_name,
+                        TERM2NAME = go_bp_term)
+cc_enrich <- enricher(gene = og_candidate_1,
+                        # pvalueCutoff = 100,
+                        pAdjustMethod = "fdr",
+                        # qvalueCutoff = 100,
+                        TERM2GENE = go_cc_name,
+                        TERM2NAME = go_cc_term)
+mf_enrich <- enricher(gene = og_candidate_1,
+                        # pvalueCutoff = 100,
+                        pAdjustMethod = "fdr",
+                        # qvalueCutoff = 100,
+                        TERM2GENE = go_mf_name,
+                        TERM2NAME = go_mf_term)
+
+### visualization
+
+# Add an 'ontology' column to each data frame to indicate the GO category
+bp_df <- as.data.frame(bp_enrich) %>% mutate(ontology = "BP")
+cc_df <- as.data.frame(cc_enrich) %>% mutate(ontology = "CC")
+mf_df <- as.data.frame(mf_enrich) %>% mutate(ontology = "MF")
+
+# Combine the data frames into one
+combined_result <- bind_rows(bp_df, cc_df, mf_df)
+
+# Select only necessary columns for plotting (for example, "Description", "Count", and "ontology")
+# Make sure to adjust column names if different in your enricher output
+plot_data <- combined_result %>%
+  select(Description, Count,p.adjust, ontology) %>% 
+  remove_missing(.)
+
+# Create the bar plot with facet_wrap
+ggplot(plot_data, aes(x = Description, y = Count, fill = p.adjust)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  facet_wrap(~ ontology, scales = "free_y",nrow = 3) +
+  theme_bw() +
+  xlab(NULL) +
+  ylab("Count") +
+  scale_fill_gradient2(low = "grey", mid = "yellow", high = "red") +
+  theme(strip.text = element_text(size = 12),  # Adjust facet label size
+        axis.text = element_text(size = 10),   # Adjust axis text size
+        axis.title = element_text(size = 14))  # Adjust axis title size
+
+ggsave("./Goenrich_speciesvsgenes.png", height = 7, width = 9)
+
+# GSEA(gene = normal_rf[og_candidate_1][order(normal_rf[og_candidate_1], decreasing = T)],
+#                         # pvalueCutoff = 100,
+#                         pAdjustMethod = "fdr",
+#                         # qvalueCutoff = 100,
+#                         TERM2GENE = go_all_name,
+#                         TERM2NAME = go_all_term)
+```
+
+## gene trees vs gene trees
+
+### gene trees vs gene trees
+```{r}
+# load gene trees
+confident_trees <- locus.trees[Ntip(locus.trees)>10]
+# load gene names
+confident_names <- names[Ntip(locus.trees)>10]
+
+## metadata for turtles
+meta_turtles <- read_tsv("Data/metadata_habitat.tsv")
+
+results <- phylter(confident_trees, gene.names = confident_names, k=6)
+
+# OUTLIERS
+outliers_og_subset <- results$Final$Outliers[,1]
+
+names(outliers_og_subset) <- results$Final$Outliers[,2]
+
+table(results$Final$Outliers[,2])
+
+unique(outliers_og_subset)
+
+
+Outliers_all <- results$Final$Outliers %>% 
+  as_data_frame(.) %>% 
+  left_join(.,meta_turtles, by = c("V2" = "Species")) %>% 
+  remove_missing(.)
+
+# Outliers_Freshwater <- Outliers_all %>% filter(Habitat == "Freshwater")
+Outliers_Rivers <- Outliers_all %>% filter(Habitat == "Rivers")
+Outliers_Swamps <- Outliers_all %>% filter(Habitat == "Swamps")
+Outliers_Lakes <- Outliers_all %>% filter(Habitat == "Lakes")
+Outliers_Terrestrial<- Outliers_all %>% filter(Habitat == "Terrestrial")
+Outliers_Marine <- Outliers_all %>% filter(Habitat == "Marine")
+
+```
+
+
+### gene enrichment analysis
+
+```{r}
+enrich_plot <- function(df,plot_name,h,w){
+  bp <- enricher(gene = unique(df$V1),
+                        pAdjustMethod = "fdr",
+                        TERM2GENE = go_bp_name,
+                        TERM2NAME = go_bp_term)
+  cc <- enricher(gene = unique(df$V1),
+                        pAdjustMethod = "fdr",
+                        TERM2GENE = go_cc_name,
+                        TERM2NAME = go_cc_term)
+  mf <- enricher(gene = unique(df$V1),
+                        pAdjustMethod = "fdr",
+                        TERM2GENE = go_mf_name,
+                        TERM2NAME = go_mf_term)
+  # Add an 'ontology' column to each data frame to indicate the GO category
+  bp_df1 <- as.data.frame(bp) %>% mutate(ontology = "BP")
+  cc_df1 <- as.data.frame(cc) %>% mutate(ontology = "CC")
+  mf_df1 <- as.data.frame(mf) %>% mutate(ontology = "MF")
+
+  # Combine the data frames into one
+  combined_result1 <- bind_rows(bp_df1, cc_df1, mf_df1)
+
+  # Select only necessary columns for plotting (for example, "Description", "p.adjust", "Count", and "ontology")
+  plot_data1 <- combined_result1 %>%
+    select(Description, Count, p.adjust, ontology) %>% 
+    remove_missing(.)
+
+  # Create the bar plot with facet_wrap
+  ggplot(plot_data1, aes(x = Description, y = Count, fill = p.adjust)) +
+    geom_bar(stat = "identity") +
+    coord_flip() +
+    facet_wrap(~ ontology, scales = "free_y",nrow = 3) +
+    theme_bw() +
+    xlab(NULL) +
+    ylab("Count") +
+    scale_fill_gradient2(low = "grey", mid = "yellow", high = "red") +
+    theme(strip.text = element_text(size = 12),  # Adjust facet label size
+        axis.text = element_text(size = 10),   # Adjust axis text size
+        axis.title = element_text(size = 14))  # Adjust axis title size
+
+  ggsave(plot_name, height = h, width = w)
+
+  
+}
+# enrich_plot(Outliers_Rivers,"Outliers_Rivers.png",10,9)
+enrich_plot(Outliers_Swamps,"Outliers_Swamps.png",10,9)
+enrich_plot(Outliers_Lakes,"Outliers_Lakes.png",10,9)
+enrich_plot(Outliers_Marine,"Outliers_Marine.png",10,9)
+# enrich_plot(Outliers_Terrestrial,"Outliers_Terrestrial.png",10,9)
+
+```
+
+
+### DensiTree
+```{r}
+merge_species_gene_trees <- c( locus.trees[which(names %in% unique(outliers_og_subset))], species_tree)
+
+col_all_tree <- c(rep('steelblue', 47),"black")
+pdf("densiGeneTree_plot.pdf", width = 10, height = 7)
+phangorn::densiTree(merge_species_gene_trees, col = col_all_tree, alpha = 0.7, width = 1,use.edge.length = FALSE, adj = 0.5, scale.bar = F)
+dev.off
+```
+### Overlap outlier genes in different habitat 
+```{r}
+list_genes <- list(Lake = unique(Outliers_Lakes$V1),
+                   Swamp = unique(Outliers_Swamps$V1),
+                   River = unique(Outliers_Rivers$V1),
+                   Marine = unique(Outliers_Marine$V1),
+                   Terrestrial = unique(Outliers_Terrestrial$V1))
+
+m = make_comb_mat(list_genes)
+png("outlier_gene_habitat.png", width = 1000, height = 700, res = 150)
+UpSet(m, top_annotation = upset_top_annotation(m, add_numbers = TRUE),
+    right_annotation = upset_right_annotation(m, add_numbers = TRUE))
+dev.off()
+
+```
+
+
