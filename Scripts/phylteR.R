@@ -79,4 +79,29 @@ write.tree(outlier_trees, file = "outlier_trees.nwk")
 
 
 library(phangorn)
-densiTree(outlier_trees, alpha = 0.2, type = "cladogram", col="#669ABFFF", use.edge.length=F)
+library(ggplot2)
+library(gridExtra)
+library(grid)
+
+# First, save the ggplot as a separate plot object
+pca_plot <- ggplot(data=pca, aes(x=PC1, y=PC2, colour=Category)) +
+  geom_point() +
+  theme_minimal() +
+  xlab("PC1 (87.8%)") +
+  ylab("PC2 (2.5%)") +
+  scale_color_manual("Category", values=colours) 
+
+# Start the PNG output
+png("pca_plot.png", width = 700, height = 700, res = 150)
+# Create a grid layout with grid.arrange
+grid.arrange(
+  pca_plot
+)
+# Close the PNG device
+dev.off()
+
+
+png("densiTree_plot.png", width = 700, height = 700, res = 150)
+densiTree(outlier_trees, col = c(rep('steelblue', 48), "black"), alpha = 0.15, type = "cladogram", use.edge.length = F, width = 2,scaleX = 1)
+#densiTree(merged_trees, col = c("black", rep('steelblue', 7)), alpha = 0.7, use.edge.length = F, width = 2,scaleX = 1)
+dev.off()
