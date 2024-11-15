@@ -17,6 +17,8 @@ library(ComplexHeatmap)
 library(phangorn)
 library(grid)
 library(factoextra)
+library(enrichplot)
+library(ggtree)
 
 #################
 ### LOAD DATA ###
@@ -37,13 +39,25 @@ locus.trees <- locus.trees[Ntip(locus.trees) > 10]
 # load species tree
 species_tree <- read.tree("Data/concord.cf.tree_concat.nwk")
 
+# metadata for turtles
+meta_turtles <- read_tsv("Data/metadata_habitat.tsv")
+meta_turtles$Habitat_factor <- factor(meta_turtles$Habitat, 
+                                      levels=c("Marine", "Rivers", "Lakes", 
+                                               "Swamps", "Terrestrial", "Outgroup"))
+
+# load species tree for plotting
+species_tree_plot <- read.tree("Data/species_tree_plot.nwk")
+# rename tips from ID to Name (nicer to read)
+species_tree_plot$tip.label <- meta_turtles$Species[match(species_tree_plot$tip.label, meta_turtles$ID)]
+
+
 ###############
 ### COLOURS ###
 ###############
 
 outlier_colour <- "#727149FF"
 no_outlier_colour <- "#A2BAC5FF"
-species_tree_colour <- "#4E4139FF"
+species_tree_colour <- "#685369"
 
 
 ##################################
@@ -135,6 +149,7 @@ groups <- as.factor(outlier_df$Outlier)
 # PCA
 res.pca <- prcomp(distances, scale = TRUE)
 
+outlier_colour <- "#8E8D71"
 # ggplot PCA
 pca <- res.pca$x[,1:2]
 pca <- as_tibble(pca)
@@ -219,6 +234,9 @@ mf_enrich <- enricher(gene = og_candidate_gene_trees_vs_species_trees,
 
 dotplot(bp_enrich, showCategory=30)
 
+bp_enrich2 <- pairwise_termsim(bp_enrich)
+treeplot(bp_enrich2)
+
 ### visualization
 
 # Add an 'ontology' column to each data frame to indicate the GO category
@@ -240,9 +258,6 @@ ggplot(bp_df, aes(x=geneID, y=Description, fill=pvalue)) +
 
 ggsave("./Results/GO_heatmap.pdf", height = 7, width = 9)
 
-
-## metadata for turtles
-meta_turtles <- read_tsv("Data/metadata_habitat.tsv")
 
 # OUTLIERS
 outliers_og_subset <- results$Final$Outliers[,1]
@@ -314,3 +329,47 @@ enrich_plot(Outliers_Swamps,"Outliers_Swamps.png",10,9)
 enrich_plot(Outliers_Lakes,"Outliers_Lakes.png",10,9)
 enrich_plot(Outliers_Marine,"Outliers_Marine.png",10,9)
 # enrich_plot(Outliers_Terrestrial,"Outliers_Terrestrial.png",10,9)
+
+################
+### TREEPLOT ###
+################
+
+
+colours_classes5 <- fish(n=5,option="Balistoides_conspicillum", end=0.95, 
+                         begin=0.3,direction=-1)
+colours_classes6 <- c(colours_classes5, "grey")
+
+group_habitat <- list(Marine=meta_turtles %>% filter(Habitat_factor=="Marine") %>% select(Species) %>% .$Species,
+                      Rivers=meta_turtles %>% filter(Habitat_factor=="Rivers") %>% select(Species) %>% .$Species,
+                      Lakes=meta_turtles %>% filter(Habitat_factor=="Lakes") %>% select(Species) %>% .$Species,
+                      Swamps=meta_turtles %>% filter(Habitat_factor=="Swamps") %>% select(Species) %>% .$Species,
+                      Terrestrial=meta_turtles %>% filter(Habitat_factor=="Terrestrial") %>% select(Species) %>% .$Species,
+                      Outgroup=meta_turtles %>% filter(Habitat_factor=="Outgroup") %>% select(Species) %>% .$Species)
+
+species_tree_plot <- groupOTU(species_tree_plot, group_habitat)
+# plot for our tree
+plot_tree <- ggtree::ggtree(species_tree_plot) + ggtree::xlim_tree(13)
+plot_tree <- plot_tree %<+% meta_turtles +
+  ggtree::geom_tiplab(size=3, offset=0.5, fontface = "italic") + 
+  ggtree::geom_tippoint(aes(color=Habitat_factor)) + 
+  scale_color_manual("Habitat", values=colours_classes6) +
+  theme_tree2() +
+  vexpand(0.01, direction = -1)
+plot_tree
+
+# should we remove the outgroups???
+ggsave("Results/species_tree.pdf", width = 8, height = 5)
+
+colours_classes6 <- c( "#7EA77DFF", "#0F3D5CFF", "grey", "#4C98B8FF", "#9DB327FF", "#DEE100FF")
+
+plot_tree <- ggtree::ggtree(species_tree_plot, aes(color=group)) + ggtree::xlim_tree(13)
+plot_tree <- plot_tree %<+% meta_turtles +
+  ggtree::geom_tiplab(size=3, offset=0.5, fontface = "italic") + 
+  ggtree::geom_tippoint(aes(color=Habitat_factor)) + 
+  scale_color_manual("Habitat", values=colours_classes6) +
+  theme_tree2() +
+  vexpand(0.01, direction = -1)
+plot_tree
+
+# should we remove the outgroups???
+ggsave("Results/species_tree2.pdf", width = 8, height = 5)
