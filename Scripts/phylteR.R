@@ -45,10 +45,14 @@ meta_turtles$Habitat_factor <- factor(meta_turtles$Habitat,
                                       levels=c("Marine", "Rivers", "Lakes", 
                                                "Swamps", "Terrestrial", "Outgroup"))
 
+meta_turtles2 <- read_tsv("Data/metadata_habitat_reptraits.tsv")
+meta_turtles2$Habitat_factor <- factor(meta_turtles2$Microhabitat, 
+                                      levels=c("Marine", "Aquatic", "Aquatic_Terrestrial", "Terrestrial", "Outgroup"))
+
 # load species tree for plotting
 species_tree_plot <- read.tree("Data/species_tree_plot.nwk")
 # rename tips from ID to Name (nicer to read)
-species_tree_plot$tip.label <- meta_turtles$Species[match(species_tree_plot$tip.label, meta_turtles$ID)]
+species_tree_plot$tip.label <- meta_turtles2$Species[match(species_tree_plot$tip.label, meta_turtles2$ID)]
 
 
 ###############
@@ -373,3 +377,23 @@ plot_tree
 
 # should we remove the outgroups???
 ggsave("Results/species_tree2.pdf", width = 8, height = 5)
+
+
+colours_classes5 <- c( "#4C98B8FF", "#9DB327FF", "#0F3D5CFF", "grey", "#DEE100FF")
+
+group_habitat <- list(Marine=meta_turtles2 %>% filter(Habitat_factor=="Marine") %>% select(Species) %>% .$Species,
+                      Aquatic=meta_turtles2 %>% filter(Habitat_factor=="Aquatic") %>% select(Species) %>% .$Species,
+                      Aquatic_Terrestrial=meta_turtles2 %>% filter(Habitat_factor=="Aquatic_Terrestrial") %>% select(Species) %>% .$Species,
+                      Terrestrial=meta_turtles2 %>% filter(Habitat_factor=="Terrestrial") %>% select(Species) %>% .$Species,
+                      Outgroup=meta_turtles2 %>% filter(Habitat_factor=="Outgroup") %>% select(Species) %>% .$Species)
+
+species_tree_plot <- groupOTU(species_tree_plot, group_habitat)
+
+plot_tree <- ggtree::ggtree(species_tree_plot, aes(color=group)) + ggtree::xlim_tree(13)
+plot_tree <- plot_tree %<+% meta_turtles2 +
+  ggtree::geom_tiplab(size=3, offset=0.5, fontface = "italic") + 
+  ggtree::geom_tippoint(aes(color=Habitat_factor)) + 
+  scale_color_manual("Habitat", values=colours_classes5) +
+  theme_tree2() +
+  vexpand(0.01, direction = -1)
+plot_tree

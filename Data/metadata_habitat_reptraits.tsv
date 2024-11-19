@@ -1,0 +1,22 @@
+Species	ID	Microhabitat	Habitat type
+Podocnemis expansa	podExp	Aquatic	Wetlands
+Pelusios castaneus	pelCas	Aquatic	Wetlands
+Mesoclemmys tuberculata	mesTub	Aquatic	Wetlands
+Emydura subglobosa	emySub	Aquatic	Wetlands
+Dermatemys mawii	derMaw	Aquatic	Forest/Wetlands
+Chelydra serpentina	cheSer	Aquatic	Marine Coastal/Wetlands
+Dermochelys coriacea	derCor	Marine	Marine Oceanic
+Chelonia mydas	cheMyd	Marine	Wetlands
+Platysternon megacephalum	plaMeg	Aquatic	Forest/Wetlands
+Terrapene mexicana	terMex	Aquatic_Terrestrial	Forest/Wetlands
+Malaclemys terrapin	malTer	Aquatic	Marine Neritic
+Chrysemys picta	chrPic	Aquatic	Wetlands
+Cuora mccordi	cuoMcc	Aquatic_Terrestrial	Wetlands
+Cuora amboinensis	cuoAmb	Terrestrial	Forest/Wetlands
+Gopherus agassizii	gopAga	Terrestrial	Shrubland
+Chelonoidis abingdonii	cheAbi	Terrestrial	Forest/Shrubland
+Pelodiscus sinensis	pelSin	Aquatic	Wetlands
+Carettochelys insculpta	carIns	Aquatic	Wetlands
+Homo sapiens	homSap	Outgroup	Outgroup
+Gallus gallus	galGal	Outgroup	Outgroup
+Alligator mississipiensis	allMis	Outgroup	Outgroup
