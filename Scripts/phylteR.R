@@ -47,13 +47,16 @@ meta_turtles$Habitat_factor <- factor(meta_turtles$Habitat,
 
 meta_turtles2 <- read_tsv("Data/metadata_habitat_reptraits.tsv")
 meta_turtles2$Habitat_factor <- factor(meta_turtles2$Microhabitat, 
-                                      levels=c("Marine", "Aquatic", "Aquatic_Terrestrial", "Terrestrial", "Outgroup"))
+                                       levels=c("Marine", "Aquatic", 
+                                                "Aquatic_Terrestrial", "Terrestrial", 
+                                                "Outgroup"))
 
 # load species tree for plotting
 species_tree_plot <- read.tree("Data/species_tree_plot.nwk")
 # rename tips from ID to Name (nicer to read)
 species_tree_plot$tip.label <- meta_turtles2$Species[match(species_tree_plot$tip.label, meta_turtles2$ID)]
 
+### COULDNT WE ALSO JUST DROP OUTGROUPS FROM ALL ANALYSES???
 
 ###############
 ### COLOURS ###
@@ -62,6 +65,10 @@ species_tree_plot$tip.label <- meta_turtles2$Species[match(species_tree_plot$tip
 outlier_colour <- "#727149FF"
 no_outlier_colour <- "#A2BAC5FF"
 species_tree_colour <- "#685369"
+
+colours_classes5 <- c( "#4C98B8FF", "#9DB327FF", "#0F3D5CFF", "grey", "#DEE100FF")
+
+colours_classes6 <- c( "#7EA77DFF", "#0F3D5CFF", "grey", "#4C98B8FF", "#9DB327FF", "#DEE100FF")
 
 
 ##################################
@@ -89,6 +96,9 @@ normal_rf <- tibble(names=names, normal_rf=normal_rf)
 
 # outliers as defined by 99% confidence interval
 outliers_cutoff <- quantile(normal_rf$normal_rf, 0.99)
+outliers_cutoff <- quantile(normal_rf$normal_rf, 0.9)
+outliers_cutoff <- quantile(normal_rf$normal_rf, 0.95)
+
 density_data_normal_rf <- density(normal_rf$normal_rf)
 density_df_normal_rf <- tibble(normal_rf=density_data_normal_rf$x,
                                density=density_data_normal_rf$y)
@@ -117,11 +127,11 @@ ggsave("Results/density.pdf", width=7, height=7)
 ################################
 
 # also include species tree in analysis
-locus.trees <- c(locus.trees, species_tree)
-names <- c(names, "species_tree")
+locus.trees_combined <- c(locus.trees, species_tree)
+names_combined <- c(names, "species_tree")
 
 # RUNNN phylteR to get outliers
-results <- phylter(locus.trees, gene.names = names, k=6)
+results <- phylter(locus.trees_combined, gene.names = names_combined)
 
 # premade plots
 # Get a summary: nb of outliers, gain in concordance, etc.
@@ -137,6 +147,294 @@ plot(results, "species")
 distances <- results$Initial$RV
 
 
+### Species tree distance outliers ###
+
+distances_species_tree <- distances["species_tree",]
+
+distances_species_tree <- data.frame(Name=names(distances_species_tree), distance=distances_species_tree, 
+                                    row.names=NULL)
+distances_species_tree$distance <- 1 - distances_species_tree$distance
+
+# outliers as defined by 99% confidence interval
+outliers_cutoff <- quantile(distances_species_tree$distance, 0.99)
+
+outliers_phylteR_species_99 <- distances_species_tree %>% 
+  filter(distance > outliers_cutoff)
+
+# Density plot
+density_data <- density(distances_species_tree$distance)
+density_data_df <- tibble(distance=density_data$x,
+                          density=density_data$y)
+density_data_df <- density_data_df %>% 
+  mutate(outlier = case_when(distance > outliers_cutoff ~ "Outlier",
+                             TRUE ~ "No outlier"))
+
+ggplot(density_data_df, aes(x=distance, y=density, fill=outlier)) +
+  geom_line(color = no_outlier_colour) +
+  geom_ribbon(aes(ymin = 0, ymax = density), alpha = 0.8) +
+  scale_fill_manual("Gene category",
+                    values = c("No outlier" = no_outlier_colour, "Outlier" = outlier_colour)) + 
+  geom_vline(xintercept = outliers_cutoff, linetype = "dashed", 
+             color = "grey40", size = 0.4) +
+  annotate("text", x = outliers_cutoff + 0.01, y = 0.3,  # Position text slightly below the peak
+           label = "99% Cutoff", color = "grey40", hjust = -0.1, size=4) +
+  xlab("PhylteR distance to species tree") +
+  ylab("Density") +
+  theme_minimal()
+
+ggsave("Results/phylteR_species_99_density.pdf", width=7, height=5)
+
+
+outliers_cutoff <- quantile(distances_species_tree$distance, 0.9)
+
+outliers_phylteR_species_90 <- distances_species_tree %>% 
+  filter(distance > outliers_cutoff)
+
+# Density plot
+density_data <- density(distances_species_tree$distance)
+density_data_df <- tibble(distance=density_data$x,
+                          density=density_data$y)
+density_data_df <- density_data_df %>% 
+  mutate(outlier = case_when(distance > outliers_cutoff ~ "Outlier",
+                             TRUE ~ "No outlier"))
+
+ggplot(density_data_df, aes(x=distance, y=density, fill=outlier)) +
+  geom_line(color = no_outlier_colour) +
+  geom_ribbon(aes(ymin = 0, ymax = density), alpha = 0.8) +
+  scale_fill_manual("Gene category",
+                    values = c("No outlier" = no_outlier_colour, "Outlier" = outlier_colour)) + 
+  geom_vline(xintercept = outliers_cutoff, linetype = "dashed", 
+             color = "grey40", size = 0.4) +
+  annotate("text", x = outliers_cutoff + 0.01, y = 0.8,  # Position text slightly below the peak
+           label = "90% Cutoff", color = "grey40", hjust = -0.1, size=4) +
+  xlab("PhylteR distance to species tree") +
+  ylab("Density") +
+  theme_minimal()
+
+ggsave("Results/phylteR_species_90_density.pdf", width=7, height=5)
+
+outliers_cutoff <- quantile(distances_species_tree$distance, 0.95)
+
+outliers_phylteR_species_95 <- distances_species_tree %>% 
+  filter(distance > outliers_cutoff)
+
+# Density plot
+density_data <- density(distances_species_tree$distance)
+density_data_df <- tibble(distance=density_data$x,
+                          density=density_data$y)
+density_data_df <- density_data_df %>% 
+  mutate(outlier = case_when(distance > outliers_cutoff ~ "Outlier",
+                             TRUE ~ "No outlier"))
+
+ggplot(density_data_df, aes(x=distance, y=density, fill=outlier)) +
+  geom_line(color = no_outlier_colour) +
+  geom_ribbon(aes(ymin = 0, ymax = density), alpha = 0.8) +
+  scale_fill_manual("Gene category",
+                    values = c("No outlier" = no_outlier_colour, "Outlier" = outlier_colour)) + 
+  geom_vline(xintercept = outliers_cutoff, linetype = "dashed", 
+             color = "grey40", size = 0.4) +
+  annotate("text", x = outliers_cutoff + 0.01, y = 0.5,  # Position text slightly below the peak
+           label = "95% Cutoff", color = "grey40", hjust = -0.1, size=4) +
+  xlab("PhylteR distance to species tree") +
+  ylab("Density") +
+  theme_minimal()
+
+ggsave("Results/phylteR_species_95_density.pdf", width=7, height=5)
+
+
+### Mean tree distance outliers ###
+
+distances_means <- colMeans(distances)
+
+distances_means <- data.frame(Name=names(distances_means), distance=distances_means, 
+                              row.names=NULL)
+
+distances_means$distance <- 1 - distances_means$distance
+
+# outliers as defined by 99% confidence interval
+outliers_cutoff <- quantile(distances_means$distance, 0.99)
+
+outliers_phylteR_mean_99 <- distances_means %>% 
+  filter(distance > outliers_cutoff)
+
+density_data <- density(distances_means$distance)
+density_data_df <- tibble(distance=density_data$x,
+                          density=density_data$y)
+density_data_df <- density_data_df %>% 
+  mutate(outlier = case_when(distance > outliers_cutoff ~ "Outlier",
+                             TRUE ~ "No outlier"))
+
+ggplot(density_data_df, aes(x=distance, y=density, fill=outlier)) +
+  geom_line(color = no_outlier_colour) +
+  geom_ribbon(aes(ymin = 0, ymax = density), alpha = 0.8) +
+  scale_fill_manual("Gene category",
+                    values = c("No outlier" = no_outlier_colour, "Outlier" = outlier_colour)) + 
+  geom_vline(xintercept = outliers_cutoff, linetype = "dashed", 
+             color = "grey40", size = 0.4) +
+  annotate("text", x = outliers_cutoff + 0.01, y = 0.3,  # Position text slightly below the peak
+           label = "99% Cutoff", color = "grey40", hjust = -0.1, size=4) +
+  xlab("PhylteR mean distance") +
+  ylab("Density") +
+  theme_minimal()
+
+ggsave("Results/phylteR_mean_99_density.pdf", width=7, height=5)
+
+# 0.9
+outliers_cutoff <- quantile(distances_means$distance, 0.9)
+
+outliers_phylteR_mean_90 <- distances_means %>% 
+  filter(distance > outliers_cutoff)
+
+density_data <- density(distances_means$distance)
+density_data_df <- tibble(distance=density_data$x,
+                          density=density_data$y)
+density_data_df <- density_data_df %>% 
+  mutate(outlier = case_when(distance > outliers_cutoff ~ "Outlier",
+                             TRUE ~ "No outlier"))
+
+ggplot(density_data_df, aes(x=distance, y=density, fill=outlier)) +
+  geom_line(color = no_outlier_colour) +
+  geom_ribbon(aes(ymin = 0, ymax = density), alpha = 0.8) +
+  scale_fill_manual("Gene category",
+                    values = c("No outlier" = no_outlier_colour, "Outlier" = outlier_colour)) + 
+  geom_vline(xintercept = outliers_cutoff, linetype = "dashed", 
+             color = "grey40", size = 0.4) +
+  annotate("text", x = outliers_cutoff + 0.01, y = 1,  # Position text slightly below the peak
+           label = "90% Cutoff", color = "grey40", hjust = -0.1, size=4) +
+  xlab("PhylteR mean distance") +
+  ylab("Density") +
+  theme_minimal()
+
+ggsave("Results/phylteR_mean_90_density.pdf", width=7, height=5)
+
+# 95
+outliers_cutoff <- quantile(distances_means$distance, 0.95)
+
+outliers_phylteR_mean_95 <- distances_means %>% 
+  filter(distance > outliers_cutoff)
+
+density_data <- density(distances_means$distance)
+density_data_df <- tibble(distance=density_data$x,
+                          density=density_data$y)
+density_data_df <- density_data_df %>% 
+  mutate(outlier = case_when(distance > outliers_cutoff ~ "Outlier",
+                             TRUE ~ "No outlier"))
+
+ggplot(density_data_df, aes(x=distance, y=density, fill=outlier)) +
+  geom_line(color = no_outlier_colour) +
+  geom_ribbon(aes(ymin = 0, ymax = density), alpha = 0.8) +
+  scale_fill_manual("Gene category",
+                    values = c("No outlier" = no_outlier_colour, "Outlier" = outlier_colour)) + 
+  geom_vline(xintercept = outliers_cutoff, linetype = "dashed", 
+             color = "grey40", size = 0.4) +
+  annotate("text", x = outliers_cutoff + 0.01, y = 0.6,  # Position text slightly below the peak
+           label = "95% Cutoff", color = "grey40", hjust = -0.1, size=4) +
+  xlab("PhylteR mean distance") +
+  ylab("Density") +
+  theme_minimal()
+
+ggsave("Results/phylteR_mean_95_density.pdf", width=7, height=5)
+
+
+### PCA centroid outliers ###
+
+# PCA
+res.pca <- prcomp(distances, scale = TRUE)
+
+centroid <- colMeans(res.pca$x)
+# Calculate the Euclidean distances
+distances_centroid <- apply(res.pca$x, 1, function(row) sqrt(sum((row - centroid)^2)))
+
+distances_centroid <- data.frame(Name=names(distances_centroid), distance=distances_centroid, 
+                              row.names=NULL)
+scale_values <- function(x){(x-min(x))/(max(x)-min(x))}
+
+distances_centroid$distance <- scale_values(distances_centroid$distance)
+
+# outliers as defined by 99% confidence interval
+outliers_cutoff <- quantile(distances_centroid$distance, 0.99)
+
+outliers_phylteR_centroid_99 <- distances_centroid %>% 
+  filter(distance > outliers_cutoff)
+
+density_data <- density(distances_centroid$distance)
+density_data_df <- tibble(distance=density_data$x,
+                          density=density_data$y)
+density_data_df <- density_data_df %>% 
+  mutate(outlier = case_when(distance > outliers_cutoff ~ "Outlier",
+                             TRUE ~ "No outlier"))
+
+ggplot(density_data_df, aes(x=distance, y=density, fill=outlier)) +
+  geom_line(color = no_outlier_colour) +
+  geom_ribbon(aes(ymin = 0, ymax = density), alpha = 0.8) +
+  scale_fill_manual("Gene category",
+                    values = c("No outlier" = no_outlier_colour, "Outlier" = outlier_colour)) + 
+  geom_vline(xintercept = outliers_cutoff, linetype = "dashed", 
+             color = "grey40", size = 0.4) +
+  annotate("text", x = outliers_cutoff + 0.01, y = 0.4,  # Position text slightly below the peak
+           label = "99% Cutoff", color = "grey40", hjust = -0.1, size=4) +
+  xlab("PhylteR distance to centroid") +
+  ylab("Density") +
+  theme_minimal()
+
+ggsave("Results/phylteR_centroid_99_density.pdf", width=7, height=5)
+
+outliers_cutoff <- quantile(distances_centroid$distance, 0.9)
+
+outliers_phylteR_centroid_90 <- distances_centroid %>% 
+  filter(distance > outliers_cutoff)
+
+density_data <- density(distances_centroid$distance)
+density_data_df <- tibble(distance=density_data$x,
+                          density=density_data$y)
+density_data_df <- density_data_df %>% 
+  mutate(outlier = case_when(distance > outliers_cutoff ~ "Outlier",
+                             TRUE ~ "No outlier"))
+
+ggplot(density_data_df, aes(x=distance, y=density, fill=outlier)) +
+  geom_line(color = no_outlier_colour) +
+  geom_ribbon(aes(ymin = 0, ymax = density), alpha = 0.8) +
+  scale_fill_manual("Gene category",
+                    values = c("No outlier" = no_outlier_colour, "Outlier" = outlier_colour)) + 
+  geom_vline(xintercept = outliers_cutoff, linetype = "dashed", 
+             color = "grey40", size = 0.4) +
+  annotate("text", x = outliers_cutoff + 0.01, y = 0.8,  # Position text slightly below the peak
+           label = "90% Cutoff", color = "grey40", hjust = -0.1, size=4) +
+  xlab("PhylteR distance to centroid") +
+  ylab("Density") +
+  theme_minimal()
+
+ggsave("Results/phylteR_centroid_90_density.pdf", width=7, height=5)
+
+outliers_cutoff <- quantile(distances_centroid$distance, 0.95)
+
+outliers_phylteR_centroid_95 <- distances_centroid %>% 
+  filter(distance > outliers_cutoff)
+
+density_data <- density(distances_centroid$distance)
+density_data_df <- tibble(distance=density_data$x,
+                          density=density_data$y)
+density_data_df <- density_data_df %>% 
+  mutate(outlier = case_when(distance > outliers_cutoff ~ "Outlier",
+                             TRUE ~ "No outlier"))
+
+ggplot(density_data_df, aes(x=distance, y=density, fill=outlier)) +
+  geom_line(color = no_outlier_colour) +
+  geom_ribbon(aes(ymin = 0, ymax = density), alpha = 0.8) +
+  scale_fill_manual("Gene category",
+                    values = c("No outlier" = no_outlier_colour, "Outlier" = outlier_colour)) + 
+  geom_vline(xintercept = outliers_cutoff, linetype = "dashed", 
+             color = "grey40", size = 0.4) +
+  annotate("text", x = outliers_cutoff + 0.01, y = 0.6,  # Position text slightly below the peak
+           label = "95% Cutoff", color = "grey40", hjust = -0.1, size=4) +
+  xlab("PhylteR distance to centroid") +
+  ylab("Density") +
+  theme_minimal()
+
+ggsave("Results/phylteR_centroid_95_density.pdf", width=7, height=5)
+
+
+### PCA plot ###
 
 # Make outlier categories df
 results$Final$Outliers
@@ -149,9 +447,6 @@ outlier_df <- outlier_df %>%
                              TRUE ~ Outlier))
 
 groups <- as.factor(outlier_df$Outlier)
-
-# PCA
-res.pca <- prcomp(distances, scale = TRUE)
 
 outlier_colour <- "#8E8D71"
 # ggplot PCA
@@ -181,6 +476,9 @@ densiTree(outlier_trees, col = c(rep('steelblue', 48), "black"), alpha = 0.15, t
 
 ### turtles annotation db
 go_all <- read.table("/Users/jule/Downloads/odb10v1_OG_xrefs.tab", 
+                     header = F, col.names = c("GID","ontology","GO","Support_number"), sep = "\t")
+go_all_busco <- go_all %>% filter(GID %in% names)
+go_all <- read.table("/Users/jule/Downloads/candidate_at32523.txt", 
                      header = F, col.names = c("GID","ontology","GO","Support_number"), sep = "\t")
 
 ### subset DB associated with biological process
@@ -216,6 +514,10 @@ go_mf_term <- go_mf %>% select(GO,goterm)
 
 go_all_name <- go_all %>% filter(str_detect(GO,"GO")) %>% select(GO,GID)
 go_all_term <- go_all %>% filter(str_detect(GO,"GO")) %>% select(GO,GID) %>% mutate(goterm = Term(GO)) %>% select(GO,goterm)
+
+################################
+### GO SPECIES TREE ANALYSIS ###
+################################
 
 bp_enrich <- enricher(gene = og_candidate_gene_trees_vs_species_trees,
                       # pvalueCutoff = 100,
@@ -262,6 +564,9 @@ ggplot(bp_df, aes(x=geneID, y=Description, fill=pvalue)) +
 
 ggsave("./Results/GO_heatmap.pdf", height = 7, width = 9)
 
+##############################
+### GO GENE TREEs ANALYSIS ###
+##############################
 
 # OUTLIERS
 outliers_og_subset <- results$Final$Outliers[,1]
@@ -334,10 +639,10 @@ enrich_plot(Outliers_Lakes,"Outliers_Lakes.png",10,9)
 enrich_plot(Outliers_Marine,"Outliers_Marine.png",10,9)
 # enrich_plot(Outliers_Terrestrial,"Outliers_Terrestrial.png",10,9)
 
+
 ################
 ### TREEPLOT ###
 ################
-
 
 colours_classes5 <- fish(n=5,option="Balistoides_conspicillum", end=0.95, 
                          begin=0.3,direction=-1)
@@ -364,8 +669,6 @@ plot_tree
 # should we remove the outgroups???
 ggsave("Results/species_tree.pdf", width = 8, height = 5)
 
-colours_classes6 <- c( "#7EA77DFF", "#0F3D5CFF", "grey", "#4C98B8FF", "#9DB327FF", "#DEE100FF")
-
 plot_tree <- ggtree::ggtree(species_tree_plot, aes(color=group)) + ggtree::xlim_tree(13)
 plot_tree <- plot_tree %<+% meta_turtles +
   ggtree::geom_tiplab(size=3, offset=0.5, fontface = "italic") + 
@@ -379,12 +682,10 @@ plot_tree
 ggsave("Results/species_tree2.pdf", width = 8, height = 5)
 
 
-colours_classes5 <- c( "#4C98B8FF", "#9DB327FF", "#0F3D5CFF", "grey", "#DEE100FF")
-
-group_habitat <- list(Marine=meta_turtles2 %>% filter(Habitat_factor=="Marine") %>% select(Species) %>% .$Species,
-                      Aquatic=meta_turtles2 %>% filter(Habitat_factor=="Aquatic") %>% select(Species) %>% .$Species,
-                      Aquatic_Terrestrial=meta_turtles2 %>% filter(Habitat_factor=="Aquatic_Terrestrial") %>% select(Species) %>% .$Species,
+group_habitat <- list(Aquatic_Terrestrial=meta_turtles2 %>% filter(Habitat_factor=="Aquatic_Terrestrial") %>% select(Species) %>% .$Species,
                       Terrestrial=meta_turtles2 %>% filter(Habitat_factor=="Terrestrial") %>% select(Species) %>% .$Species,
+                      Marine=meta_turtles2 %>% filter(Habitat_factor=="Marine") %>% select(Species) %>% .$Species,
+                      Aquatic=meta_turtles2 %>% filter(Habitat_factor=="Aquatic") %>% select(Species) %>% .$Species,
                       Outgroup=meta_turtles2 %>% filter(Habitat_factor=="Outgroup") %>% select(Species) %>% .$Species)
 
 species_tree_plot <- groupOTU(species_tree_plot, group_habitat)
@@ -393,7 +694,9 @@ plot_tree <- ggtree::ggtree(species_tree_plot, aes(color=group)) + ggtree::xlim_
 plot_tree <- plot_tree %<+% meta_turtles2 +
   ggtree::geom_tiplab(size=3, offset=0.5, fontface = "italic") + 
   ggtree::geom_tippoint(aes(color=Habitat_factor)) + 
-  scale_color_manual("Habitat", values=colours_classes5) +
+  scale_color_manual("Primary lifestyle", values=colours_classes5) +
   theme_tree2() +
   vexpand(0.01, direction = -1)
 plot_tree
+
+ggsave("Results/species_tree3.pdf", width = 8, height = 5)
