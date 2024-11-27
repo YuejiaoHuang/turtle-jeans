@@ -25,14 +25,14 @@ library(ComplexHeatmap)
 ## pair-wised species-tree vs gene tree
 ```{r}
 ## import the species tree
-species_tree <- read.tree("Data/concord.cf.tree_concat.nwk")
+species_tree <- read.tree("/Users/hsf378/PhD/Analysis/turtle-jeans/Data/concord.cf.tree_concat.nwk")
 
 ## import the gene tree
-locus.trees <- read.tree("Data/genetrees.nwk")
+locus.trees <- read.tree("/Users/hsf378/PhD/Analysis/turtle-jeans/Data/genetrees.nwk")
 
 ## list of genes included in this study
-og_list <- read.table("Data/list.txt")
-names <- read.table("Data/list.txt")
+og_list <- read.table("/Users/hsf378/PhD/Analysis/turtle-jeans/Data/list.txt")
+# names <- read.table("Data/list.txt")
 # plot(species_tree)
 # table(Ntip(locus.trees))
 
@@ -43,12 +43,139 @@ for (i in seq(length(locus.trees))) {
   normal_rf <- c(normal_rf,rf)
 }
 
+names(normal_rf) <- og_list$V1
+
 ## Histogram of RF distance
 hist(normal_rf,xlab = "Normalized RF distance", main = NULL)
 
+
+normal_rf_df <- data_frame(gene=names(normal_rf), distance = normal_rf)
+
+### number of tips in the gene trees
+number_tips <- c()
+for (i in seq(length(locus.trees))) {
+  len <- length(locus.trees[[i]]$tip.label)
+  number_tips <- c(number_tips,len)
+}
+table(number_tips)
+hist(number_tips, density = T)
 ```
 
 ### outlier genes
+
+#### outlier genes with 99% confidence interval
+```{r}
+genes_99 <- normal_rf[which(normal_rf > quantile(normal_rf,0.99))]
+names(genes_99) ### 52 genes
+
+normal_rf_df %>% 
+  filter(gene %in% c(names(genes_99))) %>% 
+  write_tsv("/Users/hsf378/PhD/Analysis/turtle-jeans/Results/species_vs_gene_99%_outiler.tsv")
+
+```
+
+##### visualization
+```{r}
+outlier_colour <- "#727149FF"
+no_outlier_colour <- "#A2BAC5FF"
+outliers_cutoff <- quantile(normal_rf,0.99)
+density_data <- density(normal_rf_df$distance)
+density_data_df <- tibble(distance=density_data$x,
+                          density=density_data$y)
+density_data_df <- density_data_df %>% 
+  mutate(outlier = case_when(distance > outliers_cutoff ~ "Outlier",
+                             TRUE ~ "No outlier"))
+
+ggplot(density_data_df, aes(x=distance, y=density, fill=outlier)) +
+  geom_line(color = no_outlier_colour) +
+  geom_ribbon(aes(ymin = 0, ymax = density), alpha = 0.8) +
+  scale_fill_manual("Gene category",
+                    values = c("No outlier" = no_outlier_colour, "Outlier" = outlier_colour)) + 
+  geom_vline(xintercept = outliers_cutoff, linetype = "dashed", 
+             color = "grey40", size = 0.4) +
+  annotate("text", x = outliers_cutoff + 0.01, y = 0.3,  # Position text slightly below the peak
+           label = "99% Cutoff", color = "grey40", hjust = -0.1, size=4) +
+  xlab("PhylteR mean distance") +
+  ylab("Density") +
+  theme_minimal()
+ggsave("/Users/hsf378/PhD/Analysis/turtle-jeans/Results/species_vs_gene_99_density.pdf", width=7, height=5)
+```
+
+
+#### outlier genes with 95% confidence interval
+```{r}
+genes_95 <- normal_rf[which(normal_rf > quantile(normal_rf,0.95))]
+names(genes_95) ### 249 genes
+
+normal_rf_df %>% 
+  filter(gene %in% c(names(genes_95))) %>% 
+  write_tsv("/Users/hsf378/PhD/Analysis/turtle-jeans/Results/species_vs_gene_95%_outiler.tsv")
+```
+
+
+```{r}
+outlier_colour <- "#727149FF"
+no_outlier_colour <- "#A2BAC5FF"
+outliers_cutoff <- quantile(normal_rf,0.95)
+density_data <- density(normal_rf_df$distance)
+density_data_df <- tibble(distance=density_data$x,
+                          density=density_data$y)
+density_data_df <- density_data_df %>% 
+  mutate(outlier = case_when(distance > outliers_cutoff ~ "Outlier",
+                             TRUE ~ "No outlier"))
+
+ggplot(density_data_df, aes(x=distance, y=density, fill=outlier)) +
+  geom_line(color = no_outlier_colour) +
+  geom_ribbon(aes(ymin = 0, ymax = density), alpha = 0.8) +
+  scale_fill_manual("Gene category",
+                    values = c("No outlier" = no_outlier_colour, "Outlier" = outlier_colour)) + 
+  geom_vline(xintercept = outliers_cutoff, linetype = "dashed", 
+             color = "grey40", size = 0.4) +
+  annotate("text", x = outliers_cutoff + 0.01, y = 0.3,  # Position text slightly below the peak
+           label = "95% Cutoff", color = "grey40", hjust = -0.1, size=4) +
+  xlab("PhylteR mean distance") +
+  ylab("Density") +
+  theme_minimal()
+ggsave("/Users/hsf378/PhD/Analysis/turtle-jeans/Results/species_vs_gene_95_density.pdf", width=7, height=5)
+```
+
+
+#### outlier genes with 90% confidence interval
+```{r}
+genes_90 <- normal_rf[which(normal_rf > quantile(normal_rf,0.90))]
+names(genes_90) ### 502 genes
+
+normal_rf_df %>% 
+  filter(gene %in% c(names(genes_90))) %>% 
+  write_tsv("/Users/hsf378/PhD/Analysis/turtle-jeans/Results/species_vs_gene_90%_outiler.tsv")
+```
+
+```{r}
+outlier_colour <- "#727149FF"
+no_outlier_colour <- "#A2BAC5FF"
+outliers_cutoff <- quantile(normal_rf,0.90)
+density_data <- density(normal_rf_df$distance)
+density_data_df <- tibble(distance=density_data$x,
+                          density=density_data$y)
+density_data_df <- density_data_df %>% 
+  mutate(outlier = case_when(distance > outliers_cutoff ~ "Outlier",
+                             TRUE ~ "No outlier"))
+
+ggplot(density_data_df, aes(x=distance, y=density, fill=outlier)) +
+  geom_line(color = no_outlier_colour) +
+  geom_ribbon(aes(ymin = 0, ymax = density), alpha = 0.8) +
+  scale_fill_manual("Gene category",
+                    values = c("No outlier" = no_outlier_colour, "Outlier" = outlier_colour)) + 
+  geom_vline(xintercept = outliers_cutoff, linetype = "dashed", 
+             color = "grey40", size = 0.4) +
+  annotate("text", x = outliers_cutoff + 0.01, y = 0.3,  # Position text slightly below the peak
+           label = "90% Cutoff", color = "grey40", hjust = -0.1, size=4) +
+  xlab("PhylteR mean distance") +
+  ylab("Density") +
+  theme_minimal()
+ggsave("/Users/hsf378/PhD/Analysis/turtle-jeans/Results/species_vs_gene_90_density.pdf", width=7, height=5)
+```
+
 
 ```{r}
 # Find the indices where RF equal to 1
