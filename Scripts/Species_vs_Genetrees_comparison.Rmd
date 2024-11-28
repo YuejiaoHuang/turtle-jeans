@@ -61,6 +61,46 @@ table(number_tips)
 hist(number_tips, density = T)
 ```
 
+```{r}
+TreeDist::TreeDistance(species_tree,locus.trees[1])
+
+normal_treedist <- c()
+for (i in seq(length(locus.trees))) {
+  rf <- TreeDist::TreeDistance(species_tree,locus.trees[i])
+  normal_treedist <- c(normal_treedist,rf)
+}
+names(normal_treedist) <- og_list$V1
+normal_treedist_df <- data_frame(gene=names(normal_treedist), distance = normal_treedist)
+
+```
+
+```{r}
+#### 99%
+genes_99_treedist <- normal_treedist[which(normal_treedist > quantile(normal_treedist,0.99))]
+names(genes_99_treedist) ### 53 genes
+
+normal_treedist_df %>% 
+  filter(gene %in% c(names(genes_99_treedist))) %>% 
+  write_tsv("/Users/hsf378/PhD/Analysis/turtle-jeans/Results/species_vs_gene_treedist_99%_outiler.tsv")
+#### 95%
+genes_95_treedist <- normal_treedist[which(normal_treedist > quantile(normal_treedist,0.95))]
+names(genes_95_treedist) ### 262 genes
+
+normal_treedist_df %>% 
+  filter(gene %in% c(names(genes_95_treedist))) %>% 
+  write_tsv("/Users/hsf378/PhD/Analysis/turtle-jeans/Results/species_vs_gene_treedist_95%_outiler.tsv")
+
+#### 90%
+genes_90_treedist <- normal_treedist[which(normal_treedist > quantile(normal_treedist,0.9))]
+names(genes_90_treedist) ### 524 genes
+
+normal_treedist_df %>% 
+  filter(gene %in% c(names(genes_90_treedist))) %>% 
+  write_tsv("/Users/hsf378/PhD/Analysis/turtle-jeans/Results/species_vs_gene_treedist_90%_outiler.tsv")
+```
+
+
+
 ### outlier genes
 
 #### outlier genes with 99% confidence interval
@@ -95,7 +135,7 @@ ggplot(density_data_df, aes(x=distance, y=density, fill=outlier)) +
              color = "grey40", size = 0.4) +
   annotate("text", x = outliers_cutoff + 0.01, y = 0.3,  # Position text slightly below the peak
            label = "99% Cutoff", color = "grey40", hjust = -0.1, size=4) +
-  xlab("PhylteR mean distance") +
+  xlab("Normalized RF distance") +
   ylab("Density") +
   theme_minimal()
 ggsave("/Users/hsf378/PhD/Analysis/turtle-jeans/Results/species_vs_gene_99_density.pdf", width=7, height=5)
@@ -133,7 +173,7 @@ ggplot(density_data_df, aes(x=distance, y=density, fill=outlier)) +
              color = "grey40", size = 0.4) +
   annotate("text", x = outliers_cutoff + 0.01, y = 0.3,  # Position text slightly below the peak
            label = "95% Cutoff", color = "grey40", hjust = -0.1, size=4) +
-  xlab("PhylteR mean distance") +
+  xlab("Normalized RF distance") +
   ylab("Density") +
   theme_minimal()
 ggsave("/Users/hsf378/PhD/Analysis/turtle-jeans/Results/species_vs_gene_95_density.pdf", width=7, height=5)
@@ -170,7 +210,7 @@ ggplot(density_data_df, aes(x=distance, y=density, fill=outlier)) +
              color = "grey40", size = 0.4) +
   annotate("text", x = outliers_cutoff + 0.01, y = 0.3,  # Position text slightly below the peak
            label = "90% Cutoff", color = "grey40", hjust = -0.1, size=4) +
-  xlab("PhylteR mean distance") +
+  xlab("Normalized RF distance") +
   ylab("Density") +
   theme_minimal()
 ggsave("/Users/hsf378/PhD/Analysis/turtle-jeans/Results/species_vs_gene_90_density.pdf", width=7, height=5)
