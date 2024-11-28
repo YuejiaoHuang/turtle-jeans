@@ -43,6 +43,18 @@ matrices <- results$Initial$mat.data
 # take outliers from that distribution
 # -> Outlier genes for taxa 1
 
+all <- data.frame()
+
+for(gene_name in names){
+  print(gene_name)
+  matrix <- matrices[[gene_name]]
+  sums <- rowSums(matrix)
+  means <- sums/(ncol(matrix)-1)
+  frame <- data.frame(name = names(means), mean = means, gene = gene_name,
+                      row.names = NULL)
+  all <- rbind(all,frame)
+}
+
 ## OUTLIER GENES
 # for build distribution for each gene (based on values for all pairwise distances)
 #     plot all pariwise distances from upper triangle of matrix
