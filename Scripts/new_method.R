@@ -1,13 +1,15 @@
 library(tidyverse)
 library(ape)
 library(phylter)
+library(TreeTools)
 
 
 #################
 ### LOAD DATA ###
 #################
 
-setwd("/Users/jule/Desktop/turtle-jeans")
+#setwd("/Users/jule/Desktop/turtle-jeans")
+
 
 # load gene trees
 locus.trees <- read.tree('Data/genetrees.nwk')
@@ -18,6 +20,7 @@ names <- readLines("Data/list.txt")
 
 ### Drop outgroups
 locus.trees <- drop.tip.multiPhylo(locus.trees, c("homSap", "galGal", "allMis"))
+tips <- AllTipLabels(locus.trees)
 
 # filter based on at least 9 tips (50 % of taxa present)
 names <- names[Ntip(locus.trees) >= 9]
@@ -53,6 +56,17 @@ for(gene_name in names){
   frame <- data.frame(name = names(means), mean = means, gene = gene_name,
                       row.names = NULL)
   all <- rbind(all,frame)
+}
+
+
+library(reshape2)
+reshape <- dcast(all, name ~ gene, value.var = 'mean')
+all2 <- reshape[,-1]
+rownames(all2) <- reshape[,1]
+
+for(i in tips){
+  print(i)
+  plot(density(all$mean[all$name == i]),main = i)
 }
 
 ## OUTLIER GENES
