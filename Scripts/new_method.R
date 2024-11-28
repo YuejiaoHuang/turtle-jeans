@@ -21,7 +21,7 @@ locus.trees <- locus.trees[Ntip(locus.trees) >= 9]
 
 
 # RUNNN phylteR to get outliers
-
+results <- phylter(locus.trees_combined, gene.names = names_combined)
 
 
 # get matrix for each gene that contains pairwise distances between species
