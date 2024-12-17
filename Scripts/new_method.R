@@ -141,25 +141,24 @@ comb_imputed_meanlist <- stitchMatricesToDataFrame(matrices_imputed_meanlist)
 #detect outliers
 source('Scripts/detectOutliers.R')
 distances_meangene <- distances_extraction(comb_imputed_meangene)
-outliergene_chi95_meangene <- detect_outliers_and_extract_quantiles(matrices_imputed_meangene,
+outliergene_q95_meangene <- detect_outliers_and_extract_quantiles(matrices_imputed_meangene,
                                                                 distances = distances_meangene,
                                                                 quantile_threshold = 0.95)
 
 distances_meanlist <- distances_extraction(comb_imputed_meanlist)
-outliergene_chi95_meanlist<-detect_outliers_and_extract_quantiles(matrices_imputed_meanlist,
+outliergene_q95_meanlist<-detect_outliers_and_extract_quantiles(matrices_imputed_meanlist,
                                                                   distance = distances_meanlist,
                                                                   quantile_threshold = 0.95)
 
-
-
+write.csv(outliergene_q95_meangene$indices,'Results/outliergene_q95_meangene.csv')
+write.csv(outliergene_q95_meanlist$indices,'Results/outliergene_q95_meanlist.csv')
 
 # get outlier species - v2 ------------------------------------------------
 
-mat_name <- names(outliergene_chi95_meangene$matrices)[1]
-mat_list <- outliergene_chi95_meanlist$matrices[1]
-mat <- outliergene_chi95_meangene$matrices[[mat_name]]
+mat_name <- names(outliergene_q95_meanlist$matrices)[1]
+mat <- outliergene_q95_meanlist$matrices[[mat_name]]
 
-# use the entire thing, not just upper triangle 
+# just upper triangle 
 # all diagonals to zero
 # 
 get_upper_triangle_values <- function(mat) {
@@ -192,10 +191,44 @@ wide <- reshape(
   direction='wide'
 )
 
+# keep entire thing
+names(mat)
+rownames(mat) <- paste0(rownames(mat),'_',mat_name)
 
+modified_list <- lapply(names(outliergene_chi95_meanlist$matrices), function(matname){
+  mat <- outliergene_chi95_meanlist$matrices[[matname]]
+  rownames(mat) <- paste(rownames(mat), matname, sep = "_")
+  return(mat)
+})
 
+test <- do.call(rbind,modified_list)
+df <- as.data.frame(test)
+head(df,1)
 
+### zeros?
 
+#detect outliers
+source('Scripts/detectOutliers.R')
+distances_meanlist <- distances_extraction(df)
+detect_outliers_and_extract_chisq <- function(distances_meanlist, conf = 0.95) {
+  # Calculate the quantile threshold
+  degrees_freedom <- ncol(df) 
+  threshold <- qchisq(conf, degrees_freedom)
+  
+  # Identify outlier indices
+  outlier_indices <- names(which(distances_meanlist > threshold))
+  
+  outlierspecies <- strsplit(outlier_indices,'_')
+  outliers_df <- as.data.frame(do.call(rbind, outlierspecies))
+  colnames(outliers_df) <- c('species','gene')
+  return(outliers_df)
+}
+
+outlierspecies_q95_phylter_chi95 <- detect_outliers_and_extract_chisq(distances_meanlist,0.95)
+write.csv(outlierspecies_q95_phylter_chi95,'Results/outlierspecies_q95_phylter_chi95.csv')
+table(outlierspecies_q95_phylter_chi95$species)
+
+length(unique(outlierspecies_q95_phylter_chi95$gene))
 
 
 
