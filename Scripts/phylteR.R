@@ -1,4 +1,3 @@
-#install.packages("phylter")
 library(phylter)
 library(tidyverse)
 library(fishualize)
@@ -54,9 +53,17 @@ meta_turtles2$Habitat_factor <- factor(meta_turtles2$Microhabitat,
 # load species tree for plotting
 species_tree_plot <- read.tree("Data/species_tree_plot.nwk")
 # rename tips from ID to Name (nicer to read)
-species_tree_plot$tip.label <- meta_turtles2$Species[match(species_tree_plot$tip.label, meta_turtles2$ID)]
+species_tree_plot$tip.label <- meta_turtles2$Species[
+  match(species_tree_plot$tip.label, meta_turtles2$ID)]
 
 ### COULDNT WE ALSO JUST DROP OUTGROUPS FROM ALL ANALYSES???
+# locus.trees <- drop.tip.multiPhylo(locus.trees, c("homSap", "galGal", "allMis"))
+# species_tree <- drop.tip(species_tree, c("homSap", "galGal", "allMis"))
+# 
+# # filter based on at least 9 tips (50 % of taxa present)
+# names <- names[Ntip(locus.trees) > 9]
+# locus.trees <- locus.trees[Ntip(locus.trees) > 9]
+
 
 ###############
 ### COLOURS ###
@@ -135,13 +142,13 @@ results <- phylter(locus.trees_combined, gene.names = names_combined)
 
 # premade plots
 # Get a summary: nb of outliers, gain in concordance, etc.
-summary(results)
+# summary(results)
 
 # Show the number of species in each gene, and how many per gene are outliers
-plot(results, "genes") 
+# plot(results, "genes") 
 
 # Show the number of genes where each species is found, and how many are outliers
-plot(results, "species") 
+# plot(results, "species") 
 
 # get dists
 distances <- results$Initial$RV
@@ -437,12 +444,15 @@ ggsave("Results/phylteR_centroid_95_density.pdf", width=7, height=5)
 ### PCA plot ###
 
 # Make outlier categories df
-results$Final$Outliers
 
-outlier_df <- as_tibble_col(names, column_name = "Name")
+outlier_df <- as_tibble_col(names_combined, column_name = "Name")
 outlier_df$Outlier <- "No outlier"
+# outlier_df <- outlier_df %>% 
+#   mutate(Outlier = case_when(Name %in% results$Final$Outliers[,1] ~ "Outlier",
+#                              Name == "species_tree" ~ "Species tree",
+#                              TRUE ~ Outlier))
 outlier_df <- outlier_df %>% 
-  mutate(Outlier = case_when(Name %in% results$Final$Outliers[,1] ~ "Outlier",
+  mutate(Outlier = case_when(Name %in% outliers_phylteR_species_95$Name ~ "Outlier",
                              Name == "species_tree" ~ "Species tree",
                              TRUE ~ Outlier))
 
@@ -469,16 +479,84 @@ outlier_trees <- locus.trees[names %in% results$Final$Outliers[,1]]
 densiTree(outlier_trees, col = c(rep('steelblue', 48), "black"), alpha = 0.15, type = "cladogram", 
           use.edge.length = F, width = 2,scaleX = 1)
 
+#### COMPARISON OUTLIERS
+
+library(ggvenn)
+ggvenn(
+  list(Centroid99 = outliers_phylteR_centroid_99$Name, 
+       Mean99 = outliers_phylteR_mean_99$Name, 
+       Species99 = outliers_phylteR_species_99$Name), 
+  fill_color = c("#0073C2FF", "#EFC000FF", "#868686FF"),
+  stroke_size = 0, set_name_size = 4, show_percentage = F
+)
+
+
+ggsave("Results/Venn_99.pdf", width=5, height=5)
+
+ggvenn(
+  list(Centroid95 = outliers_phylteR_centroid_95$Name, 
+       Mean95 = outliers_phylteR_mean_95$Name, 
+       Species95 = outliers_phylteR_species_95$Name), 
+  fill_color = c("#0073C2FF", "#EFC000FF", "#868686FF"),
+  stroke_size = 0, set_name_size = 4, show_percentage = F
+)
+
+ggsave("Results/Venn_95.pdf", width=5, height=5)
+
+ggvenn(
+  list(Centroid90 = outliers_phylteR_centroid_90$Name, 
+       Mean90 = outliers_phylteR_mean_90$Name, 
+       Species90 = outliers_phylteR_species_90$Name), 
+  fill_color = c("#0073C2FF", "#EFC000FF", "#868686FF"),
+  stroke_size = 0, set_name_size = 4, show_percentage = F
+)
+
+ggsave("Results/Venn_90.pdf", width=5, height=5)
+
+species_tree_only_99 <- read_tsv("Results/species_vs_gene_99%_outiler.tsv")
+species_tree_only_99$Name <- species_tree_only_99$gene
+species_tree_only_95 <- read_tsv("Results/species_vs_gene_95%_outiler.tsv")
+species_tree_only_95$Name <- species_tree_only_95$gene
+species_tree_only_90 <- read_tsv("Results/species_vs_gene_90%_outiler.tsv")
+species_tree_only_90$Name <- species_tree_only_90$gene
+
+ggvenn(
+  list(Centroid90 = outliers_phylteR_centroid_90$Name, 
+       Mean90 = outliers_phylteR_mean_90$Name, 
+       Species90 = outliers_phylteR_species_90$Name,
+       Species_only_90 = species_tree_only_90$gene), 
+  fill_color = c("#0073C2FF", "#EFC000FF", "#868686FF", "#727149FF"),
+  stroke_size = 0, set_name_size = 4, show_percentage = F
+)
+ggsave("Results/Venn2_90.pdf", width=5, height=5)
+
+ggvenn(
+  list(Centroid95 = outliers_phylteR_centroid_95$Name, 
+       Mean95 = outliers_phylteR_mean_95$Name, 
+       Species95 = outliers_phylteR_species_95$Name,
+       Species_only_95 = species_tree_only_95$gene), 
+  fill_color = c("#0073C2FF", "#EFC000FF", "#868686FF", "#727149FF"),
+  stroke_size = 0, set_name_size = 4, show_percentage = F
+)
+ggsave("Results/Venn2_95.pdf", width=5, height=5)
+
+ggvenn(
+  list(Centroid99 = outliers_phylteR_centroid_99$Name, 
+       Mean99 = outliers_phylteR_mean_99$Name, 
+       Species99 = outliers_phylteR_species_99$Name,
+       Species_only_99 = species_tree_only_99$gene), 
+  fill_color = c("#0073C2FF", "#EFC000FF", "#868686FF", "#727149FF"),
+  stroke_size = 0, set_name_size = 4, show_percentage = F
+)
+ggsave("Results/Venn2_99.pdf", width=5, height=5)
+
 
 ##############################
 ### GO ENRICHMENT ANALYSIS ###
 ##############################
 
 ### turtles annotation db
-go_all <- read.table("/Users/jule/Downloads/odb10v1_OG_xrefs.tab", 
-                     header = F, col.names = c("GID","ontology","GO","Support_number"), sep = "\t")
-go_all_busco <- go_all %>% filter(GID %in% names)
-go_all <- read.table("/Users/jule/Downloads/candidate_at32523.txt", 
+go_all <- read.table("Data/odb10v1_OG_xrefs.tab", 
                      header = F, col.names = c("GID","ontology","GO","Support_number"), sep = "\t")
 
 ### subset DB associated with biological process
@@ -513,7 +591,85 @@ go_mf_term <- go_mf %>% select(GO,goterm)
 ### DB with all ontologies
 
 go_all_name <- go_all %>% filter(str_detect(GO,"GO")) %>% select(GO,GID)
-go_all_term <- go_all %>% filter(str_detect(GO,"GO")) %>% select(GO,GID) %>% mutate(goterm = Term(GO)) %>% select(GO,goterm)
+go_all_term <- go_all %>% filter(str_detect(GO,"GO")) %>% select(GO,GID) %>% 
+  mutate(goterm = Term(GO)) %>% select(GO,goterm)
+
+#### BUSCO DB
+go_busco <- go_all %>% filter(GID %in% names)
+
+### subset DB associated with biological process
+go_bp_busco <- go_busco %>% 
+  filter(ontology == "biological_process",
+         str_detect(GO,"GO")) %>% 
+  select(GO,GID) %>% 
+  mutate(goterm = Term(GO))
+go_bp_name_busco <- go_bp_busco %>% select(GO,GID)
+go_bp_term_busco <- go_bp_busco %>% select(GO,goterm)
+
+### subset DB associated with cellular component
+go_cc_busco <- go_busco %>% 
+  filter(ontology == "cellular_component",
+         str_detect(GO,"GO")) %>% 
+  select(GO,GID) %>% 
+  mutate(goterm = Term(GO))
+go_cc_name_busco <- go_cc_busco %>% select(GO,GID)
+go_cc_term_busco <- go_cc_busco %>% select(GO,goterm)
+
+
+### subset DB associated with molecular function
+go_mf_busco <- go_busco %>% 
+  filter(ontology == "molecular_function",
+         str_detect(GO,"GO")) %>% 
+  select(GO,GID) %>% 
+  mutate(goterm = Term(GO))
+go_mf_name_busco <- go_mf_busco %>% select(GO,GID)
+go_mf_term_busco <- go_mf_busco %>% select(GO,goterm)
+
+### DB with all ontologies
+
+go_all_name_busco <- go_busco %>% filter(str_detect(GO,"GO")) %>% select(GO,GID)
+go_all_term_busco <- go_busco %>% filter(str_detect(GO,"GO")) %>% select(GO,GID) %>% 
+  mutate(goterm = Term(GO)) %>% select(GO,goterm)
+
+
+#### TETRAPODA DB
+go_tetrapoda <- read.table("Data/candidate_at32523.txt",
+                     header = F, col.names = c("GID","ontology","GO","Support_number"), sep = "\t")
+
+### subset DB associated with biological process
+go_bp_tetrapoda <- go_tetrapoda %>% 
+  filter(ontology == "biological_process",
+         str_detect(GO,"GO")) %>% 
+  select(GO,GID) %>% 
+  mutate(goterm = Term(GO))
+go_bp_name_tetrapoda <- go_bp_tetrapoda %>% select(GO,GID)
+go_bp_term_tetrapoda <- go_bp_tetrapoda %>% select(GO,goterm)
+
+### subset DB associated with cellular component
+go_cc_tetrapoda <- go_tetrapoda %>% 
+  filter(ontology == "cellular_component",
+         str_detect(GO,"GO")) %>% 
+  select(GO,GID) %>% 
+  mutate(goterm = Term(GO))
+go_cc_name_tetrapoda <- go_cc_tetrapoda %>% select(GO,GID)
+go_cc_term_tetrapoda <- go_cc_tetrapoda %>% select(GO,goterm)
+
+
+### subset DB associated with molecular function
+go_mf_tetrapoda <- go_tetrapoda %>% 
+  filter(ontology == "molecular_function",
+         str_detect(GO,"GO")) %>% 
+  select(GO,GID) %>% 
+  mutate(goterm = Term(GO))
+go_mf_name_tetrapoda <- go_mf_tetrapoda %>% select(GO,GID)
+go_mf_term_tetrapoda <- go_mf_tetrapoda %>% select(GO,goterm)
+
+### DB with all ontologies
+
+go_all_name_tetrapoda <- go_tetrapoda %>% filter(str_detect(GO,"GO")) %>% select(GO,GID)
+go_all_term_tetrapoda <- go_tetrapoda %>% filter(str_detect(GO,"GO")) %>% select(GO,GID) %>% 
+  mutate(goterm = Term(GO)) %>% select(GO,goterm)
+
 
 ################################
 ### GO SPECIES TREE ANALYSIS ###
@@ -565,8 +721,145 @@ ggplot(bp_df, aes(x=geneID, y=Description, fill=pvalue)) +
 ggsave("./Results/GO_heatmap.pdf", height = 7, width = 9)
 
 ##############################
-### GO GENE TREEs ANALYSIS ###
+### GO GENE TREES ANALYSIS ###
 ##############################
+
+
+enrich_results_all <- function(df){
+  bp <- enricher(gene = unique(df$Name),
+                 pAdjustMethod = "fdr",
+                 TERM2GENE = go_bp_name,
+                 TERM2NAME = go_bp_term)
+  cc <- enricher(gene = unique(df$Name),
+                 pAdjustMethod = "fdr",
+                 TERM2GENE = go_cc_name,
+                 TERM2NAME = go_cc_term)
+  mf <- enricher(gene = unique(df$Name),
+                 pAdjustMethod = "fdr",
+                 TERM2GENE = go_mf_name,
+                 TERM2NAME = go_mf_term)
+  # Add an 'ontology' column to each data frame to indicate the GO category
+  bp_df <- as.data.frame(bp) %>% mutate(ontology = "BP")
+  cc_df <- as.data.frame(cc) %>% mutate(ontology = "CC")
+  mf_df <- as.data.frame(mf) %>% mutate(ontology = "MF")
+  
+  # Combine the data frames into one
+  combined_result <- bind_rows(bp_df, cc_df, mf_df)
+  
+  return(list(bp=bp, cc=cc, mf=mf, combined_result=combined_result))
+  
+}
+
+enrich_results_busco <- function(df){
+  bp <- enricher(gene = unique(df$Name),
+                 pAdjustMethod = "fdr",
+                 TERM2GENE = go_bp_name_busco,
+                 TERM2NAME = go_bp_term_busco)
+  cc <- enricher(gene = unique(df$Name),
+                 pAdjustMethod = "fdr",
+                 TERM2GENE = go_cc_name_busco,
+                 TERM2NAME = go_cc_term_busco)
+  mf <- enricher(gene = unique(df$Name),
+                 pAdjustMethod = "fdr",
+                 TERM2GENE = go_mf_name_busco,
+                 TERM2NAME = go_mf_term_busco)
+  # Add an 'ontology' column to each data frame to indicate the GO category
+  bp_df <- as.data.frame(bp) %>% mutate(ontology = "BP")
+  cc_df <- as.data.frame(cc) %>% mutate(ontology = "CC")
+  mf_df <- as.data.frame(mf) %>% mutate(ontology = "MF")
+  
+  # Combine the data frames into one
+  combined_result <- bind_rows(bp_df, cc_df, mf_df)
+  
+  return(list(bp=bp, cc=cc, mf=mf, combined_result=combined_result))
+  
+}
+
+enrich_results_tetrapoda <- function(df){
+  bp <- enricher(gene = unique(df$Name),
+                 pAdjustMethod = "fdr",
+                 TERM2GENE = go_bp_name_tetrapoda,
+                 TERM2NAME = go_bp_term_tetrapoda)
+  cc <- enricher(gene = unique(df$Name),
+                 pAdjustMethod = "fdr",
+                 TERM2GENE = go_cc_name_tetrapoda,
+                 TERM2NAME = go_cc_term_tetrapoda)
+  mf <- enricher(gene = unique(df$Name),
+                 pAdjustMethod = "fdr",
+                 TERM2GENE = go_mf_name_tetrapoda,
+                 TERM2NAME = go_mf_term_tetrapoda)
+  # Add an 'ontology' column to each data frame to indicate the GO category
+  bp_df <- as.data.frame(bp) %>% mutate(ontology = "BP")
+  cc_df <- as.data.frame(cc) %>% mutate(ontology = "CC")
+  mf_df <- as.data.frame(mf) %>% mutate(ontology = "MF")
+  
+  # Combine the data frames into one
+  combined_result <- bind_rows(bp_df, cc_df, mf_df)
+  
+  return(list(bp=bp, cc=cc, mf=mf, combined_result=combined_result))
+  
+}
+
+## ALL
+go_phylteR_species_99_all <- enrich_results_all(outliers_phylteR_species_99)
+go_phylteR_species_95_all <- enrich_results_all(outliers_phylteR_species_95)
+go_phylteR_species_90_all <- enrich_results_all(outliers_phylteR_species_90)
+
+go_phylteR_mean_99_all <- enrich_results_all(outliers_phylteR_mean_99)
+go_phylteR_mean_95_all <- enrich_results_all(outliers_phylteR_mean_95)
+go_phylteR_mean_90_all <- enrich_results_all(outliers_phylteR_mean_90)
+
+go_phylteR_centroid_99_all <- enrich_results_all(outliers_phylteR_centroid_99)
+go_phylteR_centroid_95_all <- enrich_results_all(outliers_phylteR_centroid_95)
+go_phylteR_centroid_90_all <- enrich_results_all(outliers_phylteR_centroid_90)
+
+go_species_99_all <- enrich_results_all(species_tree_only_99)
+go_species_95_all <- enrich_results_all(species_tree_only_95)
+go_species_90_all <- enrich_results_all(species_tree_only_90)
+
+## BUSCO
+go_phylteR_species_99_busco <- enrich_results_busco(outliers_phylteR_species_99)
+go_phylteR_species_95_busco <- enrich_results_busco(outliers_phylteR_species_95)
+go_phylteR_species_90_busco <- enrich_results_busco(outliers_phylteR_species_90)
+
+go_phylteR_mean_99_busco <- enrich_results_busco(outliers_phylteR_mean_99)
+go_phylteR_mean_95_busco <- enrich_results_busco(outliers_phylteR_mean_95)
+go_phylteR_mean_90_busco <- enrich_results_busco(outliers_phylteR_mean_90)
+
+go_phylteR_centroid_99_busco <- enrich_results_busco(outliers_phylteR_centroid_99)
+go_phylteR_centroid_95_busco <- enrich_results_busco(outliers_phylteR_centroid_95)
+go_phylteR_centroid_90_busco <- enrich_results_busco(outliers_phylteR_centroid_90)
+
+go_species_99_busco <- enrich_results_busco(species_tree_only_99)
+go_species_95_busco <- enrich_results_busco(species_tree_only_95)
+go_species_90_busco <- enrich_results_busco(species_tree_only_90)
+
+## TETRAPODA
+go_phylteR_species_99_tetrapoda <- enrich_results_tetrapoda(outliers_phylteR_species_99)
+go_phylteR_species_95_tetrapoda <- enrich_results_tetrapoda(outliers_phylteR_species_95)
+go_phylteR_species_90_tetrapoda <- enrich_results_tetrapoda(outliers_phylteR_species_90)
+
+go_phylteR_mean_99_tetrapoda <- enrich_results_tetrapoda(outliers_phylteR_mean_99)
+go_phylteR_mean_95_tetrapoda <- enrich_results_tetrapoda(outliers_phylteR_mean_95)
+go_phylteR_mean_90_tetrapoda <- enrich_results_tetrapoda(outliers_phylteR_mean_90)
+
+go_phylteR_centroid_99_tetrapoda <- enrich_results_tetrapoda(outliers_phylteR_centroid_99)
+go_phylteR_centroid_95_tetrapoda <- enrich_results_tetrapoda(outliers_phylteR_centroid_95)
+go_phylteR_centroid_90_tetrapoda <- enrich_results_tetrapoda(outliers_phylteR_centroid_90)
+
+go_species_99_tetrapoda <- enrich_results_tetrapoda(species_tree_only_99)
+go_species_95_tetrapoda <- enrich_results_tetrapoda(species_tree_only_95)
+go_species_90_tetrapoda <- enrich_results_tetrapoda(species_tree_only_90)
+
+ggplot(go_phylteR_species_99[[4]], aes(x=geneID, y=Description, fill=pvalue)) +
+  geom_tile()
+
+bp_enrich2 <- pairwise_termsim(go_phylteR_species_99[[1]])
+treeplot(bp_enrich2)
+
+###########################
+### GO PHYLTER ANALYSIS ###
+###########################
 
 # OUTLIERS
 outliers_og_subset <- results$Final$Outliers[,1]
