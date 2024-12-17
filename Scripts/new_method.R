@@ -4,6 +4,7 @@ library(phylter)
 library(TreeTools)
 
 
+
 #################
 ### LOAD DATA ###
 #################
@@ -34,129 +35,6 @@ results <- phylter(locus.trees, gene.names = names)
 
 # get matrix for each gene that contains pairwise distances between species
 matrices <- results$Initial$mat.data
-
-# Optional scaling/normalization
-
-
-# Rowwise -----------------------------------------------------------------
-
-
-## OUTLIER SPECIES
-# for taxon 1: compare row for taxon1 between all genes
-# ...
-
-# for taxon 1: take mean distance to other taxa for each gene
-# plot all means
-# take outliers from that distribution
-# -> Outlier genes for taxa 1
-
-all <- data.frame()
-
-for(gene_name in names){
-  # print(gene_name)
-  matrix <- matrices[[gene_name]]
-  sums <- rowSums(matrix)
-  means <- sums/(ncol(matrix)-1)
-  frame <- data.frame(name = names(means), 
-                      mean = means, 
-                      gene = gene_name,
-                      row.names = NULL)
-  all <- rbind(all,frame)
-}
-
-
-library(reshape2)
-reshape <- dcast(all, name ~ gene, value.var = 'mean')
-all2 <- reshape[,-1]
-rownames(all2) <- reshape[,1]
-
-for(i in tips){
-  print(i)
-  plot(density(all$mean[all$name == i]),main = i)
-}
-
-write.csv(all,'Results/rowwise_species_gene_long.csv')
-write.csv(all2,'Results/rowwise_species_gene_wide.csv')
-
-
-# triangle-wise -----------------------------------------------------------
-
-
-## OUTLIER GENES
-# for build distribution for each gene (based on values for all pairwise distances)
-#     plot all pariwise distances from upper triangle of matrix
-#     fit parameters for that distribution ISSUE: WHICH DISTRIBUTIONS, HOW TO COMPARE DISTRIBUTIONS
-# which distribution is different (based on comparing parameters)?
-
-
-
-
-# mahalabonis -------------------------------------------------------------
-
-# Required Libraries
-library(MASS)  # For Mahalanobis distance
-library(stats) # For Chi-squared distribution
-
-# calculate upper tri instead of matrix
-# get upper triangle
-matrices_example <- matrices$`100088at32523`
-matrices_example_vector<-as.vector(matrices_example[upper.tri(matrices_example)])
-mean(matrices_example_vector)
-
-data_frame(val = matrices_example_vector) %>%
-  ggplot(., aes(val)) + 
-  geom_density()
-
-# think about stats
-# include min
-# fit distribution / parameter estimates?  
-
-summary_stats <- do.call(rbind, lapply(matrices, function(mat) {
-  tri <- as.vector(mat[upper.tri(mat)])
-  c(mean = mean(tri, na.rm = TRUE),
-    median = median(tri, na.rm = TRUE),
-    sd = sd(tri, na.rm = TRUE),
-    max = max(tri, na.rm = TRUE),
-    min = min(tri, na.rm = TRUE))
-}))
-
-# Compute Mahalanobis distances for matrices
-center_matrix <- colMeans(summary_stats, na.rm = TRUE)
-cov_matrix <- cov(summary_stats, use = "pairwise.complete.obs")
-distances <- mahalanobis(summary_stats, center_matrix, cov_matrix)
-length(summary_stats)
-
-detect_outliers_and_extract_quantiles <- function(matrix_list, distances, quantile_threshold = 0.95) {
-  # Calculate the quantile threshold
-  threshold <- quantile(distances, quantile_threshold)
-  # Identify outlier indices
-  outlier_indices <- which(distances > threshold)
-  # Extract outlier matrices
-  outlier_matrices <- matrix_list[outlier_indices]
-  # Return a list with indices and matrices
-  list(indices = outlier_indices, matrices = outlier_matrices)
-}
-
-detect_outliers_and_extract_chisq <- function(matrix_list, distances, conf = 0.95) {
-  # Calculate the quantile threshold
-  df <- ncol(summary_stats) 
-  threshold <- qchisq(conf, df)
-  # Identify outlier indices
-  outlier_indices <- which(distances > threshold)
-  # Extract outlier matrices
-  outlier_matrices <- matrix_list[outlier_indices]
-  # Return a list with indices and matrices
-  list(indices = outlier_indices, matrices = outlier_matrices)
-}
-
-outliergene_q90 <- detect_outliers_and_extract_quantiles(matrices,distances,quantile_threshold = 0.90)
-outliergene_q95 <- detect_outliers_and_extract_quantiles(matrices,distances,quantile_threshold = 0.95)
-outliergene_q99 <- detect_outliers_and_extract_quantiles(matrices,distances,quantile_threshold = 0.99)
-outliergene_chi90 <- detect_outliers_and_extract_chisq(matrices,distances,conf = 0.90)
-outliergene_chi95 <- detect_outliers_and_extract_chisq(matrices,distances,conf = 0.95)
-outliergene_chi99 <- detect_outliers_and_extract_chisq(matrices,distances,conf = 0.99)
-
-
 
 # species driving ---------------------------------------------------------
 
@@ -246,133 +124,79 @@ df <- as.data.frame(matrix(NA, nrow = length(matrices), ncol = length(combinatio
 colnames(df) <- combinations_vect
 rownames(df) <- names(matrices)
 
-for(i in seq_along(matrics)){
+#impute from average across matrix
+source("Scripts/impMean_matrixaverage.R")
+matrices_imputed_meangene <- impMean_matrices(matrices)
+table(lapply(matrices_imputed_phylter,dim)[[1]])
 
-upper_triangle_list <- apply(which(upper.tri(mat), arr.ind = TRUE), 1, function(idx) {
-  # Extract the row name, column name, and value
-  row_name <- rownames(mat)[idx[1]]
-  col_name <- colnames(mat)[idx[2]]
-  value <- mat[idx[1], idx[2]]
-  # Return as a list for each cell
-  list(row = row_name, column = col_name, value = value)
-  })
+# impute from phylter
+matrices_imputed_meanlist <- impMean(matrices)
+table(lapply(matrices_imputed_phylter,dim)[[1]])
 
-# Extract the vector of values
-upper_values <- sapply(upper_triangle_list, function(x) x$value)
+# make combined dataframe
+source("Scripts/stitchMatricesToDataFrame.R")
+comb_imputed_meangene <- stitchMatricesToDataFrame(matrices_imputed_meangene)
+comb_imputed_meanlist <- stitchMatricesToDataFrame(matrices_imputed_meanlist)
 
-# Create alphabetical combinations of row and column names
-upper_combinations <- sapply(upper_triangle_list, function(x) {
-  paste(sort(c(x$row, x$column)), collapse = "_")
-})
+#detect outliers
+source('Scripts/detectOutliers.R')
+distances_meangene <- distances_extraction(comb_imputed_meangene)
+outliergene_chi95_meangene <- detect_outliers_and_extract_quantiles(matrices_imputed_meangene,
+                                                                distances = distances_meangene,
+                                                                quantile_threshold = 0.95)
 
-name <- names(matrices)[[1]]
-for (i in seq_along(upper_values)) {
-  # Fill in the value for the corresponding column
-  df[name, upper_combinations[i]] <- upper_values[i]
-}
-
-}
-
+distances_meanlist <- distances_extraction(comb_imputed_meanlist)
+outliergene_chi95_meanlist<-detect_outliers_and_extract_quantiles(matrices_imputed_meanlist,
+                                                                  distance = distances_meanlist,
+                                                                  quantile_threshold = 0.95)
 
 
 
-create_combined_dataframe <- function(matrices) {
-  # Identify all unique upper triangle combinations across all matrices
+
+# get outlier species - v2 ------------------------------------------------
+
+mat_name <- names(outliergene_chi95_meangene$matrices)[1]
+mat_list <- outliergene_chi95_meanlist$matrices[1]
+mat <- outliergene_chi95_meangene$matrices[[mat_name]]
+
+# use the entire thing, not just upper triangle 
+# all diagonals to zero
+# 
+get_upper_triangle_values <- function(mat) {
+  # Get the indices of the upper triangle values
+  upper_indices <- which(upper.tri(mat), arr.ind = TRUE)
   
-  # Initialize the dataframe
-  df <- as.data.frame(matrix(NA, nrow = length(matrices), ncol = length(combinations_vect)))
-  colnames(df) <- combinations_vect
-  rownames(df) <- names(matrices)
+  # Extract the upper triangle values
+  upper_values <- mat[upper_indices]
   
-  # Populate the dataframe
-  for (name in names(matrices)) {
-    print(name)
-    mat <- matrices[[name]]
-    
-    # Extract upper triangle information
-    upper_triangle_list <- apply(which(upper.tri(mat), arr.ind = TRUE), 1, function(idx) {
-      row_name <- rownames(mat)[idx[1]]
-      col_name <- colnames(mat)[idx[2]]
-      value <- mat[idx[1], idx[2]]
-      list(row = row_name, column = col_name, value = value)
-    })
-    
-    # Extract values and combinations
-    upper_values <- sapply(upper_triangle_list, function(x) x$value)
-    upper_combinations <- sapply(upper_triangle_list, function(x) {
-      paste(sort(c(x$row, x$column)), collapse = "_")
-    })
-    
-    # Fill the dataframe for the current matrix
-    for (i in seq_along(upper_values)) {
-      df[name, upper_combinations[i]] <- upper_values[i]
-    }
-  }
-  return(df)
+  # Extract the rownames
+  rownames <- rownames(mat)[upper_indices[,1]]
+  
+  # Extract the columnnames
+  columnnames <- colnames(mat)[upper_indices[,2]]
+  
+  list(values = upper_values,rows = rownames, columns = columnnames)
 }
 
-df <- create_combined_dataframe(matrices)
+vals <- get_upper_triangle_values(mat)
+vals$gene_rows <- paste0(vals$rows,'_',mat_name)
+
+long <- data.frame(values = vals$values,
+                   rows = vals$gene_rows,
+                   columns = vals$columns)
+
+wide <- reshape(
+  long,
+  idvar='rows',
+  timevar='columns',
+  direction='wide'
+)
 
 
-write.csv(df,'Results/gene_speciescombo_uppertri_matrix.csv')
 
-# impute NA's based on gene means 
-df <- read.csv('Results/gene_speciescombo_uppertri_matrix.csv',header = T,row.names = 1)
-for (i in seq_len(nrow(df))) {
-  # Check if the row has NA values
-  if (anyNA(df[i, ])) {
-    # Replace NA values with the row mean
-    row_data <- as.numeric(df[1,])
-    row_mean <- mean(row_data, na.rm = TRUE)
-    df[i, ][is.na(df[i, ])] <- row_mean
-  }
-}
 
-head(df,2)
 
-# Compute Mahalanobis distances for matrices
-center_matrix <- colMeans(df, na.rm = T)
-cov_matrix <- cov(df, use = "pairwise.complete.obs")
-distances <- mahalanobis(df, center_matrix, cov_matrix)
 
-detect_outliers_and_extract_quantiles <- function(matrices, distances, quantile_threshold = 0.95) {
-  # Calculate the quantile threshold
-  threshold <- quantile(distances, quantile_threshold)
-  # Identify outlier indices
-  outlier_indices <- names(which(distances > threshold))
-  # Extract outlier matrices
-  outlier_matrices <- matrices[outlier_indices]
-  # Return a list with indices and matrices
-  list(indices = outlier_indices, matrices = outlier_matrices)
-}
 
-detect_outliers_and_extract_chisq <- function(matrix_list, distances, conf = 0.95) {
-  # Calculate the quantile threshold
-  degrees_freedom <- ncol(df) 
-  threshold <- qchisq(conf, degrees_freedom)
-  
-  # Identify outlier indices
-  outlier_indices <- names(which(distances > threshold))
-  
-  # Extract outlier matrices
-  outlier_matrices <- matrices[outlier_indices]
-  
-  # Return a list with indices and matrices
-  list(indices = outlier_indices, matrices = outlier_matrices)
-}
-
-outliergene_q90 <- detect_outliers_and_extract_quantiles(matrices,distances,quantile_threshold = 0.90)
-outliergene_q95 <- detect_outliers_and_extract_quantiles(matrices,distances,quantile_threshold = 0.95)
-outliergene_q99 <- detect_outliers_and_extract_quantiles(matrices,distances,quantile_threshold = 0.99)
-outliergene_chi90 <- detect_outliers_and_extract_chisq(matrices,distances,conf = 0.90)
-outliergene_chi95 <- detect_outliers_and_extract_chisq(matrices,distances,conf = 0.95)
-outliergene_chi99 <- detect_outliers_and_extract_chisq(matrices,distances,conf = 0.99)
-
-write.csv(data.frame(Outlier = outliergene_chi90$indices),'Results/outliergene_chi90.csv',row.names = F)
-write.csv(data.frame(Outlier = outliergene_chi95$indices),'Results/outliergene_chi95.csv',row.names = F)
-write.csv(data.frame(Outlier = outliergene_chi99$indices),'Results/outliergene_chi99.csv',row.names = F)
-write.csv(data.frame(Outlier = outliergene_q90$indices),'Results/outliergene_q90.csv',row.names = F)
-write.csv(data.frame(Outlier = outliergene_q95$indices),'Results/outliergene_q95.csv',row.names = F)
-write.csv(data.frame(Outlier = outliergene_q99$indices),'Results/outliergene_q99.csv',row.names = F)
 
 
