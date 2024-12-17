@@ -1,14 +1,12 @@
-distances_extraction <- function(df){
+
+detect_outliers_and_extract_quantiles <- function(matrices, df, quantile_threshold = 0.95) {
   # Compute Mahalanobis distances for matrices
   center_matrix <- colMeans(df, na.rm = T)
   cov_matrix <- cov(df, use = "pairwise.complete.obs")
   
   #return mahalanobis distances
-  mahalanobis(df, center_matrix, cov_matrix)
+  distances <- mahalanobis(df, center_matrix, cov_matrix)
   
-}
-
-detect_outliers_and_extract_quantiles <- function(matrices, distances, quantile_threshold = 0.95) {
   # Calculate the quantile threshold
   threshold <- quantile(distances, quantile_threshold)
   # Identify outlier indices
@@ -19,7 +17,14 @@ detect_outliers_and_extract_quantiles <- function(matrices, distances, quantile_
   list(indices = outlier_indices, matrices = outlier_matrices)
 }
 
-detect_outliers_and_extract_chisq <- function(matrix_list, distances, conf = 0.95) {
+detect_outliers_and_extract_chisq <- function(matrix_list, df, conf = 0.95) {
+  # Compute Mahalanobis distances for matrices
+  center_matrix <- colMeans(df, na.rm = T)
+  cov_matrix <- cov(df, use = "pairwise.complete.obs")
+  
+  #return mahalanobis distances
+  distances <- mahalanobis(df, center_matrix, cov_matrix)
+  
   # Calculate the quantile threshold
   degrees_freedom <- ncol(df) 
   threshold <- qchisq(conf, degrees_freedom)

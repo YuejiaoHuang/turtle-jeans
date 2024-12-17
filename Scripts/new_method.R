@@ -140,18 +140,44 @@ comb_imputed_meanlist <- stitchMatricesToDataFrame(matrices_imputed_meanlist)
 
 #detect outliers
 source('Scripts/detectOutliers.R')
-distances_meangene <- distances_extraction(comb_imputed_meangene)
-outliergene_q95_meangene <- detect_outliers_and_extract_quantiles(matrices_imputed_meangene,
-                                                                distances = distances_meangene,
-                                                                quantile_threshold = 0.95)
 
-distances_meanlist <- distances_extraction(comb_imputed_meanlist)
-outliergene_q95_meanlist<-detect_outliers_and_extract_quantiles(matrices_imputed_meanlist,
-                                                                  distance = distances_meanlist,
-                                                                  quantile_threshold = 0.95)
+# Detect outliers and extract quantiles and chi-square for meangene
+outliergene_q90_meangene <- detect_outliers_and_extract_quantiles(matrices_imputed_meangene, comb_imputed_meangene, quantile_threshold = 0.90)
+outliergene_q95_meangene <- detect_outliers_and_extract_quantiles(matrices_imputed_meangene, comb_imputed_meangene, quantile_threshold = 0.95)
+outliergene_q99_meangene <- detect_outliers_and_extract_quantiles(matrices_imputed_meangene, comb_imputed_meangene, quantile_threshold = 0.99)
 
-write.csv(outliergene_q95_meangene$indices,'Results/outliergene_q95_meangene.csv')
-write.csv(outliergene_q95_meanlist$indices,'Results/outliergene_q95_meanlist.csv')
+outliergene_chi90_meangene <- detect_outliers_and_extract_chisq(matrices_imputed_meangene, comb_imputed_meangene, conf = 0.90)
+outliergene_chi95_meangene <- detect_outliers_and_extract_chisq(matrices_imputed_meangene, comb_imputed_meangene, conf = 0.95)
+outliergene_chi99_meangene <- detect_outliers_and_extract_chisq(matrices_imputed_meangene, comb_imputed_meangene, conf = 0.99)
+
+# Detect outliers and extract quantiles and chi-square for meanlist
+outliergene_q90_meanlist <- detect_outliers_and_extract_quantiles(matrices_imputed_meanlist, comb_imputed_meanlist, quantile_threshold = 0.90)
+outliergene_q95_meanlist <- detect_outliers_and_extract_quantiles(matrices_imputed_meanlist, comb_imputed_meanlist, quantile_threshold = 0.95)
+outliergene_q99_meanlist <- detect_outliers_and_extract_quantiles(matrices_imputed_meanlist, comb_imputed_meanlist, quantile_threshold = 0.99)
+
+outliergene_chi90_meanlist <- detect_outliers_and_extract_chisq(matrices_imputed_meanlist, comb_imputed_meanlist, conf = 0.90)
+outliergene_chi95_meanlist <- detect_outliers_and_extract_chisq(matrices_imputed_meanlist, comb_imputed_meanlist, conf = 0.95)
+outliergene_chi99_meanlist <- detect_outliers_and_extract_chisq(matrices_imputed_meanlist, comb_imputed_meanlist, conf = 0.99)
+
+# write CSVs 
+write.csv(data.frame(Outlier = outliergene_q90_meangene$indices), 'Results/outliergene_q90_meangene.csv', row.names = FALSE)
+write.csv(data.frame(Outlier = outliergene_q95_meangene$indices), 'Results/outliergene_q95_meangene.csv', row.names = FALSE)
+write.csv(data.frame(Outlier = outliergene_q99_meangene$indices), 'Results/outliergene_q99_meangene.csv', row.names = FALSE)
+
+write.csv(data.frame(Outlier = outliergene_q90_meanlist$indices), 'Results/outliergene_q90_meanlist.csv', row.names = FALSE)
+write.csv(data.frame(Outlier = outliergene_q95_meanlist$indices), 'Results/outliergene_q95_meanlist.csv', row.names = FALSE)
+write.csv(data.frame(Outlier = outliergene_q99_meanlist$indices), 'Results/outliergene_q99_meanlist.csv', row.names = FALSE)
+
+write.csv(data.frame(Outlier = outliergene_chi90_meangene$indices), 'Results/outliergene_chi90_meangene.csv', row.names = FALSE)
+write.csv(data.frame(Outlier = outliergene_chi95_meangene$indices), 'Results/outliergene_chi95_meangene.csv', row.names = FALSE)
+write.csv(data.frame(Outlier = outliergene_chi99_meangene$indices), 'Results/outliergene_chi99_meangene.csv', row.names = FALSE)
+
+write.csv(data.frame(Outlier = outliergene_chi90_meanlist$indices), 'Results/outliergene_chi90_meanlist.csv', row.names = FALSE)
+write.csv(data.frame(Outlier = outliergene_chi95_meanlist$indices), 'Results/outliergene_chi95_meanlist.csv', row.names = FALSE)
+write.csv(data.frame(Outlier = outliergene_chi99_meanlist$indices), 'Results/outliergene_chi99_meanlist.csv', row.names = FALSE)
+
+
+
 
 # get outlier species - v2 ------------------------------------------------
 
