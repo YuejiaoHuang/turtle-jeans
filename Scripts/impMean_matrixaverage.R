@@ -1,44 +1,82 @@
-matrix <- dN_dS_matrices_transposed[[1]]
 
 impMean_matrices <- function(matrices) {
-  # Add missing rows and columns to match all species across matrices
-  AddColAndRow <- function(matrix, allrowsandcol) {
-    newmat <- matrix(nrow = length(allrowsandcol), ncol = length(allrowsandcol), 
-                     dimnames = list(allrowsandcol, allrowsandcol))
-    newmat[rownames(matrix), colnames(matrix)] <- matrix
-    newmat
+
+  AddColAndRow <- function(matrix,listsp){
+    difference <- setdiff(listsp,rownames(matrix))
+        # only att empty columns if any columns are missing
+    if (length(difference) > 0){
+      for(i in difference){
+        
+        col <- matrix(NA, ncol = 1, nrow = nrow(matrix))
+        colnames(col) <- i
+        matrix <- cbind(matrix,col)
+        
+        row <- matrix(NA, nrow = 1, ncol = ncol(matrix))
+        rownames(row) <- i
+        matrix <- rbind(matrix,row)
+      }
+    }
+  
+    #newmat <- matrix[listsp,listsp]
+    sort_order <- order(colnames(matrix))
+    sorted_matrix <- matrix[sort_order,sort_order]
+  
+    return(sorted_matrix)
+  }
+  
+  # Identify all unique species across matrices
+  sp.per.mat <- lapply(matrices, rownames)
+  listsp <- sort(unique(unlist(sp.per.mat)))
+
+  # Extend all matrices to the same dimensions
+  matrices.extended <- lapply(matrices, AddColAndRow,listsp)
+
+  # get means of s*s through all genes 
+  mean.list <- matrix(nrow = length(listsp), ncol = length(listsp), 
+                      dimnames = list(listsp, listsp))
+  
+  for (i in listsp) {
+    for(j in listsp){
+      values <- sapply(matrices.extended, function(mat) mat[i, j])
+      mean <- mean(values,na.rm = T)
+      mean.list[i,j] <- mean
+    }
   }
   
   # Replace missing values in a matrix with its mean value
-  ReplaceMissingValueWithMean <- function(matrix) {
-    mean_value <- mean(matrix, na.rm = TRUE) # Compute the mean ignoring NA
-    print(mean(matrix,na.rm=T))
-    matrix[is.na(matrix)] <- mean_value     # Replace NA with the mean
-    matrix
+  ReplaceMissingValueWithMean <- function(matrix,mean.list) {
+    
+    if(any(is.na(matrix[upper.tri(matrix)]))){
+      
+      mean_g <- mean(upper.tri(matrix), na.rm = TRUE) # Compute the mean ignoring NA
+      na_indices <- upper.tri(matrix) & is.na(matrix)
+      na_indices <- which(upper.tri(matrix) & is.na(matrix), arr.ind = T)
+  
+      # Identify indices where NA exists in the upper triangle
+      na_indices <- which(upper.tri(matrix) & is.na(matrix), arr.ind = TRUE)
+      
+      # Loop over each NA location
+      for (i in seq_len(nrow(na_indices))) {
+        row_idx <- na_indices[i, 1] # Row index
+        col_idx <- na_indices[i, 2] # Column index
+        
+        row_name <- rownames(matrix)[row_idx] # Row name
+        col_name <- colnames(matrix)[col_idx] # Column name
+        
+        # Retrieve the mean for the specific species combination
+        mean_ss <- mean.list[row_name, col_name]
+        
+        # Calculate the combined mean (global mean and specific mean)
+        mean_ss_g <- mean(c(mean_g, mean_ss), na.rm = TRUE)
+        
+        # Assign the value to the matrix
+        matrix[row_idx, col_idx] <- mean_ss_g
+        }
+    }
+    return(matrix)
   }
-  
-  # Reorder rows and columns to a uniform order
-  ReorderColAndRow <- function(matrix, allrowsandcol) {
-    newmat <- matrix[allrowsandcol, allrowsandcol]
-    newmat
-  }
-  
-  
-
-  
-  # Step 1: Identify all unique species across matrices
-  sp.per.mat <- lapply(matrices, rownames)
-  listsp <- unique(unlist(sp.per.mat))
-  
-  # Step 2: Extend all matrices to the same dimensions
-  matrices.extended <- lapply(matrices, AddColAndRow, allrowsandcol = listsp)
-  
-  # Step 3: Replace missing values in each matrix with the mean value of that matrix
-  matrices.imputed <- lapply(matrices.extended, ReplaceMissingValueWithMean)
-  
-  # Step 4: Ensure the order of rows and columns is consistent across matrices
-  matrices.final <- lapply(matrices.imputed, ReorderColAndRow, allrowsandcol = listsp)
-  
-  names(matrices.final) <- names(matrices) # Preserve matrix names
+  matrices.final <- lapply(matrices.extended,ReplaceMissingValueWithMean,mean.list = mean.list)
   return(matrices.final)
+  
 }
+  

@@ -1,24 +1,3 @@
-
-# Read dN and dS files
-n_species <- as.integer(readLines("Data/dN_dS_data/100073at32523_dN.dist", n = 1))
-
-dN <- read.table("Data/dN_dS_data/100073at32523_dN.dist", row.names=1, skip=1, fill=TRUE, 
-                 col.names = paste0("V", 1:(n_species+1)))
-dS <- read.table("Data/dN_dS_data/100073at32523_dS.dist", row.names=1, skip=1, fill=TRUE, 
-                 col.names = paste0("V", 1:(n_species+1)))
-
-# adjust colnames to species
-colnames(dN) <- rownames(dN)
-colnames(dS) <- rownames(dS)
-
-# look at data :)
-dNdS <- (as.matrix(dN)) / (as.matrix(dS))
-dNdS <- as.vector(as.matrix(dN)) / as.vector(as.matrix(dS))
-summary(dNdS)
-hist(dNdS)
-
-
-
 # loop through all files --------------------------------------------------
 
 # Define the folder containing the data
@@ -77,10 +56,11 @@ for (i in seq_along(dN_files)) {
 summary(dN_matrices)
 summary(dS_matrices)
 
-### Divide
-
 # Initialize an empty list to store the dN/dS results
 dN_dS_matrices <- list()
+dN_dS_nonzero_matrices <- list()
+dN_dS_log_matrices <- list()
+
 
 # Loop through the names of dN_matrices
 for (name in names(dN_matrices)) {
@@ -89,39 +69,37 @@ for (name in names(dN_matrices)) {
     warning(paste("No matching dS matrix found for", name))
     next
   }
+  print(name)
+  
+  dN_matrices_log <- lapply(dN_matrices, function(mat) {
+    mat <- log(mat)
+    return(mat)
+  })
+  
+  dS_matrices_log <- lapply(dS_matrices, function(mat) {
+    mat <- log(mat)
+    return(mat)
+  })
+  
+  dS_matrices_nonzero <- lapply(dS_matrices, function(mat) {
+    mat[mat == 0] <- 0.0001
+    return(mat)
+  })
   
   # Perform element-wise division
   dN_dS <- dN_matrices[[name]] / dS_matrices[[name]]
+  dN_dS_nonzero <- dN_matrices[[name]] / dS_matrices_nonzero[[name]]
+  dN_dS_log <- dN_matrices_log[[name]] / dS_matrices_log[[name]]
   
   # Store the result in the list
   dN_dS_matrices[[name]] <- dN_dS
+  dN_dS_nonzero_matrices[[name]] <- dN_dS_nonzero
+  dN_dS_log_matrices[[name]] <- dN_dS_log
+  
+  
 }
 
-# Check the result
-names(dN_dS_matrices)  # Names of the resulting matrices
-summary(dN_dS_matrices)  # Summary of the results
+dN_dS_matrices[[1]]
+dN_dS_nonzero_matrices[[1]]
+dN_dS_log_matrices[[1]]
 
-
-# Function to make the lower triangle the upper triangle
-transpose_lower_to_upper <- function(matrix) {
-  # Create a matrix of the same dimensions with zeros
-  new_matrix <- matrix(NA, nrow = nrow(matrix), ncol = ncol(matrix))
-  
-  # Copy the lower triangle to the upper triangle
-  new_matrix[upper.tri(new_matrix)] <- matrix[lower.tri(matrix)]
-  
-  # Copy the diagonal as well (optional, based on your needs)
-  diag(new_matrix) <- diag(matrix)
-  colnames(new_matrix) <- colnames(matrix)
-  rownames(new_matrix) <- rownames(matrix)
-  return(new_matrix)
-}
-
-# Apply this transformation to all matrices in the dN_dS_matrices list
-dN_dS_matrices_transposed <- lapply(dN_dS_matrices, transpose_lower_to_upper)
-names(dN_dS_matrices_transposed)[sapply(dN_dS_matrices_transposed, function(mat) any(mat == 0))]
-dN_dS_matrices_transposed['152310at32523']
-
-# Check the result
-names(dN_dS_matrices_transposed)  # Names of the matrices
-summary(dN_dS_matrices_transposed)

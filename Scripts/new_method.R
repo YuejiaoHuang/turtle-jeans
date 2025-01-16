@@ -109,25 +109,21 @@ length(table(unique99))
 
 # Attempt 2 - outlier genes -----------------------------------------------
 
-
 # Required Libraries
 library(MASS)  # For Mahalanobis distance
 library(stats) # For Chi-squared distribution
 
-# Generate all combinations of two turtles
-combinations <- combn(tips, 2, simplify = FALSE)
+### LOAD MATRIX OF INTEREST 
+source('Scripts/helperFunctions.R')
 
-# Merge the names alphabetically with an underscore
-combinations_vect <- sapply(combinations, function(x) paste(sort(x), collapse = "_"))
 
-# empty dataframe
-df <- as.data.frame(matrix(NA, nrow = length(matrices), ncol = length(combinations_vect)))
-colnames(df) <- combinations_vect
-rownames(df) <- names(matrices)
+#dN_dS_matrices[[1]]
+dN_dS_nonzero_matrices[[1]]
+dN_dS_log_matrices[[1]]
 
-### READ DN/DS
-matrices <- dN_dS_matrices
-matrices <- dN_dS_matrices_transposed
+matrices <- dN_dS_nonzero_matrices
+matrices_checked <- matrixCheck(matrices)
+
 
 #impute from average across matrix
 source("Scripts/impMean_matrixaverage.R")
