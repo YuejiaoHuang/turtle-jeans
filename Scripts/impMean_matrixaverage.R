@@ -1,3 +1,5 @@
+matrix <- dN_dS_matrices_transposed[[1]]
+
 impMean_matrices <- function(matrices) {
   # Add missing rows and columns to match all species across matrices
   AddColAndRow <- function(matrix, allrowsandcol) {
@@ -7,18 +9,22 @@ impMean_matrices <- function(matrices) {
     newmat
   }
   
+  # Replace missing values in a matrix with its mean value
+  ReplaceMissingValueWithMean <- function(matrix) {
+    mean_value <- mean(matrix, na.rm = TRUE) # Compute the mean ignoring NA
+    print(mean(matrix,na.rm=T))
+    matrix[is.na(matrix)] <- mean_value     # Replace NA with the mean
+    matrix
+  }
+  
   # Reorder rows and columns to a uniform order
   ReorderColAndRow <- function(matrix, allrowsandcol) {
     newmat <- matrix[allrowsandcol, allrowsandcol]
     newmat
   }
   
-  # Replace missing values in a matrix with its mean value
-  ReplaceMissingValueWithMean <- function(matrix) {
-    mean_value <- mean(matrix, na.rm = TRUE) # Compute the mean ignoring NA
-    matrix[is.na(matrix)] <- mean_value     # Replace NA with the mean
-    matrix
-  }
+  
+
   
   # Step 1: Identify all unique species across matrices
   sp.per.mat <- lapply(matrices, rownames)

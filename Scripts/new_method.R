@@ -109,6 +109,7 @@ length(table(unique99))
 
 # Attempt 2 - outlier genes -----------------------------------------------
 
+
 # Required Libraries
 library(MASS)  # For Mahalanobis distance
 library(stats) # For Chi-squared distribution
@@ -124,22 +125,48 @@ df <- as.data.frame(matrix(NA, nrow = length(matrices), ncol = length(combinatio
 colnames(df) <- combinations_vect
 rownames(df) <- names(matrices)
 
+### READ DN/DS
+matrices <- dN_dS_matrices
+matrices <- dN_dS_matrices_transposed
+
 #impute from average across matrix
 source("Scripts/impMean_matrixaverage.R")
 matrices_imputed_meangene <- impMean_matrices(matrices)
-table(lapply(matrices_imputed_phylter,dim)[[1]])
+table(lapply(matrices_imputed_meangene,dim)[[1]])
 
 # impute from phylter
-matrices_imputed_meanlist <- impMean(matrices)
-table(lapply(matrices_imputed_phylter,dim)[[1]])
+#matrices_imputed_meanlist <- impMean(matrices)
+#table(lapply(matrices_imputed_phylter,dim)[[1]])
+
+
+
+
+### LOG HERE 
+names(matrices_imputed_meangene)[sapply(matrices_imputed_meangene, function(mat) any(is.na(mat)))]
+names(matrices_imputed_meangene)[sapply(matrices_imputed_meangene, function(mat) any(is.infinite(mat)))]
+names(matrices_imputed_meangene)[sapply(matrices_imputed_meangene, function(mat) any(mat == 0))]
+
+### inspect problemcs
+
+matrices_imputed_meangene[['101591at32523']]
+matrices[['101591at32523']]
+dN_matrices[['101591at32523']]
+dS_matrices[['101591at32523']]
+
+
 
 # make combined dataframe
 source("Scripts/stitchMatricesToDataFrame.R")
 comb_imputed_meangene <- stitchMatricesToDataFrame(matrices_imputed_meangene)
-comb_imputed_meanlist <- stitchMatricesToDataFrame(matrices_imputed_meanlist)
+#comb_imputed_meanlist <- stitchMatricesToDataFrame(matrices_imputed_meanlist)
+
+
 
 #detect outliers
 source('Scripts/detectOutliers.R')
+
+table(is.na(matrices_imputed_meangene))
+#table(is.na(comb_imputed_meangene))
 
 # Detect outliers and extract quantiles and chi-square for meangene
 outliergene_q90_meangene <- detect_outliers_and_extract_quantiles(matrices_imputed_meangene, comb_imputed_meangene, quantile_threshold = 0.90)
@@ -176,7 +203,7 @@ write.csv(data.frame(Outlier = outliergene_chi90_meanlist$indices), 'Results/out
 write.csv(data.frame(Outlier = outliergene_chi95_meanlist$indices), 'Results/outliergene_chi95_meanlist.csv', row.names = FALSE)
 write.csv(data.frame(Outlier = outliergene_chi99_meanlist$indices), 'Results/outliergene_chi99_meanlist.csv', row.names = FALSE)
 
-
+df <- comb_imputed_meangene
 
 
 # get outlier species - v2 ------------------------------------------------
@@ -255,7 +282,3 @@ write.csv(outlierspecies_q95_phylter_chi95,'Results/outlierspecies_q95_phylter_c
 table(outlierspecies_q95_phylter_chi95$species)
 
 length(unique(outlierspecies_q95_phylter_chi95$gene))
-
-
-
-
