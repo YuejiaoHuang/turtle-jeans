@@ -121,14 +121,14 @@ source('Scripts/helperFunctions.R')
 dN_dS_nonzero_matrices[[1]]
 dN_dS_log_matrices[[1]]
 
-matrices <- dN_dS_nonzero_matrices
-matrices_checked <- matrixCheck(matrices)
+matrices_nonzero <- matrixCheck(dN_dS_nonzero_matrices)
+matrices_log <- matrixCheck(dN_dS_log_matrices)
 
-
+matrices_nonzero_logged <- lapply(matrices_nonzero,log)
 #impute from average across matrix
 source("Scripts/impMean_matrixaverage.R")
-matrices_imputed_meangene <- impMean_matrices(matrices)
-table(lapply(matrices_imputed_meangene,dim)[[1]])
+matrices_imputed_nonzero <- impMean_matrices(matrices_nonzero_logged)
+
 
 # impute from phylter
 #matrices_imputed_meanlist <- impMean(matrices)
@@ -138,68 +138,36 @@ table(lapply(matrices_imputed_meangene,dim)[[1]])
 
 
 ### LOG HERE 
-names(matrices_imputed_meangene)[sapply(matrices_imputed_meangene, function(mat) any(is.na(mat)))]
-names(matrices_imputed_meangene)[sapply(matrices_imputed_meangene, function(mat) any(is.infinite(mat)))]
-names(matrices_imputed_meangene)[sapply(matrices_imputed_meangene, function(mat) any(mat == 0))]
+#names(matrices_imputed_meangene)[sapply(matrices_imputed_meangene, function(mat) any(is.na(mat)))]
+#names(matrices_imputed_meangene)[sapply(matrices_imputed_meangene, function(mat) any(is.infinite(mat)))]
+#names(matrices_imputed_meangene)[sapply(matrices_imputed_meangene, function(mat) any(mat == 0))]
 
 ### inspect problemcs
 
-matrices_imputed_meangene[['101591at32523']]
-matrices[['101591at32523']]
-dN_matrices[['101591at32523']]
-dS_matrices[['101591at32523']]
+#matrices_imputed_meangene[['101591at32523']]
+#matrices[['101591at32523']]
+#dN_matrices[['101591at32523']]
+#dS_matrices[['101591at32523']]
 
 
 
 # make combined dataframe
 source("Scripts/stitchMatricesToDataFrame.R")
-comb_imputed_meangene <- stitchMatricesToDataFrame(matrices_imputed_meangene)
+t_imputed_nonzero <- stitchMatricesToDataFrame(matrices_imputed_nonzero)
 #comb_imputed_meanlist <- stitchMatricesToDataFrame(matrices_imputed_meanlist)
 
 
 
 #detect outliers
 source('Scripts/detectOutliers.R')
-
-table(is.na(matrices_imputed_meangene))
+#table(is.na(matrices_imputed_meangene))
 #table(is.na(comb_imputed_meangene))
 
 # Detect outliers and extract quantiles and chi-square for meangene
-outliergene_q90_meangene <- detect_outliers_and_extract_quantiles(matrices_imputed_meangene, comb_imputed_meangene, quantile_threshold = 0.90)
-outliergene_q95_meangene <- detect_outliers_and_extract_quantiles(matrices_imputed_meangene, comb_imputed_meangene, quantile_threshold = 0.95)
-outliergene_q99_meangene <- detect_outliers_and_extract_quantiles(matrices_imputed_meangene, comb_imputed_meangene, quantile_threshold = 0.99)
+outliers_q95_dnds_nonzero <- detect_outliers_and_extract_quantiles(matrices_imputed_nonzero, t_imputed_nonzero, quantile_threshold = 0.95)
+text <- outliers_q95_dnds_nonzero$indices
+write.csv(text,'Results/outliers_q95_dnds_nonzero.csv')
 
-outliergene_chi90_meangene <- detect_outliers_and_extract_chisq(matrices_imputed_meangene, comb_imputed_meangene, conf = 0.90)
-outliergene_chi95_meangene <- detect_outliers_and_extract_chisq(matrices_imputed_meangene, comb_imputed_meangene, conf = 0.95)
-outliergene_chi99_meangene <- detect_outliers_and_extract_chisq(matrices_imputed_meangene, comb_imputed_meangene, conf = 0.99)
-
-# Detect outliers and extract quantiles and chi-square for meanlist
-outliergene_q90_meanlist <- detect_outliers_and_extract_quantiles(matrices_imputed_meanlist, comb_imputed_meanlist, quantile_threshold = 0.90)
-outliergene_q95_meanlist <- detect_outliers_and_extract_quantiles(matrices_imputed_meanlist, comb_imputed_meanlist, quantile_threshold = 0.95)
-outliergene_q99_meanlist <- detect_outliers_and_extract_quantiles(matrices_imputed_meanlist, comb_imputed_meanlist, quantile_threshold = 0.99)
-
-outliergene_chi90_meanlist <- detect_outliers_and_extract_chisq(matrices_imputed_meanlist, comb_imputed_meanlist, conf = 0.90)
-outliergene_chi95_meanlist <- detect_outliers_and_extract_chisq(matrices_imputed_meanlist, comb_imputed_meanlist, conf = 0.95)
-outliergene_chi99_meanlist <- detect_outliers_and_extract_chisq(matrices_imputed_meanlist, comb_imputed_meanlist, conf = 0.99)
-
-# write CSVs 
-write.csv(data.frame(Outlier = outliergene_q90_meangene$indices), 'Results/outliergene_q90_meangene.csv', row.names = FALSE)
-write.csv(data.frame(Outlier = outliergene_q95_meangene$indices), 'Results/outliergene_q95_meangene.csv', row.names = FALSE)
-write.csv(data.frame(Outlier = outliergene_q99_meangene$indices), 'Results/outliergene_q99_meangene.csv', row.names = FALSE)
-
-write.csv(data.frame(Outlier = outliergene_q90_meanlist$indices), 'Results/outliergene_q90_meanlist.csv', row.names = FALSE)
-write.csv(data.frame(Outlier = outliergene_q95_meanlist$indices), 'Results/outliergene_q95_meanlist.csv', row.names = FALSE)
-write.csv(data.frame(Outlier = outliergene_q99_meanlist$indices), 'Results/outliergene_q99_meanlist.csv', row.names = FALSE)
-
-write.csv(data.frame(Outlier = outliergene_chi90_meangene$indices), 'Results/outliergene_chi90_meangene.csv', row.names = FALSE)
-write.csv(data.frame(Outlier = outliergene_chi95_meangene$indices), 'Results/outliergene_chi95_meangene.csv', row.names = FALSE)
-write.csv(data.frame(Outlier = outliergene_chi99_meangene$indices), 'Results/outliergene_chi99_meangene.csv', row.names = FALSE)
-
-write.csv(data.frame(Outlier = outliergene_chi90_meanlist$indices), 'Results/outliergene_chi90_meanlist.csv', row.names = FALSE)
-write.csv(data.frame(Outlier = outliergene_chi95_meanlist$indices), 'Results/outliergene_chi95_meanlist.csv', row.names = FALSE)
-write.csv(data.frame(Outlier = outliergene_chi99_meanlist$indices), 'Results/outliergene_chi99_meanlist.csv', row.names = FALSE)
-
-df <- comb_imputed_meangene
 
 
 # get outlier species - v2 ------------------------------------------------
