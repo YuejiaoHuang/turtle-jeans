@@ -57,11 +57,21 @@ summary(dN_matrices)
 summary(dS_matrices)
 
 # Initialize an empty list to store the dN/dS results
-dN_dS_matrices <- list()
-dN_dS_nonzero_matrices <- list()
-dN_dS_log_matrices <- list()
+dN_matrices_nonzero <- list()
+dS_matrices_nonzero <- list()
+
+dN_nonzero <- lapply(dN_matrices, function(mat) {
+  mat[mat == 0] <- NA
+  return(mat)
+})
+
+dS_nonzero <- lapply(dS_matrices, function(mat) {
+  mat[mat == 0] <- NA
+  return(mat)
+})
 
 
+dN_dS_matrices_nonzero <- list()
 # Loop through the names of dN_matrices
 for (name in names(dN_matrices)) {
   # Check if there is a corresponding dS matrix
@@ -71,35 +81,17 @@ for (name in names(dN_matrices)) {
   }
   print(name)
   
-  dN_matrices_log <- lapply(dN_matrices, function(mat) {
-    mat <- log(mat)
-    return(mat)
-  })
-  
-  dS_matrices_log <- lapply(dS_matrices, function(mat) {
-    mat <- log(mat)
-    return(mat)
-  })
-  
-  dS_matrices_nonzero <- lapply(dS_matrices, function(mat) {
-    mat[mat == 0] <- 0.0001
-    return(mat)
-  })
+
   
   # Perform element-wise division
-  dN_dS <- dN_matrices[[name]] / dS_matrices[[name]]
-  dN_dS_nonzero <- dN_matrices[[name]] / dS_matrices_nonzero[[name]]
-  dN_dS_log <- dN_matrices_log[[name]] / dS_matrices_log[[name]]
-  
+  dN_dS <- dN_nonzero[[name]] / dS_nonzero[[name]]
+
   # Store the result in the list
-  dN_dS_matrices[[name]] <- dN_dS
-  dN_dS_nonzero_matrices[[name]] <- dN_dS_nonzero
-  dN_dS_log_matrices[[name]] <- dN_dS_log
-  
-  
+  dN_dS_matrices_nonzero[[name]] <- dN_dS
 }
 
-dN_dS_matrices[[1]]
-dN_dS_nonzero_matrices[[1]]
-dN_dS_log_matrices[[1]]
+### check if all goes well
+dN_matrices_nonzero[['121468at32523']]
+dS_matrices_nonzero[['121468at32523']]
+dN_dS_matrices_nonzero[['121468at32523']]
 

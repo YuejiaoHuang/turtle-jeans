@@ -1,3 +1,6 @@
+library('gdata')
+
+#matrices <- dN_checked
 
 impMean_matrices <- function(matrices) {
 
@@ -71,12 +74,25 @@ impMean_matrices <- function(matrices) {
         
         # Assign the value to the matrix
         matrix[row_idx, col_idx] <- mean_ss_g
-        }
+      }
     }
+      
+    # ensure lower and upper triangle are the same 
+    lowerTriangle(matrix,byrow=T) <- upperTriangle(matrix)
+    
+    # fill in the diagonal 
+    # Calculate the row-wise mean excluding the diagonal and set it to the diagonal
+    for (i in 1:nrow(matrix)) {
+      row_values <- matrix[i, -i]  # Exclude the diagonal element
+      diag(matrix)[i] <- mean(row_values)  # Assign the mean of the remaining row elements
+    }
+    
     return(matrix)
   }
+  
   matrices.final <- lapply(matrices.extended,ReplaceMissingValueWithMean,mean.list = mean.list)
   return(matrices.final)
   
 }
+
   
