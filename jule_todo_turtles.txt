@@ -1,0 +1,30 @@
+- write methods on removing outgroups, filtering for enough taxa, dN dS workflow
+- start on figure for new method
+- heat map: species against species (including phylogenetic tree and habitat on the left), how many genes overlap for each speciesxspecies combination, diagonal: how many genes unique to that species
+- look at functions of species outlier genes per habitat in general not only GO enriched / think about g:profiler
+- push this list
+
+DONE:
+- change n_seg_sites to n_parsimony_sites -> only 304806at32523 : 9
+- comments dN dS
+- push dN dS to github : scripts but not all data (not needed)
+
+
+
+EXPLANATIONS:
+
+dN/dS: ZEROs
+- calculating dN/dS: before changing zeros! put NAs everywhere where either dN or dS has 0, after filled with valid dN/dS ratios, fill NAs with means (as before) and then log
+
+STEPS: 
+- impute
+- log
+- transpose
+
+OR:
+- impute
+- transpose
+- log
+
+but always impute before transpose: otherwise not the same size
+and alwase impute before log: otherwise different scale for taking the mean
