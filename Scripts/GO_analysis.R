@@ -291,6 +291,11 @@ go_Aquatic_pure_allgene <- enrich_results_busco(Outliers_Aquatic_pure_allgene)
 go_Aquatic_Terrestrial_pure_allgene <- enrich_results_busco(Outliers_Aquatic_Terrestrial_pure_allgene)
 go_Terrestrial_pure_allgene <- enrich_results_busco(Outliers_Terrestrial_pure_allgene)
 
+
+################
+### GO PLOTS ###
+################
+
 go_genes_dn[[4]]$GeneRatio <- sapply(go_genes_dn[[4]]$GeneRatio, function(x) {
   eval(parse(text = x))
 })
