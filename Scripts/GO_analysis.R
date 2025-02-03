@@ -305,7 +305,7 @@ go_genes_dn[[4]]$Description <- factor(go_genes_dn[[4]]$Description,
 ggplot(go_genes_dn[[4]], aes(x=GeneRatio, y=Description, color=pvalue, size=Count,
                              shape=ontology)) + 
   geom_point() +
-  scale_colour_gradientn(name = "p-value", colours=c("#C7AF5A", "#BB4430", "#6E291D")) +
+  scale_colour_gradientn(name = "p-value", colours=c("#72315C", "#A6A867")) +
   theme_minimal() + 
   ylab("") + 
   xlab("Gene Ratio") + 
@@ -322,7 +322,7 @@ go_genes_dnds[[4]]$Description <- factor(go_genes_dnds[[4]]$Description,
 ggplot(go_genes_dnds[[4]], aes(x=GeneRatio, y=Description, color=pvalue, size=Count,
                                shape=ontology)) + 
   geom_point() +
-  scale_colour_gradientn(name = "p-value", colours=c("#C7AF5A", "#BB4430", "#6E291D")) +
+  scale_colour_gradientn(name = "p-value", colours=c("#72315C", "#A6A867")) +
   theme_minimal() + 
   ylab("") + 
   xlab("Gene Ratio") + 
@@ -339,7 +339,7 @@ go_all_genes_dn[[4]]$Description <- factor(go_all_genes_dn[[4]]$Description,
 ggplot(go_all_genes_dn[[4]], aes(x=GeneRatio, y=Description, color=pvalue, size=Count,
                                  shape=ontology)) + 
   geom_point() +
-  scale_colour_gradientn(name = "p-value", colours=c("#C7AF5A", "#BB4430", "#6E291D")) +
+  scale_colour_gradientn(name = "p-value", colours=c("#72315C", "#A6A867")) +
   theme_minimal() + 
   ylab("") + 
   xlab("Gene Ratio") + 
@@ -356,7 +356,7 @@ go_Marine_dnds[[4]]$Description <- factor(go_Marine_dnds[[4]]$Description,
 ggplot(go_Marine_dnds[[4]], aes(x=GeneRatio, y=Description, color=pvalue, size=Count,
                                 shape=ontology)) + 
   geom_point() +
-  scale_colour_gradientn(name = "p-value", colours=c("#C7AF5A", "#BB4430", "#6E291D")) +
+  scale_colour_gradientn(name = "p-value", colours=c("#72315C", "#A6A867")) +
   theme_minimal() + 
   ylab("") + 
   xlab("Gene Ratio") + 
@@ -373,7 +373,7 @@ go_Aquatic_dn[[4]]$Description <- factor(go_Aquatic_dn[[4]]$Description,
 ggplot(go_Aquatic_dn[[4]], aes(x=GeneRatio, y=Description, color=pvalue, size=Count,
                                shape=ontology)) + 
   geom_point() +
-  scale_colour_gradientn(name = "p-value", colours=c("#C7AF5A", "#BB4430", "#6E291D")) +
+  scale_colour_gradientn(name = "p-value", colours=c("#72315C", "#A6A867")) +
   theme_minimal() + 
   ylab("") + 
   xlab("Gene Ratio") + 
@@ -452,46 +452,114 @@ ggsave("Results/species_tree.pdf", width = 8, height = 5)
 ################################
 
 # DN
-ggvenn(
-  list(Marine = unique(Outliers_Marine_dn$gene), 
-       Aquatic = unique(Outliers_Aquatic_dn$gene), 
-       Aquatic_Terrestrial = unique(Outliers_Aquatic_Terrestrial_dn$gene),
-       Terrestrial = unique(Outliers_Terrestrial_dn$gene)), 
+labels_dn <- c(
+  Marine = paste0("Marine (", length(unique(Outliers_Marine_dn$gene)), ")"),
+  Aquatic = paste0("Aquatic (", length(unique(Outliers_Aquatic_dn$gene)), ")"),
+  Aquatic_Terrestrial = paste0("Aquatic_Terrestrial (", 
+                               length(unique(Outliers_Aquatic_Terrestrial_dn$gene)), ")"),
+  Terrestrial = paste0("Terrestrial (", length(unique(Outliers_Terrestrial_dn$gene)), ")")
+)
+
+# Create the list using proper named elements
+venn_data_dn <- setNames(
+  list(
+    unique(Outliers_Marine_dn$gene),
+    unique(Outliers_Aquatic_dn$gene),
+    unique(Outliers_Aquatic_Terrestrial_dn$gene),
+    unique(Outliers_Terrestrial_dn$gene)
+  ),
+  labels_dn
+)
+
+ggvenn(venn_data_dn, 
   fill_color = colours_classes4,
-  stroke_size = 0, set_name_size = 4, show_percentage = F
+  stroke_size = 0, set_name_size = 4, show_percentage = F, stroke_color = "grey",
+  set_name_color = c(colour_marine, colour_aquatic, 
+                     colour_aquatic_terrestrial, colour_terrestrial), text_color = "grey35"
 )
 ggsave('Results/venn_habitat_overlap_dn.pdf', width = 8, height = 8)
 
 # DS
-ggvenn(
-  list(Marine = unique(Outliers_Marine_ds$gene), 
-       Aquatic = unique(Outliers_Aquatic_ds$gene), 
-       Aquatic_Terrestrial = unique(Outliers_Aquatic_Terrestrial_ds$gene),
-       Terrestrial = unique(Outliers_Terrestrial_ds$gene)), 
+labels_ds <- c(
+  Marine = paste0("Marine (", length(unique(Outliers_Marine_ds$gene)), ")"),
+  Aquatic = paste0("Aquatic (", length(unique(Outliers_Aquatic_ds$gene)), ")"),
+  Aquatic_Terrestrial = paste0("Aquatic_Terrestrial (", 
+                               length(unique(Outliers_Aquatic_Terrestrial_ds$gene)), ")"),
+  Terrestrial = paste0("Terrestrial (", length(unique(Outliers_Terrestrial_ds$gene)), ")")
+)
+
+# Create the list using proper named elements
+venn_data_ds <- setNames(
+  list(
+    unique(Outliers_Marine_ds$gene),
+    unique(Outliers_Aquatic_ds$gene),
+    unique(Outliers_Aquatic_Terrestrial_ds$gene),
+    unique(Outliers_Terrestrial_ds$gene)
+  ),
+  labels_ds
+)
+
+ggvenn(venn_data_ds, 
   fill_color = colours_classes4,
-  stroke_size = 0, set_name_size = 4, show_percentage = F
+  stroke_size = 0, set_name_size = 4, show_percentage = F, stroke_color = "grey",
+  set_name_color = c(colour_marine, colour_aquatic, 
+                     colour_aquatic_terrestrial, colour_terrestrial), text_color = "grey35"
 )
 ggsave('Results/venn_habitat_overlap_ds.pdf', width = 8, height = 8)
 
 # DNDS
-ggvenn(
-  list(Marine = unique(Outliers_Marine_dnds$gene), 
-       Aquatic = unique(Outliers_Aquatic_dnds$gene), 
-       Aquatic_Terrestrial = unique(Outliers_Aquatic_Terrestrial_dnds$gene),
-       Terrestrial = unique(Outliers_Terrestrial_dnds$gene)), 
+labels_dnds <- c(
+  Marine = paste0("Marine (", length(unique(Outliers_Marine_dnds$gene)), ")"),
+  Aquatic = paste0("Aquatic (", length(unique(Outliers_Aquatic_dnds$gene)), ")"),
+  Aquatic_Terrestrial = paste0("Aquatic_Terrestrial (", 
+                               length(unique(Outliers_Aquatic_Terrestrial_dnds$gene)), ")"),
+  Terrestrial = paste0("Terrestrial (", length(unique(Outliers_Terrestrial_dnds$gene)), ")")
+)
+
+# Create the list using proper named elements
+venn_data_dnds <- setNames(
+  list(
+    unique(Outliers_Marine_dnds$gene),
+    unique(Outliers_Aquatic_dnds$gene),
+    unique(Outliers_Aquatic_Terrestrial_dnds$gene),
+    unique(Outliers_Terrestrial_dnds$gene)
+  ),
+  labels_dnds
+)
+
+ggvenn(venn_data_dnds, 
   fill_color = colours_classes4,
-  stroke_size = 0, set_name_size = 4, show_percentage = F
+  stroke_size = 0, set_name_size = 4, show_percentage = F, stroke_color = "grey",
+  set_name_color = c(colour_marine, colour_aquatic, 
+                     colour_aquatic_terrestrial, colour_terrestrial), text_color = "grey35"
 )
 ggsave('Results/venn_habitat_overlap_dnds.pdf', width = 8, height = 8)
 
 # PURE
-ggvenn(
-  list(Marine = unique(Outliers_Marine_pure$gene), 
-       Aquatic = unique(Outliers_Aquatic_pure$gene), 
-       Aquatic_Terrestrial = unique(Outliers_Aquatic_Terrestrial_pure$gene),
-       Terrestrial = unique(Outliers_Terrestrial_pure$gene)), 
+labels_pure <- c(
+  Marine = paste0("Marine (", length(unique(Outliers_Marine_pure$gene)), ")"),
+  Aquatic = paste0("Aquatic (", length(unique(Outliers_Aquatic_pure$gene)), ")"),
+  Aquatic_Terrestrial = paste0("Aquatic_Terrestrial (", 
+                               length(unique(Outliers_Aquatic_Terrestrial_pure$gene)), ")"),
+  Terrestrial = paste0("Terrestrial (", length(unique(Outliers_Terrestrial_pure$gene)), ")")
+)
+
+# Create the list using proper named elements
+venn_data_pure <- setNames(
+  list(
+    unique(Outliers_Marine_pure$gene),
+    unique(Outliers_Aquatic_pure$gene),
+    unique(Outliers_Aquatic_Terrestrial_pure$gene),
+    unique(Outliers_Terrestrial_pure$gene)
+  ),
+  labels_pure
+)
+
+ggvenn(venn_data_pure, 
   fill_color = colours_classes4,
-  stroke_size = 0, set_name_size = 4, show_percentage = F
+  stroke_size = 0, set_name_size = 4, show_percentage = F, stroke_color = "grey",
+  set_name_color = c(colour_marine, colour_aquatic, 
+                     colour_aquatic_terrestrial, colour_terrestrial), text_color = "grey35"
 )
 ggsave('Results/venn_habitat_overlap_pure.pdf', width = 8, height = 8)
 
@@ -581,7 +649,7 @@ ggplot(df_heatmap_dn, aes(x = Species1, y = Species2, fill = value)) +
   labs(title = "dN",
        x = "Species",
        y = "Species") +
-  scale_fill_gradientn(name = "Overlapping genes", colours=c("#C7AF5A", "#BB4430", "#6E291D")) +
+  scale_fill_gradientn(name = "Overlapping genes", colours=c("#72315C", "#A6A867")) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1, 
                                    colour = habitat_colours_list),
@@ -627,7 +695,7 @@ ggplot(df_heatmap_ds, aes(x = Species1, y = Species2, fill = value)) +
   labs(title = "dS",
        x = "Species",
        y = "Species") +
-  scale_fill_gradientn(name = "Overlapping genes", colours=c("#C7AF5A", "#BB4430", "#6E291D")) +
+  scale_fill_gradientn(name = "Overlapping genes", colours=c("#72315C", "#A6A867")) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1, 
                                    colour = habitat_colours_list),
@@ -673,7 +741,10 @@ ggplot(df_heatmap_dnds, aes(x = Species1, y = Species2, fill = value)) +
   labs(title = "dN/dS",
        x = "Species",
        y = "Species") +
-  scale_fill_gradientn(name = "Overlapping genes", colours=c("#C7AF5A", "#BB4430", "#6E291D")) +
+  scale_fill_gradientn(name = "Overlapping genes", colours=c("#72315C", "#A6A867")) +
+  # scale_fill_gradientn(name = "Overlapping genes", colours=c("#632A50", "#BDBF09")) +
+  # scale_fill_gradientn(name = "Overlapping genes", colours=c("#632A50", "#60935D")) +
+  # scale_fill_gradientn(name = "Overlapping genes", colours=c("#632A50", "#188FA7")) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1, 
                                    colour = habitat_colours_list),
@@ -719,7 +790,7 @@ ggplot(df_heatmap_pure, aes(x = Species1, y = Species2, fill = value)) +
   labs(title = "PURE",
        x = "Species",
        y = "Species") +
-  scale_fill_gradientn(name = "Overlapping genes", colours=c("#C7AF5A", "#BB4430", "#6E291D")) +
+  scale_fill_gradientn(name = "Overlapping genes", colours=c("#72315C", "#A6A867")) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1, 
                                    colour = habitat_colours_list),
