@@ -1,13 +1,9 @@
 - write methods on removing outgroups, filtering for enough taxa, dN dS workflow
 - start on figure for new method
-- heat map: species against species (including phylogenetic tree and habitat on the left), how many genes overlap for each speciesxspecies combination, diagonal: how many genes unique to that species
 - look at functions of species outlier genes per habitat in general not only GO enriched / think about g:profiler
-- push this list
 
 DONE:
 - change n_seg_sites to n_parsimony_sites -> only 304806at32523 : 9
-- comments dN dS
-- push dN dS to github : scripts but not all data (not needed)
 
 
 
