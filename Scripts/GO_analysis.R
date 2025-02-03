@@ -227,9 +227,9 @@ enrich_results_busco <- function(df){
                  TERM2GENE = go_mf_name_busco,
                  TERM2NAME = go_mf_term_busco)
   # Add an 'ontology' column to each data frame to indicate the GO category
-  bp_df <- as.data.frame(bp) %>% mutate(ontology = "BP")
-  cc_df <- as.data.frame(cc) %>% mutate(ontology = "CC")
-  mf_df <- as.data.frame(mf) %>% mutate(ontology = "MF")
+  bp_df <- as.data.frame(bp) %>% mutate(ontology = "Biological Process (BP)")
+  cc_df <- as.data.frame(cc) %>% mutate(ontology = "Cellular Component (CC)")
+  mf_df <- as.data.frame(mf) %>% mutate(ontology = "Molecular Function (MF)")
   
   # Combine the data frames into one
   combined_result <- bind_rows(bp_df, cc_df, mf_df)
@@ -291,98 +291,103 @@ go_Aquatic_pure_allgene <- enrich_results_busco(Outliers_Aquatic_pure_allgene)
 go_Aquatic_Terrestrial_pure_allgene <- enrich_results_busco(Outliers_Aquatic_Terrestrial_pure_allgene)
 go_Terrestrial_pure_allgene <- enrich_results_busco(Outliers_Terrestrial_pure_allgene)
 
-ggplot(go_genes_dn[[4]], aes(x=geneID, y=Description, fill=pvalue)) +
-  scale_fill_gradientn(colours=colours_classes[2:3]) +
-  theme_minimal() + 
-  geom_tile()
-ggsave("Results/dn_tile.pdf", width = 8, height = 6)
-
-ggplot(go_genes_dn[[4]], aes(x=GeneRatio, y=Description, color=pvalue, size=Count)) + 
+go_genes_dn[[4]]$GeneRatio <- sapply(go_genes_dn[[4]]$GeneRatio, function(x) {
+  eval(parse(text = x))
+})
+go_genes_dn[[4]]$Description <- factor(go_genes_dn[[4]]$Description, 
+                                       levels = go_genes_dn[[4]]$Description[
+                                         order(go_genes_dn[[4]]$GeneRatio)])
+ggplot(go_genes_dn[[4]], aes(x=GeneRatio, y=Description, color=pvalue, size=Count,
+                             shape=ontology)) + 
   geom_point() +
-  scale_color_gradientn(colours=colours_classes[2:3]) +
+  scale_colour_gradientn(name = "p-value", colours=c("#C7AF5A", "#BB4430", "#6E291D")) +
   theme_minimal() + 
   ylab("") + 
-  xlab("") + 
+  xlab("Gene Ratio") + 
   ggtitle("GO enrichment analysis dN")
-ggsave("Results/dn_point.pdf", width = 8, height = 6)
+ggsave("Results/dn_point.pdf", width = 10, height = 6)
 
 
-ggplot(go_genes_dnds[[4]], aes(x=geneID, y=Description, fill=pvalue)) +
-  scale_fill_gradientn(colours=colours_classes[2:3]) +
-  theme_minimal() + 
-  geom_tile()
-ggsave("Results/dnds_tile.pdf", width = 8, height = 6)
-
-ggplot(go_genes_dnds[[4]], aes(x=GeneRatio, y=Description, color=pvalue, size=Count)) + 
+go_genes_dnds[[4]]$GeneRatio <- sapply(go_genes_dnds[[4]]$GeneRatio, function(x) {
+  eval(parse(text = x))
+})
+go_genes_dnds[[4]]$Description <- factor(go_genes_dnds[[4]]$Description, 
+                                       levels = go_genes_dnds[[4]]$Description[
+                                         order(go_genes_dnds[[4]]$GeneRatio)])
+ggplot(go_genes_dnds[[4]], aes(x=GeneRatio, y=Description, color=pvalue, size=Count,
+                               shape=ontology)) + 
   geom_point() +
-  scale_color_gradientn(colours=colours_classes[2:3]) +
+  scale_colour_gradientn(name = "p-value", colours=c("#C7AF5A", "#BB4430", "#6E291D")) +
   theme_minimal() + 
   ylab("") + 
-  xlab("") + 
+  xlab("Gene Ratio") + 
   ggtitle("GO enrichment analysis dN/dS")
-ggsave("Results/dnds_point.pdf", width = 8, height = 6)
+ggsave("Results/dnds_point.pdf", width = 10, height = 6)
 
-ggplot(go_all_genes_dn[[4]], aes(x=geneID, y=Description, fill=pvalue)) +
-  scale_fill_gradientn(colours=colours_classes[2:3]) +
-  theme_minimal() + 
-  geom_tile()
-ggsave("Results/dn_species_tile.pdf", width = 8, height = 6)
 
-ggplot(go_all_genes_dn[[4]], aes(x=GeneRatio, y=Description, color=pvalue, size=Count)) + 
+go_all_genes_dn[[4]]$GeneRatio <- sapply(go_all_genes_dn[[4]]$GeneRatio, function(x) {
+  eval(parse(text = x))
+})
+go_all_genes_dn[[4]]$Description <- factor(go_all_genes_dn[[4]]$Description, 
+                                         levels = go_all_genes_dn[[4]]$Description[
+                                           order(go_all_genes_dn[[4]]$GeneRatio)])
+ggplot(go_all_genes_dn[[4]], aes(x=GeneRatio, y=Description, color=pvalue, size=Count,
+                                 shape=ontology)) + 
   geom_point() +
-  scale_color_gradientn(colours=colours_classes[2:3]) +
+  scale_colour_gradientn(name = "p-value", colours=c("#C7AF5A", "#BB4430", "#6E291D")) +
   theme_minimal() + 
   ylab("") + 
-  xlab("") + 
+  xlab("Gene Ratio") + 
   ggtitle("GO enrichment analysis species dN")
-ggsave("Results/dn_species_point.pdf", width = 8, height = 6)
+ggsave("Results/dn_species_point.pdf", width = 10, height = 6)
 
-ggplot(go_Marine_dnds[[4]], aes(x=geneID, y=Description, fill=pvalue)) +
-  scale_fill_gradientn(colours=colours_classes[2:3]) +
-  theme_minimal() + 
-  geom_tile()
-ggsave("Results/dnds_marine_tile.pdf", width = 8, height = 6)
 
-ggplot(go_Marine_dnds[[4]], aes(x=GeneRatio, y=Description, color=pvalue, size=Count)) + 
+go_Marine_dnds[[4]]$GeneRatio <- sapply(go_Marine_dnds[[4]]$GeneRatio, function(x) {
+  eval(parse(text = x))
+})
+go_Marine_dnds[[4]]$Description <- factor(go_Marine_dnds[[4]]$Description, 
+                                           levels = go_Marine_dnds[[4]]$Description[
+                                             order(go_Marine_dnds[[4]]$GeneRatio)])
+ggplot(go_Marine_dnds[[4]], aes(x=GeneRatio, y=Description, color=pvalue, size=Count,
+                                shape=ontology)) + 
   geom_point() +
-  scale_color_gradientn(colours=colours_classes[2:3]) +
+  scale_colour_gradientn(name = "p-value", colours=c("#C7AF5A", "#BB4430", "#6E291D")) +
   theme_minimal() + 
   ylab("") + 
-  xlab("") + 
+  xlab("Gene Ratio") + 
   ggtitle("GO enrichment analysis Marine dN/dS")
-ggsave("Results/dnds_marine_point.pdf", width = 8, height = 6)
+ggsave("Results/dnds_marine_point.pdf", width = 10, height = 6)
 
-ggplot(go_Aquatic_dn[[4]], aes(x=geneID, y=Description, fill=pvalue)) +
-  scale_fill_gradientn(colours=colours_classes[2:3]) +
-  theme_minimal() + 
-  geom_tile()
-ggsave("Results/dn_aquatic_tile.pdf", width = 8, height = 6)
 
-ggplot(go_Aquatic_dn[[4]], aes(x=GeneRatio, y=Description, color=pvalue, size=Count)) + 
+go_Aquatic_dn[[4]]$GeneRatio <- sapply(go_Aquatic_dn[[4]]$GeneRatio, function(x) {
+  eval(parse(text = x))
+})
+go_Aquatic_dn[[4]]$Description <- factor(go_Aquatic_dn[[4]]$Description, 
+                                          levels = go_Aquatic_dn[[4]]$Description[
+                                            order(go_Aquatic_dn[[4]]$GeneRatio)])
+ggplot(go_Aquatic_dn[[4]], aes(x=GeneRatio, y=Description, color=pvalue, size=Count,
+                               shape=ontology)) + 
   geom_point() +
-  scale_color_gradientn(colours=colours_classes[2:3]) +
+  scale_colour_gradientn(name = "p-value", colours=c("#C7AF5A", "#BB4430", "#6E291D")) +
   theme_minimal() + 
   ylab("") + 
-  xlab("") + 
+  xlab("Gene Ratio") + 
   ggtitle("GO enrichment analysis Aquatic dN")
-ggsave("Results/dn_aquatic_point.pdf", width = 8, height = 6)
+ggsave("Results/dn_aquatic_point.pdf", width = 10, height = 6)
 
 
+# GO TREE PLOTS
+# bp_enrich2 <- pairwise_termsim(go_genes_dn[[2]])
+# treeplot(bp_enrich2)
+# 
+# bp_enrich2 <- pairwise_termsim(go_genes_dnds[[2]])
+# treeplot(bp_enrich2)
 
 
+#########################
+### SPECIES TREE PLOT ###
+#########################
 
-bp_enrich2 <- pairwise_termsim(go_genes_dn[[2]])
-treeplot(bp_enrich2)
-
-bp_enrich2 <- pairwise_termsim(go_genes_dnds[[2]])
-treeplot(bp_enrich2)
-
-
-#############
-### PLOTS ###
-#############
-
-#### SPECIES TREE PLOT
 colours_classes5 <- fish(n=5,option="Balistoides_conspicillum", end=0.95, 
                          begin=0.3,direction=-1)
 colours_classes4 <- colours_classes5[1:4]
@@ -427,13 +432,19 @@ plot_tree <- plot_tree %<+% meta_turtles +
                      breaks = c("Marine", "Aquatic", "Aquatic_Terrestrial", "Terrestrial")) +
   theme_tree2() +
   vexpand(0.01, direction = -1)
+# hide x-axis
+plot_tree <- plot_tree + theme(axis.line = element_blank(),
+                               axis.text = element_blank(),
+                               axis.ticks = element_blank(),
+                               axis.title = element_blank())
 plot_tree
 
 ggsave("Results/species_tree.pdf", width = 8, height = 5)
 
 
-
-#### OVERLAP BETWEEN HABITATS
+################################
+### OVERLAP BETWEEN HABITATS ###
+################################
 
 # DN
 ggvenn(
@@ -480,7 +491,10 @@ ggvenn(
 ggsave('Results/venn_habitat_overlap_pure.pdf', width = 8, height = 8)
 
 
-#### OVERLAP BETWEEN SPECIES
+###############################
+### OVERLAP BETWEEN SPECIES ###
+###############################
+
 species_list <- meta_turtles %>% filter(Microhabitat != "Outgroup")
 species_list <- species_list$ID
 
