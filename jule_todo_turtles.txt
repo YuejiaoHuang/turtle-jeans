@@ -1,10 +1,10 @@
-- write methods on removing outgroups, filtering for enough taxa, dN dS workflow
-- start on figure for new method
 - look at functions of species outlier genes per habitat in general not only GO enriched / think about g:profiler
+- WES: I just thought that it would be better to calculate the pure distances based on the filtered/trimmed alignments!!! I will send data that is input to codeml
 
 DONE:
 - change n_seg_sites to n_parsimony_sites -> only 304806at32523 : 9
-
+- methods on removing outgroups, filtering for enough taxa, dN dS workflow
+- improve Fig1, Fig2, Fig3
 
 
 EXPLANATIONS:

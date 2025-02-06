@@ -436,6 +436,7 @@ plot_tree <- plot_tree %<+% meta_turtles +
   scale_color_manual("Primary lifestyle", values=colours_classes4,
                      breaks = c("Marine", "Aquatic", "Aquatic_Terrestrial", "Terrestrial")) +
   theme_tree2() +
+  hexpand(0.25, direction = 1) +
   vexpand(0.01, direction = -1)
 # hide x-axis
 plot_tree <- plot_tree + theme(axis.line = element_blank(),
@@ -445,6 +446,51 @@ plot_tree <- plot_tree + theme(axis.line = element_blank(),
 plot_tree
 
 ggsave("Results/species_tree.pdf", width = 8, height = 5)
+
+
+#############################################
+### SPECIES TREE PLOT WITH BRANCH LENGTHS ###
+#############################################
+
+species_tree_plot <- read.nexus("Data/bd.mcc.median_heights.tre")
+species_tree_plot <- drop.tip(species_tree_plot, 
+                              setdiff(species_tree_plot$tip.label, meta_turtles$ID))
+species_tree_plot$tip.label <- meta_turtles$Species[
+  match(species_tree_plot$tip.label, meta_turtles$ID)]
+
+group_habitat <- list(Marine=meta_turtles %>% 
+                        filter(Habitat_factor=="Marine") %>% 
+                        dplyr::select(Species) %>% .$Species,
+                      Aquatic=meta_turtles %>% 
+                        filter(Habitat_factor=="Aquatic") %>% 
+                        dplyr::select(Species) %>% .$Species,
+                      Aquatic_Terrestrial=meta_turtles %>% 
+                        filter(Habitat_factor=="Aquatic_Terrestrial") %>% 
+                        dplyr::select(Species) %>% .$Species,
+                      Terrestrial=meta_turtles %>% 
+                        filter(Habitat_factor=="Terrestrial") %>% 
+                        dplyr::select(Species) %>% .$Species)
+
+species_tree_plot <- groupOTU(species_tree_plot, group_habitat)
+
+# plot for our tree
+plot_tree <- ggtree::ggtree(species_tree_plot, aes(color=group)) + ggtree::xlim_tree(13)
+plot_tree <- plot_tree %<+% meta_turtles +
+  ggtree::geom_tippoint(aes(color=Habitat_factor)) + 
+  ggtree::geom_tiplab(size=3, offset=0.5, fontface = "italic") + 
+  scale_color_manual("Primary lifestyle", values=colours_classes4,
+                     breaks = c("Marine", "Aquatic", "Aquatic_Terrestrial", "Terrestrial")) +
+  theme_tree2() +
+  hexpand(0.25, direction = 1) +
+  vexpand(0.01, direction = -1)
+# hide x-axis
+plot_tree <- plot_tree + theme(axis.line = element_blank(),
+                               axis.text = element_blank(),
+                               axis.ticks = element_blank(),
+                               axis.title = element_blank())
+plot_tree
+
+ggsave("Results/species_tree_branch_lengths.pdf", width = 8, height = 5)
 
 
 ################################
@@ -473,11 +519,11 @@ venn_data_dn <- setNames(
 
 ggvenn(venn_data_dn, 
   fill_color = colours_classes4,
-  stroke_size = 0, set_name_size = 4, show_percentage = F, stroke_color = "grey",
+  stroke_size = 0, set_name_size = 6, show_percentage = F, stroke_color = "grey",
   set_name_color = c(colour_marine, colour_aquatic, 
                      colour_aquatic_terrestrial, colour_terrestrial), text_color = "grey35"
 )
-ggsave('Results/venn_habitat_overlap_dn.pdf', width = 8, height = 8)
+ggsave('Results/venn_habitat_overlap_dn.pdf', width = 11, height = 9)
 
 # DS
 labels_ds <- c(
@@ -501,11 +547,11 @@ venn_data_ds <- setNames(
 
 ggvenn(venn_data_ds, 
   fill_color = colours_classes4,
-  stroke_size = 0, set_name_size = 4, show_percentage = F, stroke_color = "grey",
+  stroke_size = 0, set_name_size = 6, show_percentage = F, stroke_color = "grey",
   set_name_color = c(colour_marine, colour_aquatic, 
                      colour_aquatic_terrestrial, colour_terrestrial), text_color = "grey35"
 )
-ggsave('Results/venn_habitat_overlap_ds.pdf', width = 8, height = 8)
+ggsave('Results/venn_habitat_overlap_ds.pdf', width = 11, height = 9)
 
 # DNDS
 labels_dnds <- c(
@@ -529,11 +575,11 @@ venn_data_dnds <- setNames(
 
 ggvenn(venn_data_dnds, 
   fill_color = colours_classes4,
-  stroke_size = 0, set_name_size = 4, show_percentage = F, stroke_color = "grey",
+  stroke_size = 0, set_name_size = 6, show_percentage = F, stroke_color = "grey",
   set_name_color = c(colour_marine, colour_aquatic, 
                      colour_aquatic_terrestrial, colour_terrestrial), text_color = "grey35"
 )
-ggsave('Results/venn_habitat_overlap_dnds.pdf', width = 8, height = 8)
+ggsave('Results/venn_habitat_overlap_dnds.pdf', width = 11, height = 9)
 
 # PURE
 labels_pure <- c(
@@ -557,11 +603,11 @@ venn_data_pure <- setNames(
 
 ggvenn(venn_data_pure, 
   fill_color = colours_classes4,
-  stroke_size = 0, set_name_size = 4, show_percentage = F, stroke_color = "grey",
+  stroke_size = 0, set_name_size = 6, show_percentage = F, stroke_color = "grey",
   set_name_color = c(colour_marine, colour_aquatic, 
                      colour_aquatic_terrestrial, colour_terrestrial), text_color = "grey35"
 )
-ggsave('Results/venn_habitat_overlap_pure.pdf', width = 8, height = 8)
+ggsave('Results/venn_habitat_overlap_pure.pdf', width = 11, height = 9)
 
 
 ###############################
