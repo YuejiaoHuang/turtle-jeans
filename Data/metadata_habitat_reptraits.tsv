@@ -1,22 +1,22 @@
-Species	ID	Microhabitat	Habitat type
-Podocnemis expansa	podExp	Aquatic	Wetlands
-Pelusios castaneus	pelCas	Aquatic	Wetlands
-Mesoclemmys tuberculata	mesTub	Aquatic	Wetlands
-Emydura subglobosa	emySub	Aquatic	Wetlands
-Dermatemys mawii	derMaw	Aquatic	Forest/Wetlands
-Chelydra serpentina	cheSer	Aquatic	Marine Coastal/Wetlands
-Dermochelys coriacea	derCor	Marine	Marine Oceanic
-Chelonia mydas	cheMyd	Marine	Wetlands
-Platysternon megacephalum	plaMeg	Aquatic	Forest/Wetlands
-Terrapene mexicana	terMex	Aquatic_Terrestrial	Forest/Wetlands
-Malaclemys terrapin	malTer	Aquatic	Marine Neritic
-Chrysemys picta	chrPic	Aquatic	Wetlands
-Cuora mccordi	cuoMcc	Aquatic_Terrestrial	Wetlands
-Cuora amboinensis	cuoAmb	Terrestrial	Forest/Wetlands
-Gopherus agassizii	gopAga	Terrestrial	Shrubland
-Chelonoidis abingdonii	cheAbi	Terrestrial	Forest/Shrubland
-Pelodiscus sinensis	pelSin	Aquatic	Wetlands
-Carettochelys insculpta	carIns	Aquatic	Wetlands
-Homo sapiens	homSap	Outgroup	Outgroup
-Gallus gallus	galGal	Outgroup	Outgroup
-Alligator mississipiensis	allMis	Outgroup	Outgroup
+Species	ID	Microhabitat	Habitat type	suborder	family
+Podocnemis expansa	podExp	Aquatic	Wetlands	Pleurodira	Podocnemididae
+Pelusios castaneus	pelCas	Aquatic	Wetlands	Pleurodira	Podocnemididae
+Mesoclemmys tuberculata	mesTub	Aquatic	Wetlands	Pleurodira	Chelidae
+Emydura subglobosa	emySub	Aquatic	Wetlands	Pleurodira	Chelidae
+Dermatemys mawii	derMaw	Aquatic	Forest/Wetlands	Cryptodira	Dermatemydidae
+Chelydra serpentina	cheSer	Aquatic	Marine Coastal/Wetlands	Cryptodira	Chelydridae
+Dermochelys coriacea	derCor	Marine	Marine Oceanic	Cryptodira	Dermochelyidae
+Chelonia mydas	cheMyd	Marine	Wetlands	Cryptodira	Cheloniidae
+Platysternon megacephalum	plaMeg	Aquatic	Forest/Wetlands	Cryptodira 	Platysternidae
+Terrapene mexicana	terMex	Aquatic_Terrestrial	Forest/Wetlands	Cryptodira	Emydidae
+Malaclemys terrapin	malTer	Aquatic	Marine Neritic	Cryptodira	Emydidae
+Chrysemys picta	chrPic	Aquatic	Wetlands	Cryptodira	Emydidae
+Cuora mccordi	cuoMcc	Aquatic_Terrestrial	Wetlands	Cryptodira Geoemydidae
+Cuora amboinensis	cuoAmb	Terrestrial	Forest/Wetlands	Cryptodira	Geoemydidae
+Gopherus agassizii	gopAga	Terrestrial	Shrubland	Cryptodira	Testudinidae
+Chelonoidis abingdonii	cheAbi	Terrestrial	Forest/Shrubland	Cryptodira	Testudinidae
+Pelodiscus sinensis	pelSin	Aquatic	Wetlands	Cryptodira	Trionychidae
+Carettochelys insculpta	carIns	Aquatic	Wetlands	Cryptodira	Carettochelyidae
+Homo sapiens	homSap	Outgroup	Outgroup	Haplorrhini	Homininae
+Gallus gallus	galGal	Outgroup	Outgroup	Galloanserae	Phasianinae
+Alligator mississipiensis	allMis	Outgroup	Outgroup	Crocodylia	Alligatoridae

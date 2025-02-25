@@ -1,0 +1,357 @@
+---
+title: "Turtle KEGG"
+author: "Yuejiao"
+date: "2025-02-13"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+setwd("/Users/hsf378/PhD/Analysis/turtle-jeans")
+knitr::opts_chunk$set(echo = TRUE)
+library(clusterProfiler)
+library("KEGGREST")
+library(tidyverse)
+library(stringr)
+library(ggplot2)
+```
+
+## Load the kegg db
+
+```{r}
+search_kegg_organism('cmy', by='kegg_code')
+```
+
+```{r}
+cmy_kegg <- keggList("cmy")
+table(cmy_kegg)
+head(cmy_kegg)
+cmy_kegg_df <- data.frame(cmy_id = names(keggConv("ncbi-geneid", "cmy")),
+          ncbi_id = keggConv("ncbi-geneid", "cmy")) %>% 
+  separate(.,ncbi_id, into = c("info", "ncbi_gid"), sep = ":") %>% 
+  select(-info) 
+
+cmy_kegg_df %>% filter(ncbi_gid == "102936173")
+
+keggInfo("cmy")
+
+# keggLink("ncbi-geneid","cmy")
+
+keggList("pathway", "cmy")
+keggList("ko", "cmy")
+cmy_pathway <- data_frame(id = names(keggList("pathway", "cmy")),
+                          pathway = keggList("pathway", "cmy")) %>% 
+  mutate(pathway_id = paste0("path:",id), 
+         pathway_name = str_remove(pathway, " - Chelonia mydas \\(green sea turtle\\)")) %>% 
+  select(pathway_id,pathway_name)
+
+
+cmy_pathway_info <- data_frame()
+for (i in seq(1:dim(cmy_pathway)[1])){
+  dd <- keggLink(cmy_pathway$id[i]) %>% as.data.frame(.)
+  cmy_pathway_info <- bind_rows(cmy_pathway_info,dd)
+}
+
+colnames(cmy_pathway_info) <- c("pathway_id","cmy_id","strandness")
+
+```
+
+
+## Load background gene_list
+
+
+```{r}
+gene_list <- read_tsv("~/Downloads/candidate_enricher_gene_info.txt", 
+                      col_names = c("gene","ncbi_gid","info")) %>% 
+  select(-info) %>% 
+  mutate( ncbi_gid = as.character(ncbi_gid))
+gene_input <- read_tsv("~/Downloads/candidate_enricher_og2gene.txt",
+                       col_names = c("busco_id","gene"))
+genes <- left_join(gene_input,gene_list, by = "gene") %>% 
+  left_join(.,cmy_kegg_df, by = "ncbi_gid" ) %>% 
+  filter(!is.na(cmy_id ))
+length(table(genes$cmy_id))
+genes_enrich <- genes %>% select(c("ncbi_gid","cmy_id"))
+length(table(cmy_pathway_info$cmy_id))
+pathway_enrich_gene <- cmy_pathway_info %>% 
+  filter(cmy_id %in% genes_enrich$cmy_id) 
+pathway_enrich_name <- pathway_enrich_gene %>%
+  left_join(.,cmy_pathway, by = "pathway_id") %>% 
+  select(c("pathway_id", "pathway_name"))
+```
+
+## KEGG enrichment
+```{r}
+outliers_dn <- read.csv("/Users/hsf378/PhD/Analysis/turtle-jeans/Results/outliers_genes_dn_q95.csv", col.names = c("n", "busco_id")) %>% 
+  left_join(.,genes, by = "busco_id") %>% 
+  filter(!is.na(cmy_id )) %>% 
+  select(ncbi_gid,cmy_id)
+
+kegg_test <- enricher(gene = unique(outliers_dn$cmy_id),
+         pAdjustMethod = "fdr",
+         TERM2GENE = pathway_enrich, TERM2NAME = pathway_enrich_name)
+
+barplot(kegg_test, y = Description)
+
+enrichKEGG(gene = unique(outliers_dn$ncbi_gid),
+           organism = "cmy",
+           pAdjustMethod = "fdr")
+```
+
+```{r}
+
+outliers_dn <- read.csv("Results/outliers_genes_dn_q95.csv", col.names = c("n", "busco_id")) %>% 
+  left_join(.,genes, by = "busco_id") %>% 
+  filter(!is.na(cmy_id )) %>% 
+  select(ncbi_gid,cmy_id)
+
+outliers_ds <- read.csv("Results/outliers_genes_ds_q95.csv", col.names = c("n", "busco_id")) %>% 
+  left_join(.,genes, by = "busco_id") %>% 
+  filter(!is.na(cmy_id )) %>% 
+  select(ncbi_gid,cmy_id)
+
+outliers_dnds <- read.csv("Results/outliers_genes_dnds_q95.csv", col.names = c("n", "busco_id")) %>% 
+  left_join(.,genes, by = "busco_id") %>% 
+  filter(!is.na(cmy_id )) %>% 
+  select(ncbi_gid,cmy_id)
+
+outliers_pure <- read.csv("Results/outliers_genes_pure_q95.csv", col.names = c("n", "busco_id")) %>% 
+  left_join(.,genes, by = "busco_id") %>% 
+  filter(!is.na(cmy_id )) %>% 
+  select(ncbi_gid,cmy_id)
+
+
+outliers_dn_species <- read.csv("Results/outliers_species_dn_q95.csv", 
+                                col.names = c("n", "species", "busco_id")) %>% 
+  left_join(.,genes, by = "busco_id") %>% 
+  filter(!is.na(cmy_id )) %>% 
+  select(ncbi_gid,cmy_id, species)
+
+outliers_ds_species <- read.csv("Results/outliers_species_ds_q95.csv", 
+                                col.names = c("n", "species", "busco_id")) %>% 
+  left_join(.,genes, by = "busco_id") %>% 
+  filter(!is.na(cmy_id )) %>% 
+  select(ncbi_gid,cmy_id, species)
+
+outliers_dnds_species <- read.csv("Results/outliers_species_dnds_q95.csv", 
+                                  col.names = c("n", "species", "busco_id")) %>% 
+  left_join(.,genes, by = "busco_id") %>% 
+  filter(!is.na(cmy_id )) %>% 
+  select(ncbi_gid,cmy_id, species)
+
+outliers_pure_species <- read.csv("Results/outliers_species_pure_q95.csv", 
+                                  col.names = c("n", "species", "busco_id")) %>% 
+  left_join(.,genes, by = "busco_id") %>% 
+  filter(!is.na(cmy_id )) %>% 
+  select(ncbi_gid,cmy_id, species)
+
+
+outliers_dn_species_allgene <- read.csv("Results/allgenes_species_dn_q95.csv", 
+                                        col.names = c("n", "species", "busco_id")) %>% 
+  left_join(.,genes, by = "busco_id") %>% 
+  filter(!is.na(cmy_id )) %>% 
+  select(ncbi_gid,cmy_id, species)
+
+outliers_ds_species_allgene <- read.csv("Results/allgenes_species_dnds_q95.csv", 
+                                        col.names = c("n", "species", "busco_id")) %>% 
+  left_join(.,genes, by = "busco_id") %>% 
+  filter(!is.na(cmy_id )) %>% 
+  select(ncbi_gid,cmy_id, species)
+
+outliers_dnds_species_allgene <- read.csv("Results/allgenes_species_ds_q95.csv", 
+                                          col.names = c("n", "species", "busco_id")) %>% 
+  left_join(.,genes, by = "busco_id") %>% 
+  filter(!is.na(cmy_id )) %>% 
+  select(ncbi_gid,cmy_id, species)
+
+outliers_pure_species_allgene <- read.csv("Results/allgenes_species_pure_q95.csv", 
+                                          col.names = c("n", "species", "busco_id")) %>% 
+  left_join(.,genes, by = "busco_id") %>% 
+  filter(!is.na(cmy_id )) %>% 
+  select(ncbi_gid,cmy_id, species)
+
+meta_turtles <- read_tsv("Data/metadata_habitat_reptraits.tsv")
+meta_turtles$Habitat_factor <- factor(meta_turtles$Microhabitat, 
+                                      levels=c("Marine", "Aquatic", 
+                                               "Aquatic_Terrestrial", "Terrestrial", 
+                                               "Outgroup"))
+```
+
+```{r}
+Outliers_all_dn <- outliers_dn_species %>%
+  left_join(.,meta_turtles, by = c("species" = "ID")) %>% 
+  remove_missing(.)
+
+Outliers_Marine_dn <- Outliers_all_dn %>% 
+  filter(Microhabitat == "Marine")
+Outliers_Aquatic_dn <- Outliers_all_dn %>% 
+  filter(Microhabitat == "Aquatic")
+Outliers_Aquatic_Terrestrial_dn <- Outliers_all_dn %>% 
+  filter(Microhabitat == "Aquatic_Terrestrial")
+Outliers_Terrestrial_dn <- Outliers_all_dn %>% 
+  filter(Microhabitat == "Terrestrial")
+
+Outliers_all_ds <- outliers_ds_species %>%
+  left_join(.,meta_turtles, by = c("species" = "ID")) %>% 
+  remove_missing(.)
+
+Outliers_Marine_ds <- Outliers_all_ds %>% 
+  filter(Microhabitat == "Marine")
+Outliers_Aquatic_ds <- Outliers_all_ds %>% 
+  filter(Microhabitat == "Aquatic")
+Outliers_Aquatic_Terrestrial_ds <- Outliers_all_ds %>% 
+  filter(Microhabitat == "Aquatic_Terrestrial")
+Outliers_Terrestrial_ds <- Outliers_all_ds %>% 
+  filter(Microhabitat == "Terrestrial")
+
+Outliers_all_dnds <- outliers_dnds_species %>%
+  left_join(.,meta_turtles, by = c("species" = "ID")) %>% 
+  remove_missing(.)
+
+Outliers_Marine_dnds <- Outliers_all_dnds %>% 
+  filter(Microhabitat == "Marine")
+Outliers_Aquatic_dnds <- Outliers_all_dnds %>% 
+  filter(Microhabitat == "Aquatic")
+Outliers_Aquatic_Terrestrial_dnds <- Outliers_all_dnds %>% 
+  filter(Microhabitat == "Aquatic_Terrestrial")
+Outliers_Terrestrial_dnds <- Outliers_all_dnds %>% 
+  filter(Microhabitat == "Terrestrial")
+
+Outliers_all_pure <- outliers_pure_species %>%
+  left_join(.,meta_turtles, by = c("species" = "ID")) %>% 
+  remove_missing(.)
+
+Outliers_Marine_pure <- Outliers_all_pure %>% 
+  filter(Microhabitat == "Marine")
+Outliers_Aquatic_pure <- Outliers_all_pure %>% 
+  filter(Microhabitat == "Aquatic")
+Outliers_Aquatic_Terrestrial_pure <- Outliers_all_pure %>% 
+  filter(Microhabitat == "Aquatic_Terrestrial")
+Outliers_Terrestrial_pure <- Outliers_all_pure %>% 
+  filter(Microhabitat == "Terrestrial")
+```
+```{r}
+Outliers_all_dn_allgene <- outliers_dn_species_allgene %>%
+  left_join(.,meta_turtles, by = c("species" = "ID")) %>% 
+  remove_missing(.)
+
+Outliers_Marine_dn_allgene <- Outliers_all_dn_allgene %>% 
+  filter(Microhabitat == "Marine")
+Outliers_Aquatic_dn_allgene <- Outliers_all_dn_allgene %>% 
+  filter(Microhabitat == "Aquatic")
+Outliers_Aquatic_Terrestrial_dn_allgene <- Outliers_all_dn_allgene %>% 
+  filter(Microhabitat == "Aquatic_Terrestrial")
+Outliers_Terrestrial_dn_allgene <- Outliers_all_dn_allgene %>% 
+  filter(Microhabitat == "Terrestrial")
+
+Outliers_all_ds_allgene <- outliers_ds_species_allgene %>%
+  left_join(.,meta_turtles, by = c("species" = "ID")) %>% 
+  remove_missing(.)
+
+Outliers_Marine_ds_allgene <- Outliers_all_ds_allgene %>% 
+  filter(Microhabitat == "Marine")
+Outliers_Aquatic_ds_allgene <- Outliers_all_ds_allgene %>% 
+  filter(Microhabitat == "Aquatic")
+Outliers_Aquatic_Terrestrial_ds_allgene <- Outliers_all_ds_allgene %>% 
+  filter(Microhabitat == "Aquatic_Terrestrial")
+Outliers_Terrestrial_ds_allgene <- Outliers_all_ds_allgene %>% 
+  filter(Microhabitat == "Terrestrial")
+
+Outliers_all_dnds_allgene <- outliers_dnds_species_allgene %>%
+  left_join(.,meta_turtles, by = c("species" = "ID")) %>% 
+  remove_missing(.)
+
+Outliers_Marine_dnds_allgene <- Outliers_all_dnds_allgene %>% 
+  filter(Microhabitat == "Marine")
+Outliers_Aquatic_dnds_allgene <- Outliers_all_dnds_allgene %>% 
+  filter(Microhabitat == "Aquatic")
+Outliers_Aquatic_Terrestrial_dnds_allgene <- Outliers_all_dnds_allgene %>% 
+  filter(Microhabitat == "Aquatic_Terrestrial")
+Outliers_Terrestrial_dnds_allgene <- Outliers_all_dnds_allgene %>% 
+  filter(Microhabitat == "Terrestrial")
+
+Outliers_all_pure_allgene <- outliers_pure_species_allgene %>%
+  left_join(.,meta_turtles, by = c("species" = "ID")) %>% 
+  remove_missing(.)
+
+Outliers_Marine_pure_allgene <- Outliers_all_pure_allgene %>% 
+  filter(Microhabitat == "Marine")
+Outliers_Aquatic_pure_allgene <- Outliers_all_pure_allgene %>% 
+  filter(Microhabitat == "Aquatic")
+Outliers_Aquatic_Terrestrial_pure_allgene <- Outliers_all_pure_allgene %>% 
+  filter(Microhabitat == "Aquatic_Terrestrial")
+Outliers_Terrestrial_pure_allgene <- Outliers_all_pure_allgene %>% 
+  filter(Microhabitat == "Terrestrial")
+```
+
+```{r}
+enrich_kegg <- function(df){
+  enricher(gene = unique(df$cmy_id),
+         pAdjustMethod = "fdr",
+         TERM2GENE = pathway_enrich, 
+         TERM2NAME = pathway_enrich_name)
+}
+```
+
+```{r}
+table(pathway_enrich$pathway_id)
+length(table(pathway_enrich$cmy_id))
+```
+
+
+
+```{r}
+kegg_genes_dn <- enrich_kegg(outliers_dn) ## 7 enriched terms
+kegg_all_genes_dn <- enrich_kegg(Outliers_all_dn) # 2 enriched terms 
+kegg_Marine_dn <- enrich_kegg(Outliers_Marine_dn) ## 0
+kegg_Aquatic_dn <- enrich_kegg(Outliers_Aquatic_dn) # 2 enriched terms
+kegg_Aquatic_Terrestrial_dn <- enrich_kegg(Outliers_Aquatic_Terrestrial_dn) # 2 enriched terms
+kegg_Terrestrial_dn <- enrich_kegg(Outliers_Terrestrial_dn) # 0
+
+#### all 0
+kegg_genes_ds <- enrich_kegg(outliers_ds)
+kegg_all_genes_ds <- enrich_kegg(Outliers_all_ds)
+kegg_Marine_ds <- enrich_kegg(Outliers_Marine_ds)
+kegg_Aquatic_ds <- enrich_kegg(Outliers_Aquatic_ds)
+kegg_Aquatic_Terrestrial_ds <- enrich_kegg(Outliers_Aquatic_Terrestrial_ds)
+kegg_Terrestrial_ds <- enrich_kegg(Outliers_Terrestrial_ds)
+
+kegg_genes_dnds <- enrich_kegg(outliers_dnds) #7 enriched terms
+kegg_all_genes_dnds <- enrich_kegg(Outliers_all_dnds)
+kegg_Marine_dnds <- enrich_kegg(Outliers_Marine_dnds)
+kegg_Aquatic_dnds <- enrich_kegg(Outliers_Aquatic_dnds)
+kegg_Aquatic_Terrestrial_dnds <- enrich_kegg(Outliers_Aquatic_Terrestrial_dnds)
+kegg_Terrestrial_dnds <- enrich_kegg(Outliers_Terrestrial_dnds)
+
+kegg_genes_pure <- enrich_kegg(outliers_pure)
+kegg_all_genes_pure <- enrich_kegg(Outliers_all_pure)
+kegg_Marine_pure <- enrich_kegg(Outliers_Marine_pure) # 1 
+kegg_Aquatic_pure <- enrich_kegg(Outliers_Aquatic_pure)
+kegg_Aquatic_Terrestrial_pure <- enrich_kegg(Outliers_Aquatic_Terrestrial_pure)
+kegg_Terrestrial_pure <- enrich_kegg(Outliers_Terrestrial_pure)
+
+# ALLGENES ANALYSES
+kegg_all_genes_dn_allgene <- enrich_kegg(Outliers_all_dn_allgene) # 1
+kegg_Marine_dn_allgene <- enrich_kegg(Outliers_Marine_dn_allgene)
+kegg_Aquatic_dn_allgene <- enrich_kegg(Outliers_Aquatic_dn_allgene) # 1
+kegg_Aquatic_Terrestrial_dn_allgene <- enrich_kegg(Outliers_Aquatic_Terrestrial_dn_allgene) # 1
+kegg_Terrestrial_dn_allgene <- enrich_kegg(Outliers_Terrestrial_dn_allgene) # 1
+ 
+kegg_all_genes_ds_allgene <- enrich_kegg(Outliers_all_ds_allgene) 
+kegg_Marine_ds_allgene <- enrich_kegg(Outliers_Marine_ds_allgene)
+kegg_Aquatic_ds_allgene <- enrich_kegg(Outliers_Aquatic_ds_allgene)
+kegg_Aquatic_Terrestrial_ds_allgene <- enrich_kegg(Outliers_Aquatic_Terrestrial_ds_allgene)
+kegg_Terrestrial_ds_allgene <- enrich_kegg(Outliers_Terrestrial_ds_allgene)
+
+kegg_all_genes_dnds_allgene <- enrich_kegg(Outliers_all_dnds_allgene) # 1 Glycolysis / Gluconeogenesis
+kegg_Marine_dnds_allgene <- enrich_kegg(Outliers_Marine_dnds_allgene)
+kegg_Aquatic_dnds_allgene <- enrich_kegg(Outliers_Aquatic_dnds_allgene) # 1 Glycolysis / Gluconeogenesis
+kegg_Aquatic_Terrestrial_dnds_allgene <- enrich_kegg(Outliers_Aquatic_Terrestrial_dnds_allgene) # 1 Glycolysis / Gluconeogenesis
+kegg_Terrestrial_dnds_allgene <- enrich_kegg(Outliers_Terrestrial_dnds_allgene) # 1 Glycolysis / Gluconeogenesis
+
+kegg_all_genes_pure_allgene <- enrich_kegg(Outliers_all_pure_allgene)
+kegg_Marine_pure_allgene <- enrich_kegg(Outliers_Marine_pure_allgene)
+kegg_Aquatic_pure_allgene <- enrich_kegg(Outliers_Aquatic_pure_allgene)
+kegg_Aquatic_Terrestrial_pure_allgene <- enrich_kegg(Outliers_Aquatic_Terrestrial_pure_allgene)
+kegg_Terrestrial_pure_allgene <- enrich_kegg(Outliers_Terrestrial_pure_allgene)
+```
+
