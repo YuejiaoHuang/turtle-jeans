@@ -10,17 +10,17 @@ gene_ds <- read.csv('Results/outliers_genes_ds_q95.csv',
 gene_pure <- read.csv('Results/outliers_genes_pure_q95.csv',
                       col.names = 'gene')
 
-# Prepare a palette of 3 colors with R colorbrewer:
+
 cols <- c('purple','red','blue','green')
 
 # Chart
-ggvenn(data = list('dNdS' = gene_dnds$gene,
+ggvenn(data = list('dN/dS' = gene_dnds$gene,
                    'dN' = gene_dn$gene,
                    'dS' = gene_ds$gene,
-                   'Pure' = gene_pure$gene),
+                   'PD' = gene_pure$gene),
        fill_color = cols,
-       show_percentage = T)+
-  scale_y_continuous(expand = expansion(mult = .3))
+       labs(title = 'Test'),
+       show_percentage = F)
 
 
 ggsave('Results/venn_outliergenes.pdf',last_plot(),

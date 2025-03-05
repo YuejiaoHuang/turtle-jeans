@@ -91,7 +91,7 @@ for (name in names(dN_matrices)) {
 }
 
 ### check if all goes well
-dN_matrices_nonzero[['121468at32523']]
-dS_matrices_nonzero[['121468at32523']]
+dN_nonzero[['121468at32523']]
+dS_nonzero[['121468at32523']]
 dN_dS_matrices_nonzero[['121468at32523']]
 

@@ -36,77 +36,6 @@ results <- phylter(locus.trees, gene.names = names)
 # get matrix for each gene that contains pairwise distances between species
 matrices <- results$Initial$mat.data
 
-# species driving ---------------------------------------------------------
-
-# Function to identify outlier species in a matrix
-find_outlier_rows <- function(mat,conf = 0.95) {
-  mat[mat == 0] <- NA
-  tab <- t(apply(mat,1,function(row) {
-    c(mean = mean(row, na.rm = TRUE),
-      median = median(row, na.rm = TRUE),
-      sd = sd(row, na.rm = TRUE),
-      max = max(row, na.rm = TRUE),
-      min = min(row, na.rm = TRUE))
-  }))
-  
-  # Calculate Mahalanobis distances for rows
-  center_rows <- mean(tab, na.rm = TRUE)
-  cov_rows <- cov(tab, use = "pairwise.complete.obs")
-  
-  mahalanobis_dist_rows <- mahalanobis(tab, center_rows, cov_rows)
-  
-  df <- ncol(tab)
-  threshold <- chisq(conf,df)
-  
-  # Identify outlier indices
-  outliers <- which(mahalanobis_dist_rows > threshold)
-  return(outliers)
-}
-
-# Apply to flagged matrices
-outlier_matrices <- outliers90$indices  # Replace with indices of outlier matrices
-outlier_species90 <- lapply(outlier_matrices, function(i) {
-  find_outlier_rows(matrices[[i]])
-})
-
-# Apply to flagged matrices
-outlier_matrices <- outliers95$indices  # Replace with indices of outlier matrices
-outlier_species95 <- lapply(outlier_matrices, function(i) {
-  find_outlier_rows(matrices[[i]])
-})
-
-outlier_matrices <- outliers99$indices  # Replace with indices of outlier matrices
-outlier_species99 <- lapply(outlier_matrices, function(i) {
-  find_outlier_rows(matrices[[i]])
-})
-
-table(outlier_species95)
-
-print("Outlier species for each matrix:")
-print(outlier_species99)
-
-# Combine species from all outlier matrices
-unique_species <- names(unlist(outlier_species90))
-unique90 <- strsplit(unique_species,"\\.")
-unique90 <- sapply(unique90,`[`,2)
-length(table(unique90))
-
-unique_species <- names(unlist(outlier_species95))
-unique95 <- strsplit(unique_species,"\\.")
-unique95 <- sapply(unique95,`[`,2)
-length(table(unique95))
-
-
-unique_species <- names(unlist(outlier_species99))
-unique99 <- strsplit(unique_species,"\\.")
-unique99 <- sapply(unique99,`[`,2)
-length(table(unique99))
-
-
-
-
-
-
 # Attempt 2 - outlier genes -----------------------------------------------
 
 # Required Libraries
@@ -174,7 +103,7 @@ text <- pure_outliers$indices
 write.csv(text,'Results/outliers_genes_pure_q95.csv')
 
 
-# get outlier species - v2 ------------------------------------------------
+# outlier species - just outlier genes ------------------------------------------------
 # keep entire thing
 
 
@@ -233,6 +162,71 @@ text <- pure_outliers_species$indices
 split <- strsplit(text,'_')
 df <- do.call(rbind, lapply(split, function(x) data.frame(Gene = x[1], Species = x[2])))
 write.csv(df,'Results/outliers_species_pure_q95.csv')
+
+
+
+# outlier species - all genes ---------------------------------------------
+
+
+# keep entire thing
+
+
+outlierSpeciesTranspose <- function(matrices) {
+  # Extract the gene names and the list of matrices
+
+  # Initialize an empty list to store the renamed matrices
+  matrices_renamed <- list()
+  
+  # Loop through the matrices and rename rows based on gene names
+  for (i in 1:length(matrices)) {
+    # Get the current matrix
+    mat <- matrices[[i]]
+    
+    # Assign the new row names by appending the gene name
+    rownames(mat) <- paste0(rownames(mat), '_', names(matrices)[i])
+    
+    # Add the renamed matrix to the list
+    matrices_renamed[[i]] <- mat
+  }
+  
+  # Combine the matrices by rows
+  df <- do.call(rbind, matrices_renamed)
+  
+  return(df)
+}
+
+dNdS_df <- outlierSpeciesTranspose(dNdS_impute)
+dN_df <- outlierSpeciesTranspose(dN_impute)
+dS_df <- outlierSpeciesTranspose(dS_impute)
+pure_df <- outlierSpeciesTranspose(pure_impute)
+
+dNdS_outliers_species <- detect_outliers_and_extract_chisq(dNdS_impute, dNdS_df, conf = 0.95)
+dN_outliers_species <- detect_outliers_and_extract_chisq(dN_impute, dN_df, conf = 0.95)
+dS_outliers_species <- detect_outliers_and_extract_chisq(dS_impute, dS_df, conf = 0.95)
+pure_outliers_species <- detect_outliers_and_extract_chisq(pure_impute, pure_df, conf = 0.95)
+
+text <- dNdS_outliers_species$indices
+split <- strsplit(text,'_')
+df <- do.call(rbind, lapply(split, function(x) data.frame(Gene = x[1], Species = x[2])))
+write.csv(df,'Results/allgenes_species_dnds_q95.csv')
+
+text <- dN_outliers_species$indices
+split <- strsplit(text,'_')
+df <- do.call(rbind, lapply(split, function(x) data.frame(Gene = x[1], Species = x[2])))
+write.csv(df,'Results/allgenes_species_dn_q95.csv')
+
+text <- dS_outliers_species$indices
+split <- strsplit(text,'_')
+df <- do.call(rbind, lapply(split, function(x) data.frame(Gene = x[1], Species = x[2])))
+write.csv(df,'Results/allgenes_species_ds_q95.csv')
+
+text <- pure_outliers_species$indices
+split <- strsplit(text,'_')
+df <- do.call(rbind, lapply(split, function(x) data.frame(Gene = x[1], Species = x[2])))
+write.csv(df,'Results/allgenes_species_pure_q95.csv')
+
+
+
 
 
 

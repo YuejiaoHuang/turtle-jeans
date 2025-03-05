@@ -1,6 +1,3 @@
-matrices <- matrices_imputed_meangene
-df <- comb_imputed_meangene
-
 detect_outliers_and_extract_quantiles <- function(matrices, df, quantile_threshold = 0.95) {
   # Compute Mahalanobis distances for matrices
   center_matrix <- colMeans(df, na.rm = T)
