@@ -42,3 +42,6 @@ sed -i '' "s/.fa//g" list_final.txt
 
 # copy all dN and dS into on folder
 ./sort_dN_dS_data.sh
+
+# calculate pure distance matrices on final trimmed alignments (independent of dN/dS)
+./calculate_pdm.sh

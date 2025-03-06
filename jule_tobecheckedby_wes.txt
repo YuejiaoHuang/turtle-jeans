@@ -1,0 +1,7 @@
+# TO CHECK: USED BY JULE :)
+
+- Overview is in Scripts/dN_dS/turtle_dNdS_workflow.sh
+	- that one uses all other files in Scripts/dN/dS
+	- filter steps remove genes, trimming steps manipulate alignment
+	- for the R scripts: there is one original file and the _gene.R one is a copy with the adjusted gene ID
+	- the last step is calculating the pure distances

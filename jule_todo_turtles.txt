@@ -1,13 +1,15 @@
-- look at functions of species outlier genes per habitat in general not only GO enriched / think about g:profiler
-- WES: I just thought that it would be better to calculate the pure distances based on the filtered/trimmed alignments!!! I will send data that is input to codeml
 - plot pairwise distances against pairwise divergence times (deviations from diagonal)
 - alternative: each node has divergence time against #outlier genes in that node (all tip nodes) (deeper nodes less outlier genes) (sisters more shared outliers)
 - cluster heatmap matrix (in R: nj, hclust on matrix)
+- check all dN/dS scripts
+- fix wrong gene
+- change Fig3: no Venn, dated tree + epochs, label important nodes, combine with heatmap
 
 DONE:
 - change n_seg_sites to n_parsimony_sites -> only 304806at32523 : 9
 - methods on removing outgroups, filtering for enough taxa, dN dS workflow
 - improve Fig1, Fig2, Fig3
+- recalculated pure distances
 
 
 EXPLANATIONS:
