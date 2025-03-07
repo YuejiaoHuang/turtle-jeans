@@ -1,0 +1,180 @@
+>allMis|HiC_scaffold_15:8955270-8966804 <unknown description>
+a---tggggaagatcgggctgcagctgaaggcgacgctggagaacatcaccgggctgcgg
+cccgtgggcgaggacttccgctggtacctcaa----------------------------
+-----------------------------ggacagtgctcctcttaagggaggcagagga
+agtgccacaatggtgcagaaatgcaagctgtgctcccgagagaactccattgatatctta
+agtcacacaatcaagccttacaatgctgaggacagtgagaagtttaaaacaatagtggag
+tttgagtgccgaggtcttgaaccagttgactttcaaccccaggctgggtttgctgctgaa
+ggtgcagagtctggcacgtctttcagtgaaataaacttactggaaaaggattggaatgac
+tatgatgaaaaatcaaaggaatctgttggaatttatgaagttacccataagtttgtaaaa
+------tgctga
+>carIns|ML683911.1:7986208-8001784 <unknown description>
+a---tggggaagttcgggctgcagctgaaagcgactctggagaatatcaccaacctcagg
+ccggtgggagacgacttccgctggtatctgaagatgaaatgtgggaactgtggtgagatt
+tctgaaaaatggcagtacttgcgattaatggatagtgctcctcttaagggaggaagaggg
+agtgccactatggtgcagaaatgcaagctgtgctccagagagaattccatagatatatta
+agagacacaatcaagccctataatgctgaagacagtgagaagtttaagacaatagtggag
+tttgagtgccgcggtcttgagccagttgactttcaaccacaggcaagaaaagaggctgaa
+cgtgcagagtctggcacgccttttaatgaaataagcttgctggaaaaggactggaatgac
+tacgatgaaaaaataaaggagtctgttggaatctatgaagttacccataagtttctaaaa
+------tgttaa
+>cheAbi|PKMU01008789.1:41542-74974 <unknown description>
+atgcttggatcagttgttctgcagtcaagggcatgtctggagacaggatttaccctgcgc
+ccgcccggaagctattttcgctggtacctgaagctgaaatgtggaaactgtggtgagatt
+tctgaaaaatggcaatacctgcgattaatggacagtgctcctcttaagggaggcagaggg
+agtgccacgatggtgcagaaatgcaagctgtgctccagagaaaattccattgatatctta
+agagacactatcaagccttataatgctgaagacagtgagaagtttaagaccatagtggaa
+tttgagtgccgaggtcttgagccagtgtttctacagaggaaggctgggtttgctgctgaa
+ggtgcagagtctggcacgccttttagtgaaataaacttgctggaaaaggactggaatgac
+tatgatgaaaaaataaaggagtctgttggaatctatgaagttacccataagtttctaaaa
+------tgctaa
+>cheMyd|NW_006636848.1:3746725-3759993 <unknown description>
+a---tggggaagatcgggctgcagctgaaggctactctggaaaatattacaaacctcaga
+ccggtgggggaagattttcgctggtacctgaagatgaaatgtgggaactgcggtgagatt
+tctgaaaaatggcaatacctgcaattaat-------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+-----------------------------------------ggctggatttgctgctgaa
+ggtgcagagtcgggcacaccttttagtgaaataaacttgctggaaaaggactggaatgac
+tatgatgaaaaaataaaggagtctgttggaatctatgaagttacccataagtttataaaa
+------tgctaa
+>chrPic|NW_007281342.1:5596920-5613455 <unknown description>
+a---tggggaagatcgggctgcagctgaaagccactctggaaaatgttacaaacctcagg
+ccggtgggggaagattttcgctggtacctgaagatgaaatgtgggaattgtggtgagatt
+tctgaaaaatggcaatacctgcgattaatggacagtgctcctcttaagggaggcagaggg
+agtgccactatggtgcagaaatgcaagctgtgctccagagagaattccattgatatctta
+agagacacaatcaaaccttataatgctgaagacagtgagaagtttaagacaatagtggag
+tttgagtgccgaggtcttgagccagttgactttcaaccacaggcaattttcctaactcaa
+agtgcagagtctggcacaccttttaatgaaataaacttgctggaaaaggactggaatgac
+tatgatgaaaaaataaaggagtctgttggaatctatgaagttatccataagtttctaaaa
+------tgctaa
+>cuoAmb|ML138691.1:10390208-10404398 <unknown description>
+a---tggggaagatcgggctgcagctgaaagccacgctggaaaatattacaaacctcagg
+ccggtgggggaagattttcgctggtacctgaagatgaaatgtgggaactgtggtgagatt
+tctgaaaaatggcaatacctgcggttaatggacagtgctcctcttaagggaggcagaggg
+agtgccactatggtgcagaaatgcaagctgtgctccagagagaattccattgatatctta
+agagacacaatcaagccttataatgctgaagacagtgagaagtttaagacaatagtggag
+tttgagtgccgaggtcttgagccactgaagttcttatctcaggctgggtttgctgctgaa
+ggtgcagagtctggcacaccttttagtgaaataaacttgctggaaaaggactggaatgac
+tatgatgaaaaaataaaggagtctgttggaatctatgaagttacccacaagtttctaaaa
+------tgctaa
+>cuoMcc|ML123145.1:11328552-11344951 <unknown description>
+a---tggggaagatcgggctgcagctgaaagccacgctggaaaatattacaaacctcagg
+ccggtgggggaagattttcgctggtacctgaagatgaaatgtgggaactgtggtgagatt
+tctgaaaaatggcaatacctgcggttaat-------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+-----------------------------------------ggctgggtttgctgctgaa
+ggtgcagaatctggcacaccttttagtgaaataaacttgctggaaaaggattggaatgac
+tatgatgaaaaaataaaggagtctgttggaatctatgaagttacccacaagtttctaaaa
+------tgctaa
+>derCor|ML641127.1:73595-89292 <unknown description>
+a---tggggaagatcgggctgcagctgaaggctactctggaaaatattacaaacctcaga
+ccggtgggggaggattttcgctggtacctgaagatgaaatgtgggaactgcggtgagatt
+tctgaaaaatggcaatacctgcgattaatggacagtgttcctcttaagggaggcagaggg
+agtgccactatggtgcagaaatgcaagctgtgctccagagagaattccattgatatctta
+agagacacaatgaagccttataatgctgaagacagtgagaagtttaagacagtagtggag
+tttgagtgccgaggtcttgagccagttgactttcaaccacaggcaattttcctaactcaa
+agtgcagagtctggcacaccttttagtgaaataaacttgctggaaaaggactggaatgac
+tatgatgaaaaagtaaaggagtctgttggaatttatgaagttacccataagtttctaaaa
+------tgctaa
+>derMaw|ML677352.1:39405415-39419216 <unknown description>
+a---tggggaagatcgggctgcagctgaaagctaccctggaaaatgttacaaacctcaga
+ccggtgggggaagatttccgctggtacctgaagatgaaatgtgggaactgtggtgagatt
+tctgaaaaatggcaatacctgcgattaatggacagtgtccctcttaagggaggcagaggg
+agtgccactatggtgcagaaatgcaagctgtgctccagagagaattccattgatatctta
+agagacacaatcaaaccttataatgctgaagacagtgagaagtttaagacagtagtggag
+ttcgagtgccgaggtcttgagccagttgactttcaagcacaggcaactttcctgtcagaa
+agtacagagtctggcacaccttttaatgaaataaacttgctggaaaaggactggaatgac
+tatgatgaaaaaataaaggagtctgttggaatctatgaagttacccataagtttctaaaa
+------tgctga
+>emySub|ML679954.1:48378689-48394044 <unknown description>
+a---tggggaagattgggctgcagctgaaagcgaccctagaaaacattaccaacctgaga
+ccggtgggggaggattttcgctggtatctgaagatgaaatgtgggaactgcggtgagatt
+tctgaaaaatggcaatacttgcggttaat-------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+-----------------------------------------------ggattggaatgac
+tatgatgaaaaaataaaggaatctgttggaatctatgaagttacccataagtttctaaaa
+------tgctga
+>galGal|NC_006095.5:24993799-25001044 <unknown description>
+a---tggggaggatcgggctgcagctccgcgccacgttggagaacatcacccggctgcgg
+gccgagggggaggacttccgctggtacctcaagctgaaatgtgggaactgtggtgaagtc
+tctgagaaatggcagtacctccggttgatggacagtgctcccctgaaaggaggcagagga
+agtgccactatggtgcagaaatgcaagctgtgctccagagagaactccattgatatttta
+agtcagacaatcaaaccgtataatgctgaagacagtgagaaattcaagacaatagtggag
+tttgaatgccgaggtttagaaccagttgactttcaaccacaggcaggatttgctgctgaa
+ggtgcagagtctggcacacctttcaatgacataaacttgttagaaaaggattggaatgac
+tatgatgaaaaaacaaaggaatctgttggaatctatgaagttacccataaatttgttaaa
+------tgctga
+>gopAga|PPEB01001829.1:36053-50461 <unknown description>
+a---tggggaagatagggctgcagctgaaagccacgctggaaaatattacaaacctcagg
+ccggtgggggaagattttcgctggtacctgaagctgaaatgtgggaactgtggtgagatt
+tctgaaaaatggcaatacctgcgattaat-------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+-----------------------------------------ggctgggtttgctgctgaa
+ggtgcacagtctggcacgccttttagtgaaataaacttgctggaaaaggactggaatgac
+tatgatgaaaaaataaaggagtctgttggaatctatgaagttacccataagttcctaaaa
+------tgctaa
+>malTer|MDXI01012046.1:20976-37132 <unknown description>
+a---tggggaagatcgggctgcagctgaaagccactctggaaaatgttacaaacctcagg
+ccggtgggggaagattttcgctggtacctgaagatgaaatgtgggaactgtggtgagatt
+tctgaaaaatggcaatacctacgattaatggacagtgctcctcttaagggaggcagaggg
+agtgccactatggtgcagaaatgcaagctgtgctccagagagaattccattgatatctta
+agagacacaatcaagccttataatgctgaagacagtgagaagtttaagacaatagtggag
+tttgagtgccgaggtcttgagccagttgactttcaaccacaggcaattttcctaactcaa
+agtgcagagtctggcacaccttttaatgaaataaacttgctggaaaaggactggaatgac
+tatgatgaaaaaataaaggagtctgttggaatctatgaagttatccataagtttctaaaa
+------tgctaa
+>mesTub|ML675643.1:3791977-3806752 <unknown description>
+a---tggggaaggtcgggctgcagctgagagcgacgctggaaaacgtcacccacctccgg
+ccggtgggggaggacttccgctggtacctgaagatgaaatgtgggaactgtggtgagatt
+tctgaaaaatggcaatacctgcggttaat-------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+-----------------------------------------ggctgggtttgctgctgaa
+ggcgcagagtctggcacaccttttaatgaaataaatttgctggaaaaggattggaatgac
+tatgatgaaaaaataaaggagtctgttggaatctacgaagttacccataagtttctaaaa
+------tgctga
+>pelCas|ML685778.1:16253483-16280001 <unknown description>
+a---tggggaagatcgggctgcagctgaaggcaacgctggaaaacatcaccaacctcagg
+gcggtgggggaggatttccgctggtacctgaagatgaaatgtgggaattgtggtgagatt
+tctgaaaaatggcaatacttgcgattaatggacagtactcctcttaagggaggcagaggg
+agtgccactatggtgcagaaatgcaagctgtgctccagagagaattccattgatatctta
+agagacacaatcaagccttataatgctgaagacagtgagaagtttaagacaatagtggaa
+tttgagtgccggggtcttgagccagttgactttcaaccacaggcaattttctttcaagct
+ggaggagtacctggattagttttcttggagagtaaattacaagacaagaaatggacggat
+ttaagactaagcccacccgaagaagtggggtttgagggtattctgcacagtgctgtgaaa
+acccactgctaa
+>pelSin|NW_005855924.1:71206-95622 <unknown description>
+a---tggggaagatcgggctgcagctgaaagcgacgctggagaatgttaccaacctcagg
+ccggtgggggaagactttcgctggtacttgaagatgaaatgtgggaactgcagtgagatt
+tctgaaaaatggcaatatctgcgattaatggacagtgctcctcttaagggaggcagaggg
+agtgccactatggtgcagaaatgcaagctgtgttccagagagaattccattgatatttta
+agagacacaatcaagccttataatgctgaagacagtgagaagtttaagacaatcgtggag
+tttgagtgccggggtcttgagccagttgactttcaaccacaggctgggtttgctgctgaa
+ggtgcagagtctggcacaccttttaatgaaataaacttgctggaaaaggactggaatgac
+tatgatgaaaaaataaaggagtctgttggaatctatgaagttacccataagtttctaaaa
+------tgctga
+>plaMeg|QXTE01000044.1:4071600-4093116 <unknown description>
+a---tggggaagatcgggctgcagctgaaagccactctggaaaatattacaaacctcaga
+ccggtgggggaagattttcgctggtacctgaagatgaaatgtgggaactgcggtgagatt
+tctgaaaaatggcaatacctgcgattaatggacagtgctcctcttaagggaggcagaggg
+agtgccactatggtgcagaaatgcaagctgtgctccagagagaattccattgatatctta
+agagacacaatcaagccttataatgctgaagacagtgagaagtttaagacaatagtggag
+tttgagtgtcgaggtcttgagccagttgactttcaaccacaggcaattttcctaactcaa
+agtgcagagtctggcacaccttttagtgaaataaacttgctggaaaaggactggaatgac
+tatgatgaaaaaataaaggagtctgttggaatctatgaagttacccataagtttctaaaa
+------tgctaa
+>podExp|ML682035.1:10827735-10840625 <unknown description>
+a---tggggaagatcgggctgcagctgaaggcgaccctggagaacatcaccaacctcagg
+gcggtgggggaggattttcgctggtacctgaa----------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+-----------------------------------------ggctggttttgctgcagaa
+ggcgcagagtctggcacacctttcaatgaaataaatttgcttgaaaaggattggaatgac
+tatgatgaaaaaataaaggagtctgttggaatttatgaagttacccataggttcctaaaa
+------tgctaa

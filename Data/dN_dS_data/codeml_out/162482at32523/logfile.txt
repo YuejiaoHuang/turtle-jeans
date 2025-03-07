@@ -1,0 +1,53 @@
+
+gaps are removed for pairwise comparison.
+CODONML in paml version 4.8a, August 2014
+
+----------------------------------------------
+Phe F TTT | Ser S TCT | Tyr Y TAT | Cys C TGT
+      TTC |       TCC |       TAC |       TGC
+Leu L TTA |       TCA | *** * TAA | *** * TGA
+      TTG |       TCG |       TAG | Trp W TGG
+----------------------------------------------
+Leu L CTT | Pro P CCT | His H CAT | Arg R CGT
+      CTC |       CCC |       CAC |       CGC
+      CTA |       CCA | Gln Q CAA |       CGA
+      CTG |       CCG |       CAG |       CGG
+----------------------------------------------
+Ile I ATT | Thr T ACT | Asn N AAT | Ser S AGT
+      ATC |       ACC |       AAC |       AGC
+      ATA |       ACA | Lys K AAA | Arg R AGA
+Met M ATG |       ACG |       AAG |       AGG
+----------------------------------------------
+Val V GTT | Ala A GCT | Asp D GAT | Gly G GGT
+      GTC |       GCC |       GAC |       GGC
+      GTA |       GCA | Glu E GAA |       GGA
+      GTG |       GCG |       GAG |       GGG
+----------------------------------------------
+Nice code, uuh?
+
+processing fasta file
+reading seq# 1 carIns                                                1332 sites
+reading seq# 2 cheAbi                                                1332 sites
+reading seq# 3 cheMyd                                                1332 sites
+reading seq# 4 cheSer                                                1332 sites
+reading seq# 5 chrPic                                                1332 sites
+reading seq# 6 cuoAmb                                                1332 sites
+reading seq# 7 cuoMcc                                                1332 sites
+reading seq# 8 derCor                                                1332 sites
+reading seq# 9 derMaw                                                1332 sites
+reading seq#10 emySub                                                1332 sites
+reading seq#11 gopAga                                                1332 sites
+reading seq#12 malTer                                                1332 sites
+reading seq#13 mesTub                                                1332 sites
+reading seq#14 pelCas                                                1332 sites
+reading seq#15 pelSin                                                1332 sites
+reading seq#16 plaMeg                                                1332 sites
+reading seq#17 terMex                                                1332 sites
+ns = 17  	ls = 1332
+Reading sequences, sequential format..
+Reading seq # 1: carIns     Reading seq # 2: cheAbi     Reading seq # 3: cheMyd     Reading seq # 4: cheSer     Reading seq # 5: chrPic     Reading seq # 6: cuoAmb     Reading seq # 7: cuoMcc     Reading seq # 8: derCor     Reading seq # 9: derMaw     Reading seq #10: emySub     Reading seq #11: gopAga     Reading seq #12: malTer     Reading seq #13: mesTub     Reading seq #14: pelCas     Reading seq #15: pelSin     Reading seq #16: plaMeg     Reading seq #17: terMex     
+Sequences read..
+no sites. Got nothing to do
+Counting codons..
+
+17 out of 17 sequences do not have any resolved nucleotides. Giving up.

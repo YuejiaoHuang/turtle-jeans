@@ -1,0 +1,120 @@
+>carIns|ML683818.1:9132249-9153486 <unknown description>
+atgtgtgtgtttgtattccaggatgtatttggagctatgctgttt---------------
+---------------------gtgtttgggttggagga----------------------
+--------------------gtgtgcgttttgtgctggcactgtgatagcagttggtctg
+acgatagctgctgctggatttgcaggtcgttatgtgttacaagctatgaagcaaatggaa
+ccacaagtaaaacaagcccttcagaatctgccaaaatctgccttcagtggttattacaga
+ggtggatttgaacccaaaatgaccaaacgagaagcagctttaatattaggagtgagccct
+acagccaataaaagtaaaattagggaagctcacagacggatcatgcttttgaatcatcca
+gataaaggtggttctccctatgtggcagccaaaatcaatgaagctaaagatttactggaa
+atgcaaatattttag---
+>cheMyd|NW_006626519.1:630625-646326 <unknown description>
+atg--------gatg---------------------------------------------
+----aagaaaaaaaagacattcagagaaaagaggagccatacacccagggccttacttat
+cagtttaaaattaagcaggggagcaaagcaacggctagtactctgatagcggttggtctg
+acaatagctgctgctggatttgcaggtcgttatgcgttacaagctatgaagcaagtggaa
+ccacaagtaaaacaagcccttcagagtctgccaaaatctgccttcagtggttattacaga
+ggtggatttgatcccaaaatgaccaaacgagaagcagctttaatattaggagtgagtcct
+acagccaataaaggtaaaattagggaagctcacagacggatcatgcttttgaatcaccca
+gataaaggtggttctccctatgtggcagccaaaatcaatgaagctaaagatttactggaa
+ggccaagctaagaagtga
+>cheSer|ML689098.1:41121384-41153249 <unknown description>
+atgggct--ctggtgccgtacggcgagtcggggacggcggggccccgagccgtgtcc-gg
+tccggccgcttcc--------cgcccgcagtagcgggg----------------------
+------------------------ctccgccgggctagtactgtgatagcggttggtctg
+acaatagctgctgctggatttgcaggtcgttatgcgttacaagctatgaagcaaatggaa
+ccacaagtaaaacaagcccttcagagtctgccaaaatctgccttcagtggttattacaga
+ggtggatttgatcccaaaatgaccaaacgagaagcagctttaatattaggagtgagtcct
+acagccaataaaggtaaaattagggaagctcacagacgaatcatgcttttgaatcatcca
+gataaaggtggttctccctatgtggcagccaaaatcaatgaagctaaagatttactggaa
+gaaaaagttagataa---
+>cuoAmb|ML138693.1:9368885-9382352 <unknown description>
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------atggctactactatgatagcagttggtctg
+acaatagctgctgctggatatgcaggtcgttatgcattacaagctatgaagcaaatggaa
+ccacaagtaaaacaagcccttcagagtctgccaaaatctgccttcagtggttattacaga
+ggtggatttgatcccaaaatgaccaaacgggaagcagctttaatattaggagtgagtcct
+acagccaataaaggtaaaattagggaagctcacagacggatcatgcttttgaatcatcca
+gataaaggtggttctccctatgtggcagccaaaatcaatgaagctaaagatttactggaa
+ggccaagctaagaagtga
+>cuoMcc|ML123147.1:10164339-10176708 <unknown description>
+atg--------gatg---------------------------------------------
+------aagaaaagagccattcagagaaaagaggagcc----------------------
+------------------------gtacacccagctactactatgatagcagttggtctg
+acaatagctgctgctggatatgcaggtcgttatgcattacaagctatgaagcaaatggaa
+ccacaagtaaaacaagcccttcagagtctgccaaaatctgccttcagtggctattacaga
+ggtggatttgatcccaaaatgaccaaacgggaagcagctttaatattaggagtgagtcct
+acagccaataaaggtaaaattagggaagctcacagacggatcatgcttttgaatcatcca
+gataaaggtggttctccctatgtggcagccaaaatcaatgaagctaaagatttactggaa
+ggccaagctaagaagtga
+>derCor|ML644706.1:349-7195 <unknown description>
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------atggctagtactctgatagcggttggtctg
+acaatagctgctgctggatttgcaggtcgttatgcgttacaagctatgaagcaaatggaa
+ccacaagtaaaacaagcccttcagagtctgccaaaatctgccttcagtggttattacaga
+ggtggatttgatcccaaaatgaccaaacgagaagcagctttaatattaggagtgagtcct
+acagccaataaaggtaaaattagggaagctcacagacggatcatgcttttgaatcaccca
+gataaaggtggttctccctatgtggcagccaaaatcaatgaagctaaagatttactggaa
+ggccaagctaagaagtga
+>derMaw|ML677401.1:7539013-7553770 <unknown description>
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------atggctgctactctgatagcggttggtctg
+acaatagctgctgctggatttgcaggtcgttatgcgatacaagctatgaagcaaatggaa
+ccacaagtaaagcaagcccttcagagtctgccaaaatctgccttcagcggttattacaga
+ggtggatttgatcccaaaatgaccaaacgagaagctgctttaatattaggagtgagtcct
+acagccaataaaggtaaaattagggaagctcacagacggatcatgcttttgaatcatcca
+gataaaggtggttctccctatattttacagctgataaataagaaaaaagatccattgaat
+ggaaatgctgactga---
+>galGal|NC_006096.5:17241907-17244653 <unknown description>
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------atggtggcggtcgggctg
+accatcgcggcggcgggcttcgcaggtcgttatgcgctgagagccatgaagcaaatggag
+ccccagatgaagcaagtgctgcagaacctgcccaaagcggacttcagtggttattacaga
+ggtggatttgaacccaaaatgactaaacgagaagcagccctaatactaggagtgagccct
+acagccaacagaagtaaaattagagaagctcatagacgaatcatgcttctgaatcatcca
+gataaaggtggttctccatatgtagcagccaaaatcaatgaagctaaagatttgctggaa
+gaccaagctaaaaaatga
+>gopAga|PPEB01000865.1:382570-391813 <unknown description>
+------------atgcactggccgctgcttc--------ccgctgctcccattggtctgg
+agcagcaaaccaaggccagtgggagctgcagtcggccg----------------------
+------------------------aacccgcaggctactactgtgatagcagttggattg
+acaatagctgctgctggatttgcaggtcgttatgcattacaagctatgaagcaaatggaa
+ccacaagtaaaacaagcccttcagagtctgccaaaatcagccttcagtggttattacaga
+ggtggatttgatcccaaaatgacgaaacgagaagcagctttaatattaggagtgagtcct
+acagccaataaaggtaaaattcgggaagctcacagacggatcatgcttttgaatcatcca
+gataaaggtggttctccctatgtggcagccaaaatcaatgaagctaaagatttactggaa
+ggccaagctaagaagtga
+>malTer|MDXI01012351.1:153743-154942 <unknown description>
+------------atgcccgg-----------------------------cggagccccgc
+tactgcgggcgggaaacggccggaccggacacggctcg----------------------
+------------------------gggcccgccgtccccgactcgatagcggttggtctg
+acaatagctgctgctggatttgcaggtcgttatgcattacaagctatgaagcaaatggaa
+ccacaagtaaaacaagcccttcagaatctgccaaaatctgccttcagtggttattacaga
+ggtggatttgatcccaaaatgaccaaacgagaagcagctttaatattaggagtgagtcct
+acagccaataaaggtaaaattagggaggctcacagacggatcatgcttttgaatcatcca
+gataaaggtggttctccctatgtggcagccaaaatcaatgaagctaaagatttactggaa
+ggccaagctaagaagtga
+>mesTub|ML675649.1:9553261-9568334 <unknown description>
+atgaa-----tggtgc------gggaatggggaaatgggggactg---------------
+---gagagaatgggagacacaagagggtcctggcattg----------------------
+------------------------ggggaggaggctagtactgtgatagcggttggtctg
+acaatagctgctgctggatttgcaggtcgctatgcggtacaagctatgaagcaaatggaa
+ccacaagtaaaacaagcccttcagagtctgccaaaatctgccttcagtggttattacaga
+ggtggatttgaagccaaaatgaccaaacaagaagcagctttaatattaggagtgagtccg
+acagccaataaagctaaaatcagggaagctcacagacgaatcatgcttttgaatcatcca
+gataaaggtggttctccctatgtggcagccaaaatcaatgaagctaaagatttactggat
+ggccaagctaagaagtaa
+>pelSin|NW_005871022.1:4467551-4478090 <unknown description>
+------------atgtcggatccgcagttacgaacggggccgttcctctccctggtc---
+tccagcagaccag--------ggagaggaagcaaagcg----------------------
+------------------------gcggaacacgctggtaccgtgatagctgttggtctg
+acaatagcagctgctggatttgcaggtcgttatgccttacaagctatgaagcaaatggaa
+ccacaagtaaaacaagcccttcagagtctgccaaaatctgccttcagtggttattacaga
+ggtggatttgaacccaaaatgaccaagcgagaagcagctttaatattaggagtaagtcct
+acagccaataaaggtaaaattagggaagctcacagacggatcatgcttttgaatcatcca
+gataaaggtggttctccctatgtggcagccaaaatcaatgaagctaaagatttactggaa
+ggccaagctaagaagtga
