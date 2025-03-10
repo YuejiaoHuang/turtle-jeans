@@ -1,0 +1,288 @@
+<?xml version="1.0"?>
+<!DOCTYPE pathway SYSTEM "https://www.kegg.jp/kegg/xml/KGML_v0.7.2_.dtd">
+<!-- Creation date: Oct 29, 2020 15:32:56 +0900 (GMT+9) -->
+<pathway name="path:cmy03050" org="cmy" number="03050"
+         title="Proteasome"
+         image="https://www.kegg.jp/kegg/pathway/cmy/cmy03050.png"
+         link="https://www.kegg.jp/kegg-bin/show_pathway?cmy03050">
+    <entry id="225" name="cmy:102947470" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102947470">
+        <graphics name="IFNG" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="416" y="804" width="46" height="17"/>
+    </entry>
+    <entry id="226" name="cmy:102929396" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102929396">
+        <graphics name="PSMD3" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="575" y="153" width="46" height="17"/>
+    </entry>
+    <entry id="227" name="cmy:102942656" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102942656">
+        <graphics name="PSMD12" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="666" y="153" width="46" height="17"/>
+    </entry>
+    <entry id="228" name="cmy:102939625" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102939625">
+        <graphics name="PSMD11" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="712" y="153" width="46" height="17"/>
+    </entry>
+    <entry id="229" name="cmy:102937660" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102937660">
+        <graphics name="PSMD6" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="758" y="153" width="46" height="17"/>
+    </entry>
+    <entry id="230" name="cmy:102930504" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102930504">
+        <graphics name="PSMD7" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="575" y="170" width="46" height="17"/>
+    </entry>
+    <entry id="231" name="cmy:102934196" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102934196">
+        <graphics name="PSMD13" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="621" y="170" width="46" height="17"/>
+    </entry>
+    <entry id="232" name="cmy:102944732" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102944732">
+        <graphics name="PSMD14" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="667" y="170" width="46" height="17"/>
+    </entry>
+    <entry id="233" name="cmy:102937598" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102937598">
+        <graphics name="PSMD8" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="712" y="170" width="46" height="17"/>
+    </entry>
+    <entry id="234" name="cmy:114019971" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:114019971">
+        <graphics name="SEM1" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="758" y="170" width="46" height="17"/>
+    </entry>
+    <entry id="235" name="ko:K03029" type="ortholog"
+        link="https://www.kegg.jp/dbget-bin/www_bget?K03029">
+        <graphics name="K03029" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="575" y="200" width="46" height="17"/>
+    </entry>
+    <entry id="236" name="cmy:102936386" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102936386">
+        <graphics name="PSMD2" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="575" y="251" width="46" height="17"/>
+    </entry>
+    <entry id="237" name="cmy:102937331" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102937331">
+        <graphics name="PSMD1" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="621" y="251" width="46" height="17"/>
+    </entry>
+    <entry id="238" name="cmy:102939858" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102939858">
+        <graphics name="ADRM1" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="667" y="251" width="46" height="17"/>
+    </entry>
+    <entry id="239" name="cmy:102931699" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102931699">
+        <graphics name="PSMC2" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="575" y="268" width="46" height="17"/>
+    </entry>
+    <entry id="240" name="cmy:102932635" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102932635">
+        <graphics name="PSMC1" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="621" y="268" width="46" height="17"/>
+    </entry>
+    <entry id="241" name="cmy:102941752" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102941752">
+        <graphics name="PSMC4" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="804" y="268" width="46" height="17"/>
+    </entry>
+    <entry id="242" name="cmy:102933804" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102933804">
+        <graphics name="PSMC6" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="712" y="268" width="46" height="17"/>
+    </entry>
+    <entry id="243" name="cmy:102938450" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102938450">
+        <graphics name="PSMC3" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="758" y="268" width="46" height="17"/>
+    </entry>
+    <entry id="244" name="cmy:102944347" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102944347">
+        <graphics name="PSMC5" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="667" y="268" width="46" height="17"/>
+    </entry>
+    <entry id="245" name="cmy:102945971" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102945971">
+        <graphics name="102945971" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="828" y="171" width="46" height="17"/>
+    </entry>
+    <entry id="246" name="cmy:102945512" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102945512">
+        <graphics name="PSME2" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="874" y="171" width="46" height="17"/>
+    </entry>
+    <entry id="247" name="cmy:102934985" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102934985">
+        <graphics name="PSME3" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="942" y="171" width="46" height="17"/>
+    </entry>
+    <entry id="248" name="cmy:102946375" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102946375">
+        <graphics name="PSME4" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="875" y="268" width="46" height="17"/>
+    </entry>
+    <entry id="249" name="cmy:102930152 cmy:102947706" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102930152+cmy:102947706">
+        <graphics name="PSMA6..." fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="581" y="450" width="46" height="17"/>
+    </entry>
+    <entry id="250" name="cmy:102936648" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102936648">
+        <graphics name="PSMA2" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="627" y="450" width="46" height="17"/>
+    </entry>
+    <entry id="251" name="cmy:102929940" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102929940">
+        <graphics name="PSMA4" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="673" y="450" width="46" height="17"/>
+    </entry>
+    <entry id="252" name="cmy:102938839 cmy:102939196" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102938839+cmy:102939196">
+        <graphics name="PSMA7..." fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="719" y="450" width="46" height="17"/>
+    </entry>
+    <entry id="253" name="cmy:102932011" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102932011">
+        <graphics name="PSMA5" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="765" y="450" width="46" height="17"/>
+    </entry>
+    <entry id="254" name="cmy:102946395" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102946395">
+        <graphics name="PSMA1" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="811" y="450" width="46" height="17"/>
+    </entry>
+    <entry id="255" name="cmy:102929780" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102929780">
+        <graphics name="PSMA3" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="857" y="450" width="46" height="17"/>
+    </entry>
+    <entry id="256" name="cmy:119564651" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:119564651">
+        <graphics name="PSMB6" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="581" y="467" width="46" height="17"/>
+    </entry>
+    <entry id="257" name="cmy:102942608" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102942608">
+        <graphics name="PSMB7" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="627" y="467" width="46" height="17"/>
+    </entry>
+    <entry id="258" name="cmy:102943560" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102943560">
+        <graphics name="PSMB3" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="673" y="467" width="46" height="17"/>
+    </entry>
+    <entry id="259" name="cmy:102941715" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102941715">
+        <graphics name="PSMB2" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="719" y="467" width="46" height="17"/>
+    </entry>
+    <entry id="260" name="cmy:102931099" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102931099">
+        <graphics name="PSMB5" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="765" y="467" width="46" height="17"/>
+    </entry>
+    <entry id="261" name="cmy:102940787" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102940787">
+        <graphics name="PSMB1" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="811" y="467" width="46" height="17"/>
+    </entry>
+    <entry id="262" name="cmy:102931712" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102931712">
+        <graphics name="PSMB4" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="857" y="467" width="46" height="17"/>
+    </entry>
+    <entry id="263" name="cmy:102942434" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102942434">
+        <graphics name="PSMB9" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="581" y="534" width="46" height="17"/>
+    </entry>
+    <entry id="264" name="ko:K02733" type="ortholog"
+        link="https://www.kegg.jp/dbget-bin/www_bget?K02733">
+        <graphics name="K02733" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="641" y="534" width="46" height="17"/>
+    </entry>
+    <entry id="265" name="cmy:119567536" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:119567536">
+        <graphics name="PSMB8" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="697" y="534" width="46" height="17"/>
+    </entry>
+    <entry id="266" name="cmy:119563591" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:119563591">
+        <graphics name="PSMB11" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="811" y="534" width="46" height="17"/>
+    </entry>
+    <entry id="268" name="ko:K03432" type="ortholog"
+        link="https://www.kegg.jp/dbget-bin/www_bget?K03432">
+        <graphics name="K03432" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="581" y="608" width="46" height="17"/>
+    </entry>
+    <entry id="269" name="ko:K03433" type="ortholog"
+        link="https://www.kegg.jp/dbget-bin/www_bget?K03433">
+        <graphics name="K03433" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="581" y="625" width="46" height="17"/>
+    </entry>
+    <entry id="270" name="ko:K03420" type="ortholog"
+        link="https://www.kegg.jp/dbget-bin/www_bget?K03420">
+        <graphics name="K03420" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="875" y="351" width="46" height="17"/>
+    </entry>
+    <entry id="271" name="path:cmy04120" type="map"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy04120">
+        <graphics name="Ubiquitin mediated proteolysis" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="roundrectangle" x="365" y="576" width="128" height="34"/>
+    </entry>
+    <entry id="272" name="path:cmy03050" type="map"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy03050">
+        <graphics name="TITLE:Proteasome" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="roundrectangle" x="102" y="58" width="124" height="25"/>
+    </entry>
+    <entry id="273" name="cmy:102935089" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102935089">
+        <graphics name="PSMF1" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="467" y="996" width="46" height="17"/>
+    </entry>
+    <entry id="274" name="cmy:102931746" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102931746">
+        <graphics name="102931746" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="417" y="964" width="46" height="17"/>
+    </entry>
+    <entry id="283" name="cmy:102942434" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102942434">
+        <graphics name="PSMB9" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="367" y="844" width="46" height="17"/>
+    </entry>
+    <entry id="284" name="ko:K02733" type="ortholog"
+        link="https://www.kegg.jp/dbget-bin/www_bget?K02733">
+        <graphics name="K02733" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="417" y="844" width="46" height="17"/>
+    </entry>
+    <entry id="285" name="cmy:119567536" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:119567536">
+        <graphics name="PSMB8" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="467" y="844" width="46" height="17"/>
+    </entry>
+    <entry id="286" name="cmy:102945971" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102945971">
+        <graphics name="102945971" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="417" y="907" width="46" height="17"/>
+    </entry>
+    <entry id="287" name="cmy:102945512" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102945512">
+        <graphics name="PSME2" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="417" y="924" width="46" height="17"/>
+    </entry>
+    <entry id="288" name="ko:K13527" type="ortholog"
+        link="https://www.kegg.jp/dbget-bin/www_bget?K13527">
+        <graphics name="K13527" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="644" y="351" width="46" height="17"/>
+    </entry>
+    <entry id="289" name="cmy:102935145" type="gene"
+        link="https://www.kegg.jp/dbget-bin/www_bget?cmy:102935145">
+        <graphics name="PSMD9" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="620" y="153" width="46" height="17"/>
+    </entry>
+</pathway>
