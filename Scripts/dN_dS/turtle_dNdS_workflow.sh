@@ -45,3 +45,6 @@ sed -i '' "s/.fa//g" list_final.txt
 
 # calculate pure distance matrices on final trimmed alignments (independent of dN/dS)
 ./calculate_pdm.sh
+
+# manually remove gene 162482at32523, because the dN/dS is not working for this gene for some reason :(
+# TODO: remove from list, pdm data + dnds_final data

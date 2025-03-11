@@ -1,7 +1,7 @@
 # Script to copy all relevant codeml output into one folder, rename by gene
 
 # For each gene
-cat list_enough_taxa.txt | while read gene
+cat list_final.txt | while read gene
 do
 
 	# copy 2ML.dN and 2ML.dS into new folder, rename according to gene ID

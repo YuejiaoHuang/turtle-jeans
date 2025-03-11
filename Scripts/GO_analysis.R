@@ -21,7 +21,7 @@ colours_classes[3] <- fish(n=1,option="Balistoides_conspicillum", end=0.4,
 colours_classes[4] <- fish(n=1,option="Balistoides_conspicillum", end=0.2, 
                            begin=0.2)
 
-gene_names <- readLines("Data/list.txt")
+gene_names <- readLines("Scripts/dN_dS/list_final.txt")
 
 outliers_dn <- read.csv("Results/outliers_genes_dn_q95.csv")
 colnames(outliers_dn) <- c("n", "gene")
@@ -396,6 +396,7 @@ ggsave("Results/dn_aquatic_point.pdf", width = 10, height = 6)
 colours_classes5 <- fish(n=5,option="Balistoides_conspicillum", end=0.95, 
                          begin=0.3,direction=-1)
 colours_classes4 <- colours_classes5[1:4]
+
 c("#0F3D5CFF", "#4C98B8FF", "#7EA77DFF", "#9DB327FF", "#DEE100FF")
 
 colour_marine <- colours_classes4[1]
