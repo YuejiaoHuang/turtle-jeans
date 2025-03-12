@@ -1,15 +1,30 @@
-- plot pairwise distances against pairwise divergence times (deviations from diagonal)
-- alternative: each node has divergence time against #outlier genes in that node (all tip nodes) (deeper nodes less outlier genes) (sisters more shared outliers)
 - cluster heatmap matrix (in R: nj, hclust on matrix)
 - change Fig2: no Venn, dated tree + epochs, label important nodes, combine with heatmap
 - write on Fig2
 
 DONE:
 - change n_seg_sites to n_parsimony_sites -> only 304806at32523 : 9
-- methods on removing outgroups, filtering for enough taxa, dN dS workflow
-- improve Fig1, Fig2, Fig3
-- recalculated pure distances
 - fixed list.txt confusion -> should be 5084 genes in total
+- plot pairwise distances against pairwise divergence times (deviations from diagonal)
+- alternative: each node has divergence time against #outlier genes in that node (all tip nodes) (deeper nodes less outlier genes) (sisters more shared outliers)
+
+NOTES KEGG:
+TODO:
+- 5258 genes, but I don't think it matters, because not used as background
+- adjust # outlier genes in comments based on new data (e.g. line 47)
+- habitat part can go
+- suborder part can go
+-> species outliers not needed at all
+- all genes can go
+- comments missing
+- should be in scripts folder
+- save plots to results folder
+- adjust dN/dS dotplot
+DISCUSSION POINTS:
+- what about 113 genes without cmy_id?
+- why not only subset of genes? how do we account for only analysing BUSCOs but testing against all genes?
+- how do we deal with bias towards green sea turtle (some species closer, others more distantly related)
+
 
 
 EXPLANATIONS:

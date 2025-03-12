@@ -47,4 +47,4 @@ sed -i '' "s/.fa//g" list_final.txt
 ./calculate_pdm.sh
 
 # manually remove gene 162482at32523, because the dN/dS is not working for this gene for some reason :(
-# TODO: remove from list, pdm data + dnds_final data
+./remove_gene_final_data.sh

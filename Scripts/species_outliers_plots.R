@@ -319,8 +319,8 @@ ggplot(df_div_times, aes(x=divergence_time, y=value, label=Species_pair)) +
   theme_minimal() +
   labs(title = "Species pairs",
        x = "Divergence time",
-       y = "Number of overlapping genes") +
-  
+       y = "Number of overlapping genes")
+ggsave("Results/dotplot_tips_divtimes_overlaps.pdf", width = 8, height = 5)
 
 
 ### INTERNAL NODES
@@ -364,3 +364,5 @@ ggplot(results, aes(x=divergence_time, y=num_overlapping_genes)) +
   labs(title = "Internal nodes",
      x = "Divergence time",
      y = "Number of outlier genes present in all associated tips")
+
+ggsave("Results/dotplot_internal_divtimes_overlaps.pdf", width = 8, height = 5)
