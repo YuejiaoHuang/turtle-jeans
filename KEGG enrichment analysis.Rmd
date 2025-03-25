@@ -83,6 +83,8 @@ outliers_dnds_species <- read.csv("Results/outliers_species_dnds_q95.csv",
   left_join(.,genes, by = "busco_id") %>% 
   filter(!is.na(cmy_id )) %>% 
   select(ncbi_gid,cmy_id, species)
+
+
 ### 700 rows, missing one gene 291010at32523
 outliers_pure_species <- read.csv("Results/outliers_species_pure_q95.csv", 
                                   col.names = c("n", "species", "busco_id")) %>% 
@@ -222,7 +224,8 @@ kegg_ref_Pleurodira_ds <- enrich_ref_kegg(Outliers_Pleurodira_ds)
 
 kegg_ref_genes_dnds <- enrich_ref_kegg(outliers_dnds) #8 enriched terms
 dotplot(kegg_ref_genes_dnds,label_forma = 100)
-ggsave("kegg_ref_genes_dnds.pdf")
+ggsave("kegg_ref_genes_dnds.png")
+
 kegg_ref_Marine_dnds <- enrich_ref_kegg(Outliers_Marine_dnds)
 kegg_ref_Aquatic_dnds <- enrich_ref_kegg(Outliers_Aquatic_dnds)
 kegg_ref_Aquatic_Terrestrial_dnds <- enrich_ref_kegg(Outliers_Aquatic_Terrestrial_dnds)
@@ -251,7 +254,18 @@ dotplot(kegg_ref_Pleurodira_pure,label_forma = 100)
 
 ```{r}
 
-barplot(kegg_ref_genes_dnds,y = description)
+desired_order <-  c("Spliceosome","Basal transcription factors", "mRNA surveillance pathway", "Proteasome", "RNA degradation", "Polycomb repressive complex","Viral life cycle - HIV-1","Cell cycle")
+kegg_ref_genes_dnds@result$Description <- factor(kegg_ref_genes_dnds@result$Description,levels = desired_order)
+dotplot(kegg_ref_genes_dnds, 
+        x = "GeneRatio", 
+        showCategory = length(desired_order)) + 
+  scale_y_discrete(limits = rev(desired_order)) +
+  theme_bw()
+
+ggsave("KEGG enriched pathways.png")
+
+kegg_ref_genes_dnds@result %>% filter(p.adjust < 0.05) %>% select(geneID) %>% write_csv("geneid.csv")
+
 kegg_path_id <- rownames(kegg_ref_genes_dnds@result %>% filter(p.adjust < 0.05) %>% select(ID))
 
 for (i in kegg_path_id) {
@@ -262,7 +276,3 @@ for (i in kegg_path_id) {
 }
 
 ```
-
-
-
-
