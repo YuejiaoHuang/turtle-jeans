@@ -1,12 +1,15 @@
-- cluster heatmap matrix (in R: nj, hclust on matrix)
-- change Fig2: no Venn, dated tree + epochs, label important nodes, combine with heatmap
+- TELL me which nodes to label in tree
 - write on Fig2
 
+QUESTIONS:
+- heatmap diagonal: total # genes in that species or # unique in that species
+- DISCUSSION: maybe heatmap also depends on genome completeness, how many genes present in species, but also: in how many species is specific gene present?
+- cluster heatmap matrix (in R: nj, hclust on matrix)
+
 DONE:
-- change n_seg_sites to n_parsimony_sites -> only 304806at32523 : 9
-- fixed list.txt confusion -> should be 5084 genes in total
-- plot pairwise distances against pairwise divergence times (deviations from diagonal)
-- alternative: each node has divergence time against #outlier genes in that node (all tip nodes) (deeper nodes less outlier genes) (sisters more shared outliers)
+- venn diagram Fig1
+- change Fig2: epochs ok?, grid ok?, ltt ok?
+- assembly quality check plot
 
 NOTES KEGG:
 TODO:

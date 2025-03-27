@@ -76,11 +76,16 @@ plot_tree <- ggtree::ggtree(species_tree_plot)
 plot_tree <- plot_tree +
   ggtree::geom_tiplab(size=3, offset=0.5, fontface = "italic") + 
   theme_tree2() +
-  coord_geo(xlim = c(-240, 100), ylim = c(-0.5, Ntip(species_tree_plot)+2),
-            neg = TRUE, abbrv = list(TRUE, FALSE), dat=list("epochs", "periods"),
-            pos = list("bottom", "bottom"), size = "auto",
-            height = list(unit(1, "lines"), unit(1, "lines"))) +
-  scale_x_continuous(breaks = seq(-240, 0, 20), labels = abs(seq(-240, 0, 20)))
+  coord_geo(xlim = c(-250, 100), ylim = c(-0.5, Ntip(species_tree_plot)+2),
+            neg = TRUE, abbrv = list(FALSE), dat=list("periods"),
+            fill = c("grey90", "grey85", "grey80", "grey75", "grey70", "grey65"),
+            color= "grey35",
+            lab_color = "grey25",
+            pos = list("bottom"), size = "auto",
+            height = list(unit(1, "lines"))) +
+  scale_x_continuous(breaks = seq(-240, 0, 20), labels = abs(seq(-240, 0, 20))) +
+  theme(panel.grid.major   = element_line(color="grey80", size=.2),
+        panel.grid.major.y = element_blank()) 
 revts(plot_tree)
 
 ggsave("Results/species_tree_branch_lengths.pdf", width = 8, height = 5)
@@ -293,7 +298,8 @@ ggplot(df_heatmap_pure, aes(x = Species1, y = Species2, fill = value)) +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
 ggsave("Results/heatmap_pure.pdf", width = 8, height = 5)
 
-
+clust_pure <- hclust(dist(matrix_heatmap_pure))
+plot(clust_pure)
 
 ### PAIRWISE DIVERGENCE TIMES
 
@@ -315,11 +321,12 @@ df_div_times <- merge(df_div_times, df_heatmap_dnds_reduced, by="Species_pair")
 df_div_times <- df_div_times %>% filter(Species1 != Species2)
 
 ggplot(df_div_times, aes(x=divergence_time, y=value, label=Species_pair)) +
-  geom_point() +
+  geom_point(colour="#72315C") +
   theme_minimal() +
   labs(title = "Species pairs",
        x = "Divergence time",
        y = "Number of overlapping genes")
+
 ggsave("Results/dotplot_tips_divtimes_overlaps.pdf", width = 8, height = 5)
 
 
@@ -328,7 +335,7 @@ ggsave("Results/dotplot_tips_divtimes_overlaps.pdf", width = 8, height = 5)
 outliers_dnds_species <- merge(outliers_dnds_species, df_species_id, by.x="species", by.y="ID", all.x=T)
 # divergence times all nodes
 div_times_nodes <- dist.nodes(species_tree_plot)[19,]
-div_times_nodes <- floor(max(div_times_nodes) - div_times_nodes)
+div_times_nodes <- round(max(div_times_nodes) - div_times_nodes, digits = 4)
 
 # get all internal nodes
 internal_nodes <- (length(species_tree_plot$tip.label) + 1):max(species_tree_plot$edge)
@@ -346,7 +353,8 @@ get_overlapping_genes <- function(tips, genes_species) {
   return(length(overlapping_genes))
 }
 
-results <- data.frame(node = integer(), divergence_time = numeric(), num_overlapping_genes = integer())
+results <- data.frame(node = integer(), divergence_time = numeric(), 
+                      num_overlapping_genes = integer(), num_tips = integer())
 
 for (node in internal_nodes) {
   tips <- get_tips(species_tree_plot, node)
@@ -354,15 +362,76 @@ for (node in internal_nodes) {
   results <- rbind(results, data.frame(
     node = node,
     divergence_time = div_times_nodes[node],
-    num_overlapping_genes = overlapping_genes
+    num_overlapping_genes = overlapping_genes,
+    num_tips = length(tips)
   ))
 }
 
-ggplot(results, aes(x=divergence_time, y=num_overlapping_genes)) +
-  geom_point() +
+species_richness <- data.frame(ltt.plot.coords(species_tree_plot))
+species_richness$time <- round(species_richness$time * -1, digits = 4)
+data_plot <- merge(results, species_richness, 
+                   by.x = "divergence_time", by.y = "time",
+                   all.x = TRUE, all.y = TRUE)
+
+
+ggplot(data_plot, aes(x=divergence_time, y=num_overlapping_genes)) +
+  geom_point(color="#72315C") +
+  geom_step(aes(x=divergence_time, y=N), color="grey") +
+  scale_y_continuous(
+    name = "Number of outlier genes present in all associated tips",
+    sec.axis = sec_axis(~ . , name = "Species Richness")
+  ) +
   theme_minimal() +
   labs(title = "Internal nodes",
-     x = "Divergence time",
-     y = "Number of outlier genes present in all associated tips")
+     x = "Divergence time")
 
 ggsave("Results/dotplot_internal_divtimes_overlaps.pdf", width = 8, height = 5)
+
+
+### BUSCO + N50 quality check
+
+stats <- read_tsv('../../Downloads/Assembly_stats.tsv')
+stats$`BUSCO S` <- stats$`BUSCO S` * 100
+
+# plot for our tree
+plot_tree <- ggtree::ggtree(species_tree_plot) + ggtree::xlim_tree(450)
+plot_tree <- plot_tree +
+  ggtree::geom_tiplab(size=5, offset=4, fontface = "italic") + 
+  theme_tree2() +
+  vexpand(0.01, direction = -1)
+plot_tree
+
+facet_stats <- facet_plot(plot_tree,
+                            data=stats,
+                            geom=geom_bar,
+                            mapping = aes(x=`Assembly length (Gb)`, fill=`Assembly length (Gb)`),
+                            stat="identity",
+                            orientation='y',
+                            panel="Assembly length (Gb)",
+                            position = position_stack(reverse = TRUE),
+                            show.legend = F)
+
+facet_stats <- facet_plot(facet_stats,
+                            data=stats,
+                            geom=geom_bar,
+                            mapping = aes(x=`Scaffold N50 (Mb)`, fill=`Scaffold N50 (Mb)`),
+                            stat="identity",
+                            orientation='y',
+                            panel="Scaffold N50 (Mb)",
+                            position = position_stack(reverse = TRUE),
+                            show.legend = F)
+
+facet_stats <- facet_plot(facet_stats,
+                            data=stats,
+                            geom=geom_bar,
+                            mapping = aes(x=`BUSCO S`, fill=`BUSCO S`),
+                            stat="identity",
+                            orientation='y',
+                            panel="BUSCO S",
+                            position = position_stack(reverse = TRUE),
+                            show.legend = F) +
+  xlim_tree(240)
+
+facet_stats
+
+ggsave("Results/assembly_stats.pdf", width = 20, height = 9)

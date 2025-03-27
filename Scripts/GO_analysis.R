@@ -21,6 +21,8 @@ colours_classes[3] <- fish(n=1,option="Balistoides_conspicillum", end=0.4,
 colours_classes[4] <- fish(n=1,option="Balistoides_conspicillum", end=0.2, 
                            begin=0.2)
 
+c("#17638DFF", "#4694B8FF", "#B4C408FF", "#FCEF0FFF")
+
 gene_names <- readLines("Scripts/dN_dS/list_final.txt")
 
 outliers_dn <- read.csv("Results/outliers_genes_dn_q95.csv")
@@ -493,6 +495,10 @@ plot_tree
 
 ggsave("Results/species_tree_branch_lengths.pdf", width = 8, height = 5)
 
+
+################################################################################
+################################ GRAVEYARD !!!! ################################
+################################################################################
 
 ################################
 ### OVERLAP BETWEEN HABITATS ###
