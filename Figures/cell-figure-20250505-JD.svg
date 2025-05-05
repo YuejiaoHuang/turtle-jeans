@@ -24,9 +24,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="0.71019121"
-     inkscape:cx="366.80262"
-     inkscape:cy="450.58288"
+     inkscape:zoom="0.69169784"
+     inkscape:cx="360.70664"
+     inkscape:cy="643.3445"
      inkscape:window-width="1512"
      inkscape:window-height="859"
      inkscape:window-x="1920"
@@ -51,6 +51,25 @@
   </sodipodi:namedview>
   <defs
      id="defs1">
+    <marker
+       style="overflow:visible"
+       id="Triangle"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Triangle arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135" />
+    </marker>
     <linearGradient
        id="linearGradient14"
        inkscape:collect="always">
@@ -143,32 +162,76 @@
        x2="161.01378"
        y2="182.02423"
        gradientTransform="matrix(-1,0,0,1,309.02756,4.9999966)" />
+    <marker
+       style="overflow:visible"
+       id="Triangle-1"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Triangle arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-9" />
+    </marker>
   </defs>
   <g
      inkscape:label="cell components"
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(-58.013775,-67.52423)">
+    <rect
+       style="fill:#e07e21;fill-opacity:1;stroke:none;stroke-width:0.37207;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       id="rect17-9"
+       width="35.878597"
+       height="4.8897004"
+       x="145.94235"
+       y="222.63454" />
+    <ellipse
+       style="fill:none;fill-opacity:1;stroke:#22b0df;stroke-width:2;stroke-dasharray:none;stroke-opacity:1"
+       id="path9"
+       cx="152.17136"
+       cy="212.52423"
+       rx="42.959061"
+       ry="51.052666"
+       inkscape:label="nucleu-outline" />
+    <path
+       style="opacity:1;fill:#808080;fill-opacity:1;stroke:#808080;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle);paint-order:stroke fill markers"
+       d="m 110.01377,250.52422 8.00001,-4 z"
+       id="path17"
+       sodipodi:nodetypes="ccc" />
+    <path
+       style="fill:#808080;fill-opacity:1;stroke:#808080;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle-1);paint-order:stroke fill markers"
+       d="m 132.01378,241.52423 8.00001,-4 z"
+       id="path17-8"
+       sodipodi:nodetypes="ccc" />
     <text
        xml:space="preserve"
-       style="font-size:4.93888889px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-       x="92.59063"
-       y="253.99831"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       x="82.767845"
+       y="246.35062"
        id="text1-6-9"
        inkscape:label="mRNA"><tspan
          sodipodi:role="line"
          id="tspan1-3-4"
-         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1;-inkscape-font-specification:'Sans, Normal';font-family:Sans;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:4.93888889px;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-         x="92.59063"
-         y="253.99831" /><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
+         x="82.767845"
+         y="246.35062" /><tspan
          sodipodi:role="line"
-         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1;-inkscape-font-specification:'Sans, Normal';font-family:Sans;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:4.93888889px;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-         x="92.59063"
-         y="256.28934"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
+         x="82.767845"
+         y="252.52423"
          id="tspan4-1">mRNA</tspan></text>
     <g
        id="g4-1"
-       transform="translate(-25.337494,45.406935)"
+       transform="translate(-30.160274,46.350065)"
        inkscape:label="mRNA">
       <path
          style="fill:none;stroke:#2b9300;stroke-width:0.7;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
@@ -192,12 +255,12 @@
        inkscape:label="cell-outline" />
     <path
        style="fill:none;stroke:#ab0000;stroke-width:0.7;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
-       d="m 145.68523,247.11808 4.65709,0.81228"
+       d="m 123.41871,232.92916 4.65709,0.81228"
        id="path1-2-8"
        sodipodi:nodetypes="cc" />
     <g
        id="g4"
-       transform="translate(6.1757768,28.356395)"
+       transform="translate(7.381497,27.222825)"
        inkscape:label="mRNA">
       <path
          style="fill:none;stroke:#2b9300;stroke-width:0.7;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
@@ -208,6 +271,21 @@
          style="fill:none;stroke:#2b9300;stroke-width:0.7;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
          d="m 131.838,209.16783 5.79428,-0.86643"
          id="path1-9-7"
+         sodipodi:nodetypes="cc" />
+    </g>
+    <g
+       id="g4-11"
+       transform="translate(-8.8242213,33.885562)"
+       inkscape:label="mRNA">
+      <path
+         style="fill:none;stroke:#2b9300;stroke-width:0.7;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+         d="m 125.35127,210.11729 5.79428,-0.86643"
+         id="path1-7-0"
+         sodipodi:nodetypes="cc" />
+      <path
+         style="fill:none;stroke:#2b9300;stroke-width:0.7;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+         d="m 131.838,209.16783 5.79428,-0.86643"
+         id="path1-9-7-0"
          sodipodi:nodetypes="cc" />
     </g>
     <text
@@ -229,16 +307,54 @@
          id="tspan4">mRNA</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
        x="148.01378"
-       y="227.52423"
+       y="226.46591"
        id="text1-58"
        inkscape:label="Spliceosome"><tspan
          sodipodi:role="line"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
          x="148.01378"
-         y="227.52423"
+         y="226.46591"
          id="tspan3">Spliceosome</tspan></text>
+    <rect
+       style="fill:#a0bb37;fill-opacity:1;stroke:none;stroke-width:0.444601;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       id="rect17-9-5"
+       width="51.230293"
+       height="4.8897004"
+       x="117.39863"
+       y="252.52423" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       x="119.47005"
+       y="256.35562"
+       id="text1-58-5"
+       inkscape:label="Spliceosome"><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
+         x="119.47005"
+         y="256.35562"
+         id="tspan3-6">mRNA surveillance</tspan></text>
+    <rect
+       style="fill:#5fbcd3;fill-opacity:1;stroke:none;stroke-width:0.362579;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       id="rect17-9-5-5"
+       width="34.071426"
+       height="4.8897004"
+       x="123.94235"
+       y="292.63452" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       x="126.01378"
+       y="296.46591"
+       id="text1-58-5-1"
+       inkscape:label="Spliceosome"><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
+         x="126.01378"
+         y="296.46591"
+         id="tspan3-6-6">Proteasome</tspan></text>
     <ellipse
        style="fill:#e07e21;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
        id="path3"
@@ -259,18 +375,25 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
          x="151.56764"
          y="215.53065">pre-mRNA</tspan></text>
+    <rect
+       style="opacity:1;fill:#d35f8d;fill-opacity:1;stroke:none;stroke-width:0.451143;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       id="rect17"
+       width="52.748856"
+       height="4.8897004"
+       x="153.03935"
+       y="192.54979" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
-       x="157.7953"
-       y="196.53065"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       x="154.01378"
+       y="196.52423"
        id="text1-60"
        inkscape:label="pre-mRNA"><tspan
          sodipodi:role="line"
          id="tspan1-4"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
-         x="157.7953"
-         y="196.53065">Transcription factors</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
+         x="154.01378"
+         y="196.52423">Transcription factors</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
@@ -344,14 +467,6 @@
          id="path1-9"
          sodipodi:nodetypes="cc" />
     </g>
-    <ellipse
-       style="fill:none;fill-opacity:1;stroke:#22b0df;stroke-width:2;stroke-dasharray:none;stroke-opacity:1"
-       id="path9"
-       cx="150.05472"
-       cy="212.52423"
-       rx="42.959061"
-       ry="51.052666"
-       inkscape:label="nucleu-outline" />
     <path
        style="fill:#89a02c;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
        d="m 148.01378,181.52424 c -2.00426,0 -1.99888,5.99999 -4,5.99999 h 2 c 2.00112,0 1.99888,-6 4,-6 z"
@@ -478,5 +593,45 @@
        style="fill:none;fill-opacity:1;stroke:#ffcc00;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
        d="m 123.01378,140.20372 6.83012,1.83013 -1.83012,6.83013 6.83012,1.83012 -1.83012,6.83013 6.83012,1.83013 -1.83012,6.83012 6.83012,1.83013 -1.83012,6.83013 6.83012,1.83013 -1.83012,6.83012 3.51675,0.91584 2.08913,-1.20616 -4.33012,2.5 3.36348,0.88535 0.9665,-3.38559"
        id="path16-4" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       x="22.752331"
+       y="219.24651"
+       id="text1-60-3-1"
+       inkscape:label="pre-mRNA"><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
+         x="22.752331"
+         y="219.24651"
+         id="tspan16-2">Prolonged dormacy</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       x="7.310678"
+       y="296.30075"
+       id="text1-60-3-3-2"
+       inkscape:label="pre-mRNA"><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
+         x="7.310678"
+         y="296.30075"
+         id="tspan17-1">Effective clearance of transcripts</tspan></text>
+    <path
+       style="fill:none;fill-opacity:1;stroke:#80e5ff;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       d="m 124.39161,246.89519 -7.04415,0.61629 0.61627,7.04416 -7.04415,0.61628 0.61627,7.04415 -7.04414,0.6163 0.61628,7.04416 -7.044174,0.61629 0.61628,7.04415 -7.04416,0.61629 0.61628,7.04416 -3.62235,0.29124 -1.84795,-1.55062 3.83023,3.21395 -3.46612,0.28783 -0.36392,-3.50199"
+       id="path16-6" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#ffcc00;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       d="m 70.693259,217.52423 6.83012,-1.83013 1.83014,6.83013 6.830121,-1.83012 1.830136,6.83012 6.83012,-1.83012 1.830131,6.83012 6.830123,-1.83013 1.83014,6.83013 6.83011,-1.83012 1.83014,6.83012 3.50351,-0.96524 1.20616,-2.08913 -2.5,4.33012 3.35554,-0.915 -0.85578,-3.41526"
+       id="path16-4-7" />
+    <ellipse
+       style="fill:#a0bb37;fill-opacity:1;stroke:none;stroke-width:0.0971681;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       id="path3-6"
+       cx="122.84115"
+       cy="244.52423"
+       rx="2.8273687"
+       ry="3.0000002"
+       inkscape:label="Spliceosome" />
   </g>
 </svg>
