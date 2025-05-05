@@ -1,18 +1,40 @@
 - TELL me which nodes to label in tree
-- connect dotplot + tree
-- add Venn diagram
-- a), b), ... all black
-- write KEGG section
+- add relative heatmap
+- read everything
+- update figure larger font sizes
+- add relative heatmap + other heatmaps supplements
+- cell figure
 
 QUESTIONS:
 - DISCUSSION: maybe heatmap also depends on genome completeness, how many genes present in species, but also: in how many species is specific gene present?
 - cluster heatmap matrix (in R: nj, hclust on matrix)
+
+DONE:
 - pairwise distances instead of PURE
 - change diagonal heatmap
 - x-axis heatmap italic
 - ARIAL for everything (x3 plots)
+- connect dotplot + tree
+- add Venn diagram
+- a), b), ... all black
 
-DONE:
+SOFTWARE:
+- R
+	- ape
+	- tidyverse
+	- ggvenn
+	- reshape2
+	- ggtree
+	- deeptime
+	- phangorn
+
+	- fishualize
+	- svglite
+	- systemfonts
+	- extrafonts
+- paml4.8 codeml
+- seqkit 2.9.0
+- macse 2.07
 
 NOTES KEGG:
 TODO:
