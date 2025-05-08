@@ -1,7 +1,4 @@
 - TELL me which nodes to label in tree
-- add relative heatmap
-- read everything
-- update figure larger font sizes
 - add relative heatmap + other heatmaps supplements
 - cell figure
 

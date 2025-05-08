@@ -41,6 +41,13 @@ colnames(outliers_dnds_species) <- c("n", "species", "gene")
 outliers_pure_species <- read.csv("Results/outliers_species_pure_q95.csv")
 colnames(outliers_pure_species) <- c("n", "species", "gene")
 
+meta_turtles <- read_tsv("Data/metadata_habitat_reptraits.tsv")
+meta_turtles$Habitat_factor <- factor(meta_turtles$Microhabitat, 
+                                      levels=c("Marine", "Aquatic", 
+                                               "Aquatic_Terrestrial", "Terrestrial", 
+                                               "Outgroup"))
+meta_turtles <- meta_turtles %>% filter(Microhabitat != "Outgroup")
+
 
 #########################
 ### SPECIES TREE PLOT ###
@@ -56,14 +63,6 @@ colnames(outliers_pure_species) <- c("n", "species", "gene")
 # colour_aquatic <- colours_classes4[2]
 # colour_aquatic_terrestrial <- colours_classes4[3]
 # colour_terrestrial <- colours_classes4[4]
-# 
-
-meta_turtles <- read_tsv("Data/metadata_habitat_reptraits.tsv")
-meta_turtles$Habitat_factor <- factor(meta_turtles$Microhabitat, 
-                                      levels=c("Marine", "Aquatic", 
-                                               "Aquatic_Terrestrial", "Terrestrial", 
-                                               "Outgroup"))
-meta_turtles <- meta_turtles %>% filter(Microhabitat != "Outgroup")
 
 # load species tree with branch lengths from Thomson et al. (2021)
 species_tree_plot <- read.nexus("Data/bd.mcc.median_heights.tre")
@@ -229,7 +228,7 @@ heatmap_ds
 ggsave("Results/heatmap_ds.pdf", width = 8, height = 5)
 
 
-# DNDS
+# DNDS RELATIVE
 data_heatmap_dnds <- outliers_dnds_species %>% dplyr::select(c("species", "gene"))
 
 matrix_heatmap_dnds <- matrix(0, nrow = length(species_list), ncol = length(species_list))
@@ -277,14 +276,14 @@ heatmap_dnds <- ggplot(df_heatmap_dnds, aes(x = Species1, y = Species2, fill = v
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1, face = 'italic')) +
   theme(text = element_text(family = "Arial"))
 
-svglite('Results/heatmap_dnds.svg', width = 8, height = 5)
+svglite('Results/heatmap_dnds_relative.svg', width = 8, height = 5)
 print(heatmap_dnds)
 dev.off()
 
 heatmap_dnds
 ggsave("Results/heatmap_dnds_relative.pdf", width = 16, height = 10)
 
-# DNDS RELATIVE
+# DNDS
 data_heatmap_dnds <- outliers_dnds_species %>% dplyr::select(c("species", "gene"))
 
 matrix_heatmap_dnds <- matrix(0, nrow = length(species_list), ncol = length(species_list))
