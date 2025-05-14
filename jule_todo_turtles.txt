@@ -1,19 +1,12 @@
 - TELL me which nodes to label in tree
-- add relative heatmap + other heatmaps supplements
 - cell figure
+- key resources table
 
 QUESTIONS:
 - DISCUSSION: maybe heatmap also depends on genome completeness, how many genes present in species, but also: in how many species is specific gene present?
 - cluster heatmap matrix (in R: nj, hclust on matrix)
 
 DONE:
-- pairwise distances instead of PURE
-- change diagonal heatmap
-- x-axis heatmap italic
-- ARIAL for everything (x3 plots)
-- connect dotplot + tree
-- add Venn diagram
-- a), b), ... all black
 
 SOFTWARE:
 - R

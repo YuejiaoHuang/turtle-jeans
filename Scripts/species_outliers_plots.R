@@ -276,7 +276,7 @@ heatmap_dnds <- ggplot(df_heatmap_dnds, aes(x = Species1, y = Species2, fill = v
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1, face = 'italic')) +
   theme(text = element_text(family = "Arial"))
 
-svglite('Results/heatmap_dnds_relative.svg', width = 8, height = 5)
+svglite('Results/heatmap_dnds_relative.svg', width = 12, height = 7.5)
 print(heatmap_dnds)
 dev.off()
 
