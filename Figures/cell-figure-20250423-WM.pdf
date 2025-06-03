@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (e7c3feb1, 2024-10-09)"
+   sodipodi:docname="cell-figure-20250423-WM.pdf"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.55640521"
+     inkscape:cx="360.34889"
+     inkscape:cy="554.45203"
+     inkscape:window-width="1776"
+     inkscape:window-height="946"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <linearGradient
+       id="swatch9"
+       inkscape:swatch="solid">
+      <stop
+         style="stop-color:#ffac02;stop-opacity:1;"
+         offset="0"
+         id="stop9" />
+    </linearGradient>
+    <linearGradient
+       id="swatch8"
+       inkscape:swatch="solid"
+       gradientTransform="matrix(0.06408149,0,0,0.06277704,0.65825452,12.70263)">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop8" />
+    </linearGradient>
+    <linearGradient
+       id="swatch7"
+       inkscape:swatch="solid"
+       gradientTransform="scale(0.26458333)">
+      <stop
+         style="stop-color:#ffb701;stop-opacity:1;"
+         offset="0"
+         id="stop7" />
+    </linearGradient>
+    <linearGradient
+       id="swatch6"
+       inkscape:swatch="solid">
+      <stop
+         style="stop-color:#ffb701;stop-opacity:1;"
+         offset="0"
+         id="stop6" />
+    </linearGradient>
+    <linearGradient
+       id="swatch5"
+       inkscape:swatch="solid"
+       gradientTransform="scale(0.26458333)">
+      <stop
+         style="stop-color:#ffb701;stop-opacity:1;"
+         offset="0"
+         id="stop5" />
+    </linearGradient>
+    <linearGradient
+       id="swatch4"
+       inkscape:swatch="solid"
+       gradientTransform="matrix(1.0309366,0,0,0.68363648,-1.3279666,96.249049)">
+      <stop
+         style="stop-color:#ffd281;stop-opacity:1;"
+         offset="0"
+         id="stop4" />
+    </linearGradient>
+    <linearGradient
+       id="swatch3"
+       inkscape:swatch="solid"
+       gradientTransform="matrix(0.09953201,0,0,0.09953201,-43.556263,24.013062)">
+      <stop
+         style="stop-color:#e6fffd;stop-opacity:1;"
+         offset="0"
+         id="stop3" />
+    </linearGradient>
+  </defs>
+  <g
+     inkscape:label="cell components"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-58.013775,-67.52423)">
+    <ellipse
+       style="fill:none;fill-opacity:1;stroke:#22b0df;stroke-width:2.36349;stroke-dasharray:none;stroke-opacity:1"
+       id="path9"
+       cx="140.11382"
+       cy="199.95732"
+       rx="24.855572"
+       ry="29.538429"
+       inkscape:label="nucleu-outline" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#e07e21;stroke-width:2.1901;stroke-dasharray:none;stroke-opacity:1"
+       id="rect9"
+       width="169.29913"
+       height="195.81474"
+       x="78.556114"
+       y="147.91515"
+       ry="15.04789"
+       inkscape:label="cell-outline" />
+  </g>
+</svg>

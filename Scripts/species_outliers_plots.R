@@ -1,13 +1,14 @@
 library(tidyverse)
 library(fishualize)
-library(ggvenn)
-library(pheatmap)
-library(reshape2)
+library(reshape2) # for melt
 library(ape)
 library(ggtree)
 library(deeptime)
 library(phangorn)
-library(ggrepel)
+library(svglite)
+
+# library(systemfonts)
+# library(extrafont)
 
 setwd("/Users/jule/Desktop/turtle-jeans")
 
@@ -40,6 +41,13 @@ colnames(outliers_dnds_species) <- c("n", "species", "gene")
 outliers_pure_species <- read.csv("Results/outliers_species_pure_q95.csv")
 colnames(outliers_pure_species) <- c("n", "species", "gene")
 
+meta_turtles <- read_tsv("Data/metadata_habitat_reptraits.tsv")
+meta_turtles$Habitat_factor <- factor(meta_turtles$Microhabitat, 
+                                      levels=c("Marine", "Aquatic", 
+                                               "Aquatic_Terrestrial", "Terrestrial", 
+                                               "Outgroup"))
+meta_turtles <- meta_turtles %>% filter(Microhabitat != "Outgroup")
+
 
 #########################
 ### SPECIES TREE PLOT ###
@@ -55,14 +63,6 @@ colnames(outliers_pure_species) <- c("n", "species", "gene")
 # colour_aquatic <- colours_classes4[2]
 # colour_aquatic_terrestrial <- colours_classes4[3]
 # colour_terrestrial <- colours_classes4[4]
-# 
-
-meta_turtles <- read_tsv("Data/metadata_habitat_reptraits.tsv")
-meta_turtles$Habitat_factor <- factor(meta_turtles$Microhabitat, 
-                                      levels=c("Marine", "Aquatic", 
-                                               "Aquatic_Terrestrial", "Terrestrial", 
-                                               "Outgroup"))
-meta_turtles <- meta_turtles %>% filter(Microhabitat != "Outgroup")
 
 # load species tree with branch lengths from Thomson et al. (2021)
 species_tree_plot <- read.nexus("Data/bd.mcc.median_heights.tre")
@@ -79,17 +79,21 @@ plot_tree <- plot_tree +
   coord_geo(xlim = c(-250, 100), ylim = c(-0.5, Ntip(species_tree_plot)+2),
             neg = TRUE, abbrv = list(FALSE), dat=list("periods"),
             fill = c("grey90", "grey85", "grey80", "grey75", "grey70", "grey65"),
-            color= "grey35",
-            lab_color = "grey25",
-            pos = list("bottom"), size = "auto",
+            color= "black",
+            lab_color = "black",
+            pos = list("top"), size = "auto",
             height = list(unit(1, "lines"))) +
   scale_x_continuous(breaks = seq(-240, 0, 20), labels = abs(seq(-240, 0, 20))) +
   theme(panel.grid.major   = element_line(color="grey80", size=.2),
-        panel.grid.major.y = element_blank()) 
+        panel.grid.major.y = element_blank(),
+        text = element_text(family = "Arial"))
 revts(plot_tree)
 
-ggsave("Results/species_tree_branch_lengths.pdf", width = 8, height = 5)
+svglite('Results/species_tree_branch_lengths.svg', width = 8, height = 5)
+revts(plot_tree)
+dev.off()
 
+ggsave("Results/species_tree_branch_lengths.pdf", width = 8, height = 5)
 
 
 ###############################
@@ -134,11 +138,11 @@ for (i in 1:length(species_list)) {
     matrix_heatmap_dn[i, j] <- length(intersect(genes_i, genes_j))
     
     # if same species
-    if (i == j) {
-      other_genes <- data_heatmap_dn$gene[data_heatmap_dn$species != species_list[i]]
-      unique_genes <- setdiff(genes_i, other_genes)
-      matrix_heatmap_dn[i, j] <- length(unique_genes)
-    }
+    # if (i == j) {
+    #   other_genes <- data_heatmap_dn$gene[data_heatmap_dn$species != species_list[i]]
+    #   unique_genes <- setdiff(genes_i, other_genes)
+    #   matrix_heatmap_dn[i, j] <- length(unique_genes)
+    # }
   }
 }
 
@@ -152,7 +156,7 @@ df_heatmap_dn$Species1 <- factor(df_heatmap_dn$Species1,
 df_heatmap_dn$Species2 <- factor(df_heatmap_dn$Species2, 
                                  levels=species_ordered_list[rev(1:length(species_ordered_list))])
 
-ggplot(df_heatmap_dn, aes(x = Species1, y = Species2, fill = value)) +
+heatmap_dn <- ggplot(df_heatmap_dn, aes(x = Species1, y = Species2, fill = value)) +
   geom_tile() +
   geom_text(aes(label=value), color = "white") +
   labs(title = "dN",
@@ -160,7 +164,15 @@ ggplot(df_heatmap_dn, aes(x = Species1, y = Species2, fill = value)) +
        y = "Species") +
   scale_fill_gradientn(name = "Overlapping genes", colours=c("#72315C", "#A6A867")) +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+  theme(axis.text.y = element_text(face = 'italic')) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1, face = 'italic')) +
+  theme(text = element_text(family = "Arial"))
+
+svglite('Results/heatmap_dn.svg', width = 8, height = 5)
+print(heatmap_dn)
+dev.off()
+
+heatmap_dn
 ggsave("Results/heatmap_dn.pdf", width = 8, height = 5)
 
 
@@ -178,11 +190,11 @@ for (i in 1:length(species_list)) {
     matrix_heatmap_ds[i, j] <- length(intersect(genes_i, genes_j))
     
     # if same species
-    if (i == j) {
-      other_genes <- data_heatmap_ds$gene[data_heatmap_ds$species != species_list[i]]
-      unique_genes <- setdiff(genes_i, other_genes)
-      matrix_heatmap_ds[i, j] <- length(unique_genes)
-    }
+    # if (i == j) {
+    #   other_genes <- data_heatmap_ds$gene[data_heatmap_ds$species != species_list[i]]
+    #   unique_genes <- setdiff(genes_i, other_genes)
+    #   matrix_heatmap_ds[i, j] <- length(unique_genes)
+    # }
   }
 }
 
@@ -196,7 +208,7 @@ df_heatmap_ds$Species1 <- factor(df_heatmap_ds$Species1,
 df_heatmap_ds$Species2 <- factor(df_heatmap_ds$Species2, 
                                  levels=species_ordered_list[rev(1:length(species_ordered_list))])
 
-ggplot(df_heatmap_ds, aes(x = Species1, y = Species2, fill = value)) +
+heatmap_ds <- ggplot(df_heatmap_ds, aes(x = Species1, y = Species2, fill = value)) +
   geom_tile() +
   geom_text(aes(label=value), color = "white") +
   labs(title = "dS",
@@ -204,8 +216,72 @@ ggplot(df_heatmap_ds, aes(x = Species1, y = Species2, fill = value)) +
        y = "Species") +
   scale_fill_gradientn(name = "Overlapping genes", colours=c("#72315C", "#A6A867")) +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+  theme(axis.text.y = element_text(face = 'italic')) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1, face = 'italic')) +
+  theme(text = element_text(family = "Arial"))
+
+svglite('Results/heatmap_ds.svg', width = 8, height = 5)
+print(heatmap_ds)
+dev.off()
+
+heatmap_ds
 ggsave("Results/heatmap_ds.pdf", width = 8, height = 5)
+
+
+# DNDS RELATIVE
+data_heatmap_dnds <- outliers_dnds_species %>% dplyr::select(c("species", "gene"))
+
+matrix_heatmap_dnds <- matrix(0, nrow = length(species_list), ncol = length(species_list))
+rownames(matrix_heatmap_dnds) <- species_list
+colnames(matrix_heatmap_dnds) <- species_list
+
+for (i in 1:length(species_list)) {
+  for (j in 1:length(species_list)) {
+    genes_i <- data_heatmap_dnds$gene[data_heatmap_dnds$species == species_list[i]]
+    genes_j <- data_heatmap_dnds$gene[data_heatmap_dnds$species == species_list[j]]
+    matrix_heatmap_dnds[i, j] <- round(length(intersect(genes_i, genes_j)) / length(genes_i), digits=2)
+
+    # if same species
+    # if (i == j) {
+    #   other_genes <- data_heatmap_dnds$gene[data_heatmap_dnds$species != species_list[i]]
+    #   unique_genes <- setdiff(genes_i, other_genes)
+    #   matrix_heatmap_dnds[i, j] <- length(unique_genes)
+    # }
+  }
+}
+
+df_heatmap_dnds <- melt(matrix_heatmap_dnds)
+df_heatmap_dnds <- merge(df_heatmap_dnds, df_species_id, by.x="Var1", by.y="ID", all.x=T)
+colnames(df_heatmap_dnds) <- c("Var1", "Var2", "value", "Species1")
+df_heatmap_dnds <- merge(df_heatmap_dnds, df_species_id, by.x="Var2", by.y="ID", all.x=T)
+colnames(df_heatmap_dnds) <- c("Var2", "Var1", "value", "Species1", "Species2")
+
+df_heatmap_dnds$Species1 <- factor(df_heatmap_dnds$Species1, 
+                                   levels=species_ordered_list)
+df_heatmap_dnds$Species2 <- factor(df_heatmap_dnds$Species2, 
+                                   levels=species_ordered_list[rev(1:length(species_ordered_list))])
+
+heatmap_dnds <- ggplot(df_heatmap_dnds, aes(x = Species1, y = Species2, fill = value)) +
+  geom_tile() +
+  geom_text(aes(label=value), color = "white") +
+  labs(title = "dN/dS",
+       x = "Species",
+       y = "Species") +
+  scale_fill_gradientn(name = "Overlapping genes", colours=c("#72315C", "#A6A867")) +
+  # scale_fill_gradientn(name = "Overlapping genes", colours=c("#632A50", "#BDBF09")) +
+  # scale_fill_gradientn(name = "Overlapping genes", colours=c("#632A50", "#60935D")) +
+  # scale_fill_gradientn(name = "Overlapping genes", colours=c("#632A50", "#188FA7")) +
+  theme_minimal() +
+  theme(axis.text.y = element_text(face = 'italic')) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1, face = 'italic')) +
+  theme(text = element_text(family = "Arial"))
+
+svglite('Results/heatmap_dnds_relative.svg', width = 12, height = 7.5)
+print(heatmap_dnds)
+dev.off()
+
+heatmap_dnds
+ggsave("Results/heatmap_dnds_relative.pdf", width = 16, height = 10)
 
 # DNDS
 data_heatmap_dnds <- outliers_dnds_species %>% dplyr::select(c("species", "gene"))
@@ -221,11 +297,11 @@ for (i in 1:length(species_list)) {
     matrix_heatmap_dnds[i, j] <- length(intersect(genes_i, genes_j))
     
     # if same species
-    if (i == j) {
-      other_genes <- data_heatmap_dnds$gene[data_heatmap_dnds$species != species_list[i]]
-      unique_genes <- setdiff(genes_i, other_genes)
-      matrix_heatmap_dnds[i, j] <- length(unique_genes)
-    }
+    # if (i == j) {
+    #   other_genes <- data_heatmap_dnds$gene[data_heatmap_dnds$species != species_list[i]]
+    #   unique_genes <- setdiff(genes_i, other_genes)
+    #   matrix_heatmap_dnds[i, j] <- length(unique_genes)
+    # }
   }
 }
 
@@ -240,7 +316,7 @@ df_heatmap_dnds$Species1 <- factor(df_heatmap_dnds$Species1,
 df_heatmap_dnds$Species2 <- factor(df_heatmap_dnds$Species2, 
                                    levels=species_ordered_list[rev(1:length(species_ordered_list))])
 
-ggplot(df_heatmap_dnds, aes(x = Species1, y = Species2, fill = value)) +
+heatmap_dnds <- ggplot(df_heatmap_dnds, aes(x = Species1, y = Species2, fill = value)) +
   geom_tile() +
   geom_text(aes(label=value), color = "white") +
   labs(title = "dN/dS",
@@ -251,7 +327,15 @@ ggplot(df_heatmap_dnds, aes(x = Species1, y = Species2, fill = value)) +
   # scale_fill_gradientn(name = "Overlapping genes", colours=c("#632A50", "#60935D")) +
   # scale_fill_gradientn(name = "Overlapping genes", colours=c("#632A50", "#188FA7")) +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+  theme(axis.text.y = element_text(face = 'italic')) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1, face = 'italic')) +
+  theme(text = element_text(family = "Arial"))
+
+svglite('Results/heatmap_dnds.svg', width = 8, height = 5)
+print(heatmap_dnds)
+dev.off()
+
+heatmap_dnds
 ggsave("Results/heatmap_dnds.pdf", width = 8, height = 5)
 
 # PURE
@@ -268,11 +352,11 @@ for (i in 1:length(species_list)) {
     matrix_heatmap_pure[i, j] <- length(intersect(genes_i, genes_j))
     
     # if same species
-    if (i == j) {
-      other_genes <- data_heatmap_pure$gene[data_heatmap_pure$species != species_list[i]]
-      unique_genes <- setdiff(genes_i, other_genes)
-      matrix_heatmap_pure[i, j] <- length(unique_genes)
-    }
+    # if (i == j) {
+    #   other_genes <- data_heatmap_pure$gene[data_heatmap_pure$species != species_list[i]]
+    #   unique_genes <- setdiff(genes_i, other_genes)
+    #   matrix_heatmap_pure[i, j] <- length(unique_genes)
+    # }
   }
 }
 
@@ -287,7 +371,7 @@ df_heatmap_pure$Species1 <- factor(df_heatmap_pure$Species1,
 df_heatmap_pure$Species2 <- factor(df_heatmap_pure$Species2, 
                                    levels=species_ordered_list[rev(1:length(species_ordered_list))])
 
-ggplot(df_heatmap_pure, aes(x = Species1, y = Species2, fill = value)) +
+heatmap_pure <- ggplot(df_heatmap_pure, aes(x = Species1, y = Species2, fill = value)) +
   geom_tile() +
   geom_text(aes(label=value), color = "white") +
   labs(title = "PURE",
@@ -295,11 +379,24 @@ ggplot(df_heatmap_pure, aes(x = Species1, y = Species2, fill = value)) +
        y = "Species") +
   scale_fill_gradientn(name = "Overlapping genes", colours=c("#72315C", "#A6A867")) +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+  theme(axis.text.y = element_text(face = 'italic')) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1, face = 'italic')) +
+  theme(text = element_text(family = "Arial"))
+
+svglite('Results/heatmap_pure.svg', width = 8, height = 5)
+print(heatmap_pure)
+dev.off()
+
+heatmap_pure
 ggsave("Results/heatmap_pure.pdf", width = 8, height = 5)
 
 clust_pure <- hclust(dist(matrix_heatmap_pure))
 plot(clust_pure)
+
+
+################
+### DOTPLOTS ###
+################
 
 ### PAIRWISE DIVERGENCE TIMES
 
@@ -320,13 +417,20 @@ df_heatmap_dnds_reduced <- df_heatmap_dnds%>%
 df_div_times <- merge(df_div_times, df_heatmap_dnds_reduced, by="Species_pair")
 df_div_times <- df_div_times %>% filter(Species1 != Species2)
 
-ggplot(df_div_times, aes(x=divergence_time, y=value, label=Species_pair)) +
+dotplot_tips_divtimes_overlaps <- ggplot(df_div_times, 
+                                         aes(x=divergence_time, y=value, label=Species_pair)) +
   geom_point(colour="#72315C") +
   theme_minimal() +
   labs(title = "Species pairs",
        x = "Divergence time",
-       y = "Number of overlapping genes")
+       y = "Number of overlapping genes") +
+  theme(text = element_text(family = "Arial"))
 
+svglite('Results/dotplot_tips_divtimes_overlaps.svg', width = 8, height = 5)
+print(dotplot_tips_divtimes_overlaps)
+dev.off()
+
+dotplot_tips_divtimes_overlaps
 ggsave("Results/dotplot_tips_divtimes_overlaps.pdf", width = 8, height = 5)
 
 
@@ -374,17 +478,28 @@ data_plot <- merge(results, species_richness,
                    all.x = TRUE, all.y = TRUE)
 
 
-ggplot(data_plot, aes(x=divergence_time, y=num_overlapping_genes)) +
-  geom_point(color="#72315C") +
+dotplot_internal_divtimes_overlaps <- ggplot(data_plot, 
+                                             aes(x=divergence_time, y=num_overlapping_genes)) +
   geom_step(aes(x=divergence_time, y=N), color="grey") +
+  geom_point(color="#72315C") +
   scale_y_continuous(
     name = "Number of outlier genes present in all associated tips",
     sec.axis = sec_axis(~ . , name = "Species Richness")
   ) +
   theme_minimal() +
+  scale_x_reverse(breaks = seq(0, 240, 20), labels = abs(seq(0, 240, 20)),
+                  limits = c(240, 0)) +
+  theme(panel.grid.major   = element_line(color="grey80", size=.2),
+        panel.grid.minor.x = element_blank()) +
   labs(title = "Internal nodes",
-     x = "Divergence time")
+       x = "Divergence time") +
+  theme(text = element_text(family = "Arial"))
 
+svglite('Results/dotplot_internal_divtimes_overlaps.svg', width = 8, height = 5)
+print(dotplot_internal_divtimes_overlaps)
+dev.off()
+
+dotplot_internal_divtimes_overlaps
 ggsave("Results/dotplot_internal_divtimes_overlaps.pdf", width = 8, height = 5)
 
 
@@ -402,36 +517,37 @@ plot_tree <- plot_tree +
 plot_tree
 
 facet_stats <- facet_plot(plot_tree,
-                            data=stats,
-                            geom=geom_bar,
-                            mapping = aes(x=`Assembly length (Gb)`, fill=`Assembly length (Gb)`),
-                            stat="identity",
-                            orientation='y',
-                            panel="Assembly length (Gb)",
-                            position = position_stack(reverse = TRUE),
-                            show.legend = F)
+                          data=stats,
+                          geom=geom_bar,
+                          mapping = aes(x=`Assembly length (Gb)`, fill=`Assembly length (Gb)`),
+                          stat="identity",
+                          orientation='y',
+                          panel="Assembly length (Gb)",
+                          position = position_stack(reverse = TRUE),
+                          show.legend = F)
 
 facet_stats <- facet_plot(facet_stats,
-                            data=stats,
-                            geom=geom_bar,
-                            mapping = aes(x=`Scaffold N50 (Mb)`, fill=`Scaffold N50 (Mb)`),
-                            stat="identity",
-                            orientation='y',
-                            panel="Scaffold N50 (Mb)",
-                            position = position_stack(reverse = TRUE),
-                            show.legend = F)
+                          data=stats,
+                          geom=geom_bar,
+                          mapping = aes(x=`Scaffold N50 (Mb)`, fill=`Scaffold N50 (Mb)`),
+                          stat="identity",
+                          orientation='y',
+                          panel="Scaffold N50 (Mb)",
+                          position = position_stack(reverse = TRUE),
+                          show.legend = F)
 
 facet_stats <- facet_plot(facet_stats,
-                            data=stats,
-                            geom=geom_bar,
-                            mapping = aes(x=`BUSCO S`, fill=`BUSCO S`),
-                            stat="identity",
-                            orientation='y',
-                            panel="BUSCO S",
-                            position = position_stack(reverse = TRUE),
-                            show.legend = F) +
+                          data=stats,
+                          geom=geom_bar,
+                          mapping = aes(x=`BUSCO S`, fill=`BUSCO S`),
+                          stat="identity",
+                          orientation='y',
+                          panel="BUSCO S",
+                          position = position_stack(reverse = TRUE),
+                          show.legend = F) +
   xlim_tree(240)
 
 facet_stats
 
 ggsave("Results/assembly_stats.pdf", width = 20, height = 9)
+ggsave("Results/assembly_stats.png", width = 20, height = 9)

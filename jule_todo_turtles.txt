@@ -1,15 +1,30 @@
 - TELL me which nodes to label in tree
-- write on Fig2
+- cell figure
+- key resources table
 
 QUESTIONS:
-- heatmap diagonal: total # genes in that species or # unique in that species
 - DISCUSSION: maybe heatmap also depends on genome completeness, how many genes present in species, but also: in how many species is specific gene present?
 - cluster heatmap matrix (in R: nj, hclust on matrix)
 
 DONE:
-- venn diagram Fig1
-- change Fig2: epochs ok?, grid ok?, ltt ok?
-- assembly quality check plot
+
+SOFTWARE:
+- R
+	- ape
+	- tidyverse
+	- ggvenn
+	- reshape2
+	- ggtree
+	- deeptime
+	- phangorn
+
+	- fishualize
+	- svglite
+	- systemfonts
+	- extrafonts
+- paml4.8 codeml
+- seqkit 2.9.0
+- macse 2.07
 
 NOTES KEGG:
 TODO:
