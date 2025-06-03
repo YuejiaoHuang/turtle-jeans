@@ -260,8 +260,39 @@ dotplot(kegg_ref_genes_dnds,
         x = "GeneRatio", 
         showCategory = length(desired_order)) + 
   scale_y_discrete(limits = rev(desired_order)) +
-  theme_bw()
-
+  theme_bw(base_family = "Arial") +
+  theme(
+    # remove grid lines
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    
+    # base text (will cascade to anything not explicitly set below)
+    text = element_text(
+      family = "Arial", 
+      face   = "bold", 
+      color  = "black",
+      size   = 14
+    ),
+    
+    # axis titles and axis tick labels
+    axis.title  = element_text(face = "bold", color = "black"),
+    axis.text   = element_text(face = "bold", color = "black"),
+    
+    # legend title and labels
+    legend.title = element_text(face = "bold", color = "black"),
+    legend.text  = element_text(face = "bold", color = "black"),
+    
+    # strip text (for facets, if any)
+    strip.text   = element_text(face = "bold", color = "black")
+  )
+  # theme_bw() +
+  # theme(panel.grid.major = element_blank(),
+  #       panel.grid.minor = element_blank(),
+  #       text = element_text(size=14,
+  #                           family = "Arial", 
+  #                           face = "bold"))
+ggsave("KEGG_ref_genes_dnds2.png", units = "in", height = 4, width = 6,
+       dpi = 700)
 ggsave("KEGG enriched pathways.png")
 
 kegg_ref_genes_dnds@result %>% filter(p.adjust < 0.05) %>% select(geneID) %>% write_csv("geneid.csv")
@@ -275,4 +306,9 @@ for (i in kegg_path_id) {
          species = "cmy")
 }
 
+
+
 ```
+
+
+
