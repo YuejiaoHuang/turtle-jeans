@@ -1,0 +1,298 @@
+---
+title: "Turtle KEGG analysis"
+author: "Yuejiao"
+date: "2025-06-16"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(clusterProfiler)
+library("KEGGREST")
+library(tidyverse)
+library(stringr)
+library(ggplot2)
+library("pathview")
+```
+
+## Load the kegg db
+
+```{r}
+cmy_kegg_df <- data.frame(cmy_id = names(keggConv("ncbi-geneid", "cmy")),
+          ncbi_id = keggConv("ncbi-geneid", "cmy")) %>% 
+  separate(.,ncbi_id, into = c("info", "ncbi_gid"), sep = ":") %>% 
+  select(-info) 
+```
+
+## KEGG enrichment
+
+### load outiler genes
+```{r}
+#254 genes
+outliers_dn <- read.csv("Results/outliers_genes_dn_q95.csv", col.names = c("n", "busco_id")) %>% 
+  left_join(.,genes, by = "busco_id") %>% 
+  filter(!is.na(cmy_id )) %>% 
+  select(ncbi_gid,cmy_id)
+# 255 genes, converted 248 genes. 
+outliers_ds <- read.csv("Results/outliers_genes_ds_q95.csv", col.names = c("n", "busco_id")) %>% 
+  left_join(.,genes, by = "busco_id") %>% 
+  filter(!is.na(cmy_id )) %>% 
+  select(ncbi_gid,cmy_id)
+# 255 genes, converted 252 genes.
+outliers_dnds <- read.csv("Results/outliers_genes_dnds_q95.csv", col.names = c("n", "busco_id")) %>% 
+  left_join(.,genes, by = "busco_id") %>% 
+  filter(!is.na(cmy_id )) %>% 
+  select(ncbi_gid,cmy_id)
+
+# 255 genes, converted 254 genes.
+outliers_pure <- read.csv("Results/outliers_genes_pure_q95.csv", col.names = c("n", "busco_id")) %>% 
+  left_join(.,genes, by = "busco_id") %>% 
+  filter(!is.na(cmy_id )) %>% 
+  select(ncbi_gid,cmy_id)
+
+```
+
+### enrich kegg function
+```{r}
+enrich_ref_kegg <- function(df){
+  out_df <- enrichKEGG(gene = unique(df$ncbi_gid),
+         pAdjustMethod = "fdr",
+         organism = "cmy")
+  out_df@result$Description <- sub(" - Chelonia mydas \\(green sea turtle\\)", "", out_df@result$Description)
+  return(out_df)
+}
+```
+
+### KEGG analysis
+#### dN results
+```{r}
+kegg_ref_genes_dn <- enrich_ref_kegg(outliers_dn) ## 9 enriched terms
+```
+#### dS results
+```{r}
+kegg_ref_genes_ds <- enrich_ref_kegg(outliers_ds)
+```
+#### dN/dS results
+```{r}
+kegg_ref_genes_dnds <- enrich_ref_kegg(outliers_dnds) #8 enriched terms
+```
+
+#### visualize the pathway and highligh the outlier genes in red for dn/ds results
+```{r}
+desired_order <-  c("Spliceosome","Basal transcription factors", "mRNA surveillance pathway", "Proteasome", "RNA degradation", "Polycomb repressive complex","Viral life cycle - HIV-1","Cell cycle")
+kegg_ref_genes_dnds@result$Description <- factor(kegg_ref_genes_dnds@result$Description,levels = desired_order)
+dotplot(kegg_ref_genes_dnds, 
+        x = "GeneRatio", 
+        showCategory = length(desired_order)) + 
+  scale_y_discrete(limits = rev(desired_order)) +
+  theme_bw(base_family = "Arial") +
+  theme(
+    # remove grid lines
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    
+    # base text (will cascade to anything not explicitly set below)
+    text = element_text(
+      family = "Arial", 
+      face   = "bold", 
+      color  = "black",
+      size   = 14
+    ),
+    
+    # axis titles and axis tick labels
+    axis.title  = element_text(face = "bold", color = "black"),
+    axis.text   = element_text(face = "bold", color = "black"),
+    
+    # legend title and labels
+    legend.title = element_text(face = "bold", color = "black"),
+    legend.text  = element_text(face = "bold", color = "black"),
+    
+    # strip text (for facets, if any)
+    strip.text   = element_text(face = "bold", color = "black")
+  )
+
+ggsave("KEGG enriched pathways.png", units = "in", height = 4, width = 6,
+       dpi = 700)
+
+#### write output enriched geneID
+kegg_ref_genes_dnds@result %>% filter(p.adjust < 0.05) %>% select(geneID) %>% write_csv("geneid.csv")
+#### KEGG pathways 
+kegg_path_id <- rownames(kegg_ref_genes_dnds@result %>% filter(p.adjust < 0.05) %>% select(ID))
+
+for (i in kegg_path_id) {
+  
+  pathview(gene.data=outliers_dnds$ncbi_gid, 
+         pathway.id=i, 
+         species = "cmy")
+}
+```
+
+#### pairwise distance results
+```{r}
+kegg_ref_genes_pure <- enrich_ref_kegg(outliers_pure) # 3
+```
+
+### species and outlier genes
+#### load data
+```{r}
+# 501 rows and all converted
+outliers_dn_species <- read.csv("Results/outliers_species_dn_q95.csv", 
+                                col.names = c("n", "species", "busco_id")) %>% 
+  left_join(.,genes, by = "busco_id") %>% 
+  filter(!is.na(cmy_id )) %>% 
+  select(ncbi_gid,cmy_id, species) 
+### missing 2 genes 168156at32523 and 291010at32523 
+outliers_ds_species <- read.csv("Results/outliers_species_ds_q95.csv", 
+                                col.names = c("n", "species", "busco_id")) %>% 
+  left_join(.,genes, by = "busco_id") %>% 
+  filter(!is.na(cmy_id )) %>% 
+  select(ncbi_gid,cmy_id, species)
+### missing 2 genes 283327at32523 and 290126at32523 
+outliers_dnds_species <- read.csv("Results/outliers_species_dnds_q95.csv", 
+                                  col.names = c("n", "species", "busco_id")) %>% 
+  left_join(.,genes, by = "busco_id") %>% 
+  filter(!is.na(cmy_id )) %>% 
+  select(ncbi_gid,cmy_id, species)
+
+### 700 rows, missing one gene 291010at32523
+outliers_pure_species <- read.csv("Results/outliers_species_pure_q95.csv", 
+                                  col.names = c("n", "species", "busco_id")) %>% 
+  left_join(.,genes, by = "busco_id") %>% 
+  filter(!is.na(cmy_id )) %>% 
+  select(ncbi_gid,cmy_id, species)
+```
+
+#### classify species based on habitats
+```{r}
+
+Outliers_all_dn <- outliers_dn_species %>%
+  left_join(.,meta_turtles, by = c("species" = "ID")) %>% 
+  remove_missing(.)
+
+Outliers_Marine_dn <- Outliers_all_dn %>% 
+  filter(Microhabitat == "Marine")
+Outliers_Aquatic_dn <- Outliers_all_dn %>% 
+  filter(Microhabitat == "Aquatic")
+Outliers_Aquatic_Terrestrial_dn <- Outliers_all_dn %>% 
+  filter(Microhabitat == "Aquatic_Terrestrial")
+Outliers_Terrestrial_dn <- Outliers_all_dn %>% 
+  filter(Microhabitat == "Terrestrial")
+
+Outliers_all_ds <- outliers_ds_species %>%
+  left_join(.,meta_turtles, by = c("species" = "ID")) %>% 
+  remove_missing(.)
+
+Outliers_Marine_ds <- Outliers_all_ds %>% 
+  filter(Microhabitat == "Marine")
+Outliers_Aquatic_ds <- Outliers_all_ds %>% 
+  filter(Microhabitat == "Aquatic")
+Outliers_Aquatic_Terrestrial_ds <- Outliers_all_ds %>% 
+  filter(Microhabitat == "Aquatic_Terrestrial")
+Outliers_Terrestrial_ds <- Outliers_all_ds %>% 
+  filter(Microhabitat == "Terrestrial")
+
+Outliers_all_dnds <- outliers_dnds_species %>%
+  left_join(.,meta_turtles, by = c("species" = "ID")) %>% 
+  remove_missing(.)
+
+Outliers_Marine_dnds <- Outliers_all_dnds %>% 
+  filter(Microhabitat == "Marine")
+Outliers_Aquatic_dnds <- Outliers_all_dnds %>% 
+  filter(Microhabitat == "Aquatic")
+Outliers_Aquatic_Terrestrial_dnds <- Outliers_all_dnds %>% 
+  filter(Microhabitat == "Aquatic_Terrestrial")
+Outliers_Terrestrial_dnds <- Outliers_all_dnds %>% 
+  filter(Microhabitat == "Terrestrial")
+
+Outliers_all_pure <- outliers_pure_species %>%
+  left_join(.,meta_turtles, by = c("species" = "ID")) %>% 
+  remove_missing(.)
+
+Outliers_Marine_pure <- Outliers_all_pure %>% 
+  filter(Microhabitat == "Marine")
+Outliers_Aquatic_pure <- Outliers_all_pure %>% 
+  filter(Microhabitat == "Aquatic")
+Outliers_Aquatic_Terrestrial_pure <- Outliers_all_pure %>% 
+  filter(Microhabitat == "Aquatic_Terrestrial")
+Outliers_Terrestrial_pure <- Outliers_all_pure %>% 
+  filter(Microhabitat == "Terrestrial")
+```
+
+
+#### classify by suborder level
+```{r}
+
+Outliers_Cryptodira_dn <- Outliers_all_dn %>% 
+  filter(suborder == "Cryptodira")
+Outliers_Pleurodira_dn <- Outliers_all_dn %>% 
+  filter(suborder == "Pleurodira")
+
+Outliers_Cryptodira_ds <- Outliers_all_ds %>% 
+  filter(suborder == "Cryptodira")
+Outliers_Pleurodira_ds <- Outliers_all_ds %>% 
+  filter(suborder == "Pleurodira")
+
+Outliers_Cryptodira_dnds <- Outliers_all_dnds %>% 
+  filter(suborder == "Cryptodira")
+Outliers_Pleurodira_dnds <- Outliers_all_dnds %>% 
+  filter(suborder == "Pleurodira")
+
+Outliers_Cryptodira_pure <- Outliers_all_pure %>% 
+  filter(suborder == "Cryptodira")
+Outliers_Pleurodira_pure <- Outliers_all_pure %>% 
+  filter(suborder == "Pleurodira")
+```
+
+#### KEGG analysis
+##### dN results
+```{r}
+###by habitats
+kegg_ref_Marine_dn <- enrich_ref_kegg(Outliers_Marine_dn) ## 0
+kegg_ref_Aquatic_dn <- enrich_ref_kegg(Outliers_Aquatic_dn) # 2 enriched terms
+kegg_ref_Aquatic_Terrestrial_dn <- enrich_ref_kegg(Outliers_Aquatic_Terrestrial_dn) # 1 enriched terms
+kegg_ref_Terrestrial_dn <- enrich_ref_kegg(Outliers_Terrestrial_dn) # 0
+
+### by sub-order level
+kegg_ref_Cryptodira_dn <- enrich_ref_kegg(Outliers_Cryptodira_dn) # 2 "Ubiquitin mediated proteolysis" "Spliceosome"
+kegg_ref_Pleurodira_dn <- enrich_ref_kegg(Outliers_Pleurodira_dn) # 2 "Ubiquitin mediated proteolysis" "Spliceosome"
+#Cryptodira Pleurodira 
+```
+
+
+##### dS results
+```{r}
+###by habitats
+kegg_ref_Marine_ds <- enrich_ref_kegg(Outliers_Marine_ds)
+kegg_ref_Aquatic_ds <- enrich_ref_kegg(Outliers_Aquatic_ds)
+kegg_ref_Aquatic_Terrestrial_ds <- enrich_ref_kegg(Outliers_Aquatic_Terrestrial_ds)
+kegg_ref_Terrestrial_ds <- enrich_ref_kegg(Outliers_Terrestrial_ds)
+### by sub-order level
+kegg_ref_Cryptodira_ds <- enrich_ref_kegg(Outliers_Cryptodira_ds) # 
+kegg_ref_Pleurodira_ds <- enrich_ref_kegg(Outliers_Pleurodira_ds) 
+```
+
+##### dN/dS results
+```{r}
+###by habitats
+kegg_ref_Marine_dnds <- enrich_ref_kegg(Outliers_Marine_dnds)
+kegg_ref_Aquatic_dnds <- enrich_ref_kegg(Outliers_Aquatic_dnds)
+kegg_ref_Aquatic_Terrestrial_dnds <- enrich_ref_kegg(Outliers_Aquatic_Terrestrial_dnds)
+kegg_ref_Terrestrial_dnds <- enrich_ref_kegg(Outliers_Terrestrial_dnds)
+### by sub-order level
+kegg_ref_Cryptodira_dnds <- enrich_ref_kegg(Outliers_Cryptodira_dnds) 
+kegg_ref_Pleurodira_dnds <- enrich_ref_kegg(Outliers_Pleurodira_dnds) 
+
+```
+
+##### pair-wise distance
+```{r}
+###by habitats
+kegg_ref_Marine_pure <- enrich_ref_kegg(Outliers_Marine_pure) # 1 "Spliceosome" 
+kegg_ref_Aquatic_pure <- enrich_ref_kegg(Outliers_Aquatic_pure)
+kegg_ref_Aquatic_Terrestrial_pure <- enrich_ref_kegg(Outliers_Aquatic_Terrestrial_pure)
+kegg_ref_Terrestrial_pure <- enrich_ref_kegg(Outliers_Terrestrial_pure)
+### by sub-order level
+kegg_ref_Cryptodira_pure <- enrich_ref_kegg(Outliers_Cryptodira_pure) # 0
+kegg_ref_Pleurodira_pure <- enrich_ref_kegg(Outliers_Pleurodira_pure) # 1 "Spliceosome" 
+```
+
