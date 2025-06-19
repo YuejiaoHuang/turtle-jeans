@@ -152,12 +152,6 @@ dN_nonzero[['121468at32523']]
 dS_nonzero[['121468at32523']]
 dN_dS_matrices_nonzero[['121468at32523']]
 
-
-
-
-
-
-
 # EXTRACT OUTLIERS -----------------------------------------------
 
 
@@ -215,17 +209,52 @@ dN_outliers <- detect_outliers_and_extract_quantiles(dN_impute, dN_log, quantile
 dS_outliers <- detect_outliers_and_extract_quantiles(dS_impute, dS_log, quantile_threshold = 0.95)
 pure_outliers <- detect_outliers_and_extract_quantiles(pure_impute, pure_log, quantile_threshold = 0.95)
 
-text <- dNdS_outliers$indices
-write.csv(text,'Results/outliers_genes_dnds_q95.csv')
+# Your results
+outlier_obs <- list(
+  dfs = list(dNdS_outliers, dN_outliers, dS_outliers, pure_outliers),
+  names = c('dnds', 'dn', 'ds', 'pure')  # no need for list()
+)
 
-text <- dN_outliers$indices
-write.csv(text,'Results/outliers_genes_dn_q95.csv')
+df <- dNdS_outliers
+# Use Map to loop through both dfs and names simultaneously
+Map(function(df, name) {
+  if (!is.null(df$indices)) {
+    outlier_indices <- data.frame(
+      gene = df$indices,
+      pval = df$pchisq_all[df$indices]
+    )
+    write.csv(outlier_indices, paste0('Results/outliers_genes_', name, '_q95.csv'), row.names = FALSE)
+    all_indices <- data.frame(
+      gene = names(df$distances_all),
+      distance = df$distances_all,
+      pval = df$pchisq_all[names(df$distances_all)]
+    )
+    write.csv(all_indices,paste0('Results/outliers_genes_', name, '_q95_allgenes.csv'), row.names = FALSE)
+  }
+}, outlier_obs$dfs, outlier_obs$names)
 
-text <- dS_outliers$indices
-write.csv(text,'Results/outliers_genes_ds_q95.csv')
 
-text <- pure_outliers$indices
-write.csv(text,'Results/outliers_genes_pure_q95.csv')
+
+dNdS_indices <- data.frame(gene = dNdS_outliers$indices,
+                   pval = dNdS_outliers$pchisq_all[dNdS_outliers$indices])
+write.csv(dNdS_indices,'Results/outliers_genes_dnds_q95.csv')
+
+dNdS_pval_all <- data.frame(gene = dNdS_outliers$indices,
+                            pval = dNdS_outliers$pchisq_all[dNdS_outliers$indices])
+write.csv(dNdS_indices,'Results/outliers_genes_dnds_q95.csv')
+
+
+dN_indices <- data.frame(gene = dN_outliers$indices,
+                   pval = dN_outliers$pchisq_all[dN_outliers$indices])
+write.csv(dN_indices,'Results/outliers_genes_dn_q95.csv')
+
+dS_indices <- data.frame(gene = dS_outliers$indices,
+                   pval = dS_outliers$pchisq_all[dS_outliers$indices])
+write.csv(dS_indices,'Results/outliers_genes_ds_q95.csv')
+
+pure_indices <- data.frame(gene = pure_outliers$indices,
+                   pval = pure_outliers$pchisq_all[pure_outliers$indices])
+write.csv(pure_indices,'Results/outliers_genes_pure_q95.csv')
 
 
 # outlier species - just outlier genes ------------------------------------------------
