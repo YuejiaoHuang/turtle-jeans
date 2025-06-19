@@ -22,6 +22,22 @@ cmy_kegg_df <- data.frame(cmy_id = names(keggConv("ncbi-geneid", "cmy")),
           ncbi_id = keggConv("ncbi-geneid", "cmy")) %>% 
   separate(.,ncbi_id, into = c("info", "ncbi_gid"), sep = ":") %>% 
   select(-info) 
+
+
+```
+
+## Load background gene_list
+
+```{r}
+gene_list <- read_tsv("Data/KEGG og2geneid/candidate_enricher_gene_info.txt", 
+                      col_names = c("gene","ncbi_gid","info")) %>% 
+  select(-info) %>% 
+  mutate( ncbi_gid = as.character(ncbi_gid))
+gene_input <- read_tsv("Data/KEGG og2geneid/candidate_enricher_og2gene.txt",
+                       col_names = c("busco_id","gene"))
+genes <- left_join(gene_input,gene_list, by = "gene") %>% 
+  left_join(.,cmy_kegg_df, by = "ncbi_gid" ) %>% 
+  filter(!is.na(cmy_id ))
 ```
 
 ## KEGG enrichment
