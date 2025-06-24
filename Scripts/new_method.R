@@ -3,40 +3,6 @@ library(ape)
 library(phylter)
 library(TreeTools)
 
-
-
-#################
-### LOAD DATA (OLD) ###
-#################
-
-#setwd("/Users/jule/Desktop/turtle-jeans")
-
-
-# load gene trees
-locus.trees <- read.tree('Data/genetrees.nwk')
-
-# load gene names
-names <- readLines("Scripts/dN_dS/list_final.txt")
-
-### Drop outgroups
-locus.trees <- drop.tip.multiPhylo(locus.trees, c("homSap", "galGal", "allMis"))
-tips <- AllTipLabels(locus.trees)
-
-# filter based on at least 9 tips (50 % of taxa present)
-names <- names[Ntip(locus.trees) >= 9]
-locus.trees <- locus.trees[Ntip(locus.trees) >= 9]
-
-
-
-# RUNNN phylteR to get outliers
-results <- phylter(locus.trees, gene.names = names)
-
-
-# get matrix for each gene that contains pairwise distances between species
-matrices <- results$Initial$mat.data
-
-
-
 # LOAD DATA ----------------------------------------------------------------
 ### READ PWD
 list <- list.files('Data/dist_matrices',
@@ -234,27 +200,6 @@ Map(function(df, name) {
 }, outlier_obs$dfs, outlier_obs$names)
 
 
-
-dNdS_indices <- data.frame(gene = dNdS_outliers$indices,
-                   pval = dNdS_outliers$pchisq_all[dNdS_outliers$indices])
-write.csv(dNdS_indices,'Results/outliers_genes_dnds_q95.csv')
-
-dNdS_pval_all <- data.frame(gene = dNdS_outliers$indices,
-                            pval = dNdS_outliers$pchisq_all[dNdS_outliers$indices])
-write.csv(dNdS_indices,'Results/outliers_genes_dnds_q95.csv')
-
-
-dN_indices <- data.frame(gene = dN_outliers$indices,
-                   pval = dN_outliers$pchisq_all[dN_outliers$indices])
-write.csv(dN_indices,'Results/outliers_genes_dn_q95.csv')
-
-dS_indices <- data.frame(gene = dS_outliers$indices,
-                   pval = dS_outliers$pchisq_all[dS_outliers$indices])
-write.csv(dS_indices,'Results/outliers_genes_ds_q95.csv')
-
-pure_indices <- data.frame(gene = pure_outliers$indices,
-                   pval = pure_outliers$pchisq_all[pure_outliers$indices])
-write.csv(pure_indices,'Results/outliers_genes_pure_q95.csv')
 
 
 # outlier species - just outlier genes ------------------------------------------------

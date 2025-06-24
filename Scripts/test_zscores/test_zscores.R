@@ -10,6 +10,10 @@ detect_outliers_and_extract_quantiles <- function(matrices, df, quantile_thresho
   #return mahalanobis distances
   distances <- mahalanobis(df, center_matrix, cov_matrix)
   
+  ### get chisq values 
+  df_dim <- ncol(df)
+  pchisq <- pchisq(distances, df = df_dim, lower.tail = FALSE)
+  
   # Calculate the quantile threshold
   threshold <- quantile(distances, quantile_threshold)
   
@@ -18,9 +22,12 @@ detect_outliers_and_extract_quantiles <- function(matrices, df, quantile_thresho
   # Extract outlier matrices
   outlier_matrices <- matrices[outlier_indices]
   # Return a list with indices and matrices
-  list(indices = outlier_indices, matrices = outlier_matrices)
+  list(indices = outlier_indices, matrices = outlier_matrices,
+       distances_all = distances, pchisq_all = pchisq)
 }
 
+t <- detect_outliers_and_extract_quantiles(matrices,df,quantile_threshold)
+str(t)
 ### Z-scores 
 # scale 
 hist(distances)
@@ -33,10 +40,4 @@ names(vec) <- rownames(p_values_normal)
 # index 
 hist(vec[outlier_indices])
 
-### PChisq
-df_dim <- ncol(df)
-pchisq <- pchisq(distances, df = df_dim, lower.tail = FALSE)
-hist(pchisq[outlier_indices])
-
-max(pchisq[outlier_indices])
 
